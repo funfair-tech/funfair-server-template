@@ -4,6 +4,7 @@ on:
     branches-ignore:
     - 'release/*'
     - 'hotfix/*'
+    - 'feature/*'
     
 jobs:
   pull-request:
