@@ -2,9 +2,9 @@ name: Auto PR Creation
 on:
   push:
     branches-ignore:
-    - 'release/*'
-    - 'hotfix/*'
-    - 'feature/*'
+    - "release/*"
+    - "hotfix/*"
+    - "feature/*"
     
 jobs:
   pull-request:
