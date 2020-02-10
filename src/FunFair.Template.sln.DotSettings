@@ -332,6 +332,7 @@
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Bracknell/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Ropsten/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Morden/@EntryIndexedValue">True</s:Boolean>
+        <s:Boolean x:Key="/Default/UserDictionary/Words/=Goerli/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Maxmind/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Changelly/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=testnet/@EntryIndexedValue">True</s:Boolean>
