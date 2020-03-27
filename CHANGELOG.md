@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- upgrade to dotnet core 3.1.201
 ### Removed
 ### Deployment Changes
 
