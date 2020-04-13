@@ -1,10 +1,7 @@
 name: Secrets Checker
 
 on:
-  push:
-    branches-ignore:
-    - "release/*"
-    - "hotfix/*"
+  [push]
 
 jobs:
   does-not-contain-secrets:
@@ -14,3 +11,21 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: max/secret-scan@1.0.0
+
+  conforms-to-editorconfig:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: zbeekman/EditorConfig-Action@v1.1.1
+
+
+
+  has-no-merge-conflicts:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: olivernybroe/action-conflict-finder@v1.0
