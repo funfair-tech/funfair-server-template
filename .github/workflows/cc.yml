@@ -1,0 +1,16 @@
+name: Secrets Checker
+
+on:
+  push:
+    branches-ignore:
+    - "release/*"
+    - "hotfix/*"
+
+jobs:
+  does-not-contain-secrets:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: max/secret-scan@1.0.0
