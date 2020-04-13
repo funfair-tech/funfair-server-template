@@ -1,4 +1,4 @@
-name: Secrets Checker
+name: Code Analysis
 
 on:
   [push]
