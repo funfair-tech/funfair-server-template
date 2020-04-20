@@ -1,15 +1,8 @@
-# This workflow will triage pull requests and apply a label based on the
-# paths that are modified in the pull request.
-#
-# To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration.  For more information, see:
-# https://github.com/actions/labeler/blob/master/README.md
-
-name: Labeler
+name: Pull Requests
 on: [pull_request]
 
 jobs:
-  label:
+  add-pr-label:
 
     runs-on: ubuntu-latest
 
@@ -17,3 +10,11 @@ jobs:
     - uses: actions/labeler@v2
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
+  assign-to-creator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: thomaseizinger/assign-pr-creator-action@v1.0.0
+      if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
