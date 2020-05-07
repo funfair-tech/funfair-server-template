@@ -41,15 +41,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - uses: "alstr/todo-to-issue-action@master"
-      id: "todo"
-      with:
-        REPO: ${{ github.repository }}
-        BEFORE: ${{ github.event.before }}
-        SHA: ${{ github.sha }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        LABEL: "// TODO"
-        COMMENT_MARKER: "//"
+      - uses: actions/checkout@master
+      - uses: alstr/todo-to-issue-action@master
+        with:
+          REPO: ${{ github.repository }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LABEL: "// TODO"
+          COMMENT_MARKER: "//"
+        id: "todo"
