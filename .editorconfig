@@ -1,7 +1,18 @@
 # Editor configuration, see http://editorconfig.org
 root = true
 
-[*]
+[{.babelrc,.stylelintrc,.eslintrc,jest.config,*.uplugin,*.bowerrc,*.jsb3,*.jsb2,*.json,jest.config,*.har,*.inputactions}]
+charset=utf-8
+trim_trailing_whitespace=true
+insert_final_newline=false
+max_line_length=200
+spaces_around_operators=true
+indent_brace_style=Allman
+indent_style=space
+indent_size=2
+end_of_line=crlf
+
+[*.sol]
 charset=utf-8
 trim_trailing_whitespace=true
 insert_final_newline=false
@@ -9,62 +20,91 @@ indent_style=space
 indent_size=4
 max_line_length=200
 spaces_around_operators=true
-indent_brace_style=Allman
-
-[{.babelrc,.stylelintrc,.eslintrc,jest.config,*.uplugin,*.bowerrc,*.jsb3,*.jsb2,*.json}]
-indent_style=space
-indent_size=2
-
-[{*.sol}]
 indent_brace_style=K&R
 end_of_line=crlf
 
-[{*.csproj}]
+[*.csproj]
+charset=utf-8
+trim_trailing_whitespace=true
+insert_final_newline=false
+indent_style=space
+max_line_length=200
 indent_size=2
 end_of_line=crlf
 
-[{*.xml}]
+[*.xml]
+charset=utf-8
+trim_trailing_whitespace=true
+insert_final_newline=false
+indent_style=space
+max_line_length=200
 indent_size=2
 end_of_line=crlf
 
 [*.sql]
+charset=utf-8
+trim_trailing_whitespace=true
+insert_final_newline=false
+indent_style=space
+max_line_length=200
 indent_size=2
 end_of_line=crlf
 
 [*.md]
+charset=utf-8
+trim_trailing_whitespace=true
+indent_style=space
+indent_size=4
+max_line_length=200
 end_of_line=crlf
-max_line_length = off
-trim_trailing_whitespace = true
 insert_final_newline=true
 
 [*.gitignore]
-end_of_line=crlf
-insert_final_newline=true
-
-[*.json]
-end_of_line=crlf
-
-[.DotSettings]
-max_line_length = off
-
-[.ruleset]
-max_line_length = off
-
-[.yml]
-indent_size=2
-insert_final_newline=false
-
-[*.cs]
 charset=utf-8
-end_of_line=crlf
-trim_trailing_whitespace=false
+trim_trailing_whitespace=true
 insert_final_newline=false
 indent_style=space
 indent_size=4
+max_line_length=200
+end_of_line=crlf
+
+[*.DotSettings]
+charset=utf-8
+trim_trailing_whitespace=true
+insert_final_newline=false
+indent_style=space
+indent_size=4
+max_line_length = off
+
+[*.ruleset]
+charset=utf-8
+trim_trailing_whitespace=true
+insert_final_newline=false
+indent_style=space
+indent_size=4
+max_line_length = off
+
+[*.yml]
+charset=utf-8
+trim_trailing_whitespace=true
+indent_style=space
+indent_size=2
+insert_final_newline=false
 
 [*.toml]
 indent_size=4
 insert_final_newline=false
+
+[*.cs]
+charset=utf-8
+max_line_length=200
+spaces_around_operators=true
+indent_brace_style=Allman
+trim_trailing_whitespace=True
+insert_final_newline=false
+indent_style=space
+indent_size=4
+
 
 # Microsoft .NET properties
 csharp_preferred_modifier_order=public, private, protected, internal, new, abstract, virtual, sealed, override, static, readonly, extern, unsafe, volatile, async:suggestion
@@ -323,9 +363,6 @@ resharper_web_config_type_not_resolved_highlighting=warning
 resharper_web_config_wrong_module_highlighting=warning
 resharper_xunit_xunit_test_with_console_output_highlighting=error
 
-[{*.har,*.inputactions,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config}]
-indent_style=space
-indent_size=2
 
 [*.{appxmanifest,asax,ascx,aspx,build,cs,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
 indent_style=space
