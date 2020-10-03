@@ -3,7 +3,6 @@ root = true
 
 [*]
 charset=utf-8
-end_of_line=crlf
 trim_trailing_whitespace=true
 insert_final_newline=false
 indent_style=space
@@ -18,25 +17,32 @@ indent_size=2
 
 [{*.sol}]
 indent_brace_style=K&R
+end_of_line=crlf
 
 [{*.csproj}]
 indent_size=2
+end_of_line=crlf
 
 [{*.xml}]
 indent_size=2
+end_of_line=crlf
 
 [*.sql]
 indent_size=2
+end_of_line=crlf
 
 [*.md]
+end_of_line=crlf
 max_line_length = off
 trim_trailing_whitespace = true
 insert_final_newline=true
 
 [*.gitignore]
+end_of_line=crlf
 insert_final_newline=true
 
 [*.json]
+end_of_line=crlf
 
 [.DotSettings]
 max_line_length = off
