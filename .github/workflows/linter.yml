@@ -45,6 +45,8 @@ jobs:
       - name: Lint Code Base
         uses: github/super-linter@v2.0.0
         env:
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_ANSIBLE: false
           VALIDATE_ARM: false
