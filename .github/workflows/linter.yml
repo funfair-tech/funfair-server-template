@@ -72,7 +72,7 @@ jobs:
           VALIDATE_KUBERNETES_KUBEVAL: false
           VALIDATE_LATEX: false
           VALIDATE_LUA: false
-          VALIDATE_MD: true # but ought to be true
+          VALIDATE_MD: true
           VALIDATE_OPENAPI: false
           VALIDATE_PERL: false
           VALIDATE_PHP: false
