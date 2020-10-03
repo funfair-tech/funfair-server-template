@@ -35,7 +35,6 @@ title = "gitleaks config"
     regex = '''"type": "service_account"'''
     tags = ["key", "Google"]
 
-
 [[rules]]
     description = "SendGrid API Key"
     regex = '''SG\.[\w_]{16,32}\.[\w_]{16,64}'''

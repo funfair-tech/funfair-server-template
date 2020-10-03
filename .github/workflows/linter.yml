@@ -54,7 +54,6 @@ jobs:
           VALIDATE_CSS: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
-          VALIDATE_EDITORCONFIG: true
           VALIDATE_HTML: true
           VALIDATE_JAVASCRIPT_ES: true
           VALIDATE_JAVASCRIPT_STANDARD: true
@@ -74,6 +73,7 @@ jobs:
           VALIDATE_XML: true
           VALIDATE_YAML: true
           YAML_CONFIG_FILE: true
+          # VALIDATE_EDITORCONFIG: true # really want this on though
           #VALIDATE_ANSIBLE: false
           #VALIDATE_ARM: false
           #VALIDATE_BASH_EXEC: false
