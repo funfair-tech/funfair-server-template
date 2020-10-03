@@ -66,6 +66,7 @@ jobs:
           VALIDATE_PYTHON_FLAKE8: true
           VALIDATE_PYTHON_BLACK: true
           VALIDATE_POWERSHELL: true
+          VALIDATE_SHELL_SHFMT: true
           VALIDATE_SQL: true
           VALIDATE_TSX: true
           VALIDATE_TYPESCRIPT_ES: true
@@ -99,7 +100,6 @@ jobs:
           #VALIDATE_R: false
           #VALIDATE_RAKU: false
           #VALIDATE_RUBY: false
-          #VALIDATE_SHELL_SHFMT: true
           #VALIDATE_SNAKEMAKE_LINT: false
           #VALIDATE_SNAKEMAKE_SNAKEFMT: false
           #VALIDATE_STATES: false
