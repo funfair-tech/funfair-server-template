@@ -58,7 +58,7 @@ jobs:
           VALIDATE_DART: false
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
-          VALIDATE_EDITORCONFIG	: false # but ought to be true
+          VALIDATE_EDITORCONFIG	: false
           VALIDATE_ENV: false
           VALIDATE_GO: false
           VALIDATE_GROOVY: false
