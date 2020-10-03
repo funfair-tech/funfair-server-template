@@ -5,5 +5,4 @@ Template repository for C# / server code
 
 View [changelog](CHANGELOG.md)
 
-
 [CHANGELOG]: ./CHANGELOG.md
