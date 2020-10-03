@@ -2,8 +2,8 @@
   directory: "/"
   schedule: 
     interval: daily
-	time: "03:00"
-	timezone: "Europe/London"
+    time: "03:00"
+    timezone: "Europe/London"
   open-pull-requests-limit: 99
   reviewers:
   - credfeto
