@@ -17,6 +17,6 @@
     prefix: "[FF-1429]"
   rebase-strategy: "auto"
   labels:
-  - "docker"
+  - "dotnet"
   - "dependencies"
   - "Changelog Not Required"

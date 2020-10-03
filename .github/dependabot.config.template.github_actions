@@ -15,6 +15,6 @@
     prefix: "[FF-1429]"
   rebase-strategy: "auto"
   labels:
-   - "docker"
+   - "github-actions"
    - "dependencies"
    - "Changelog Not Required"
