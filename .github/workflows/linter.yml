@@ -52,6 +52,7 @@ jobs:
           VALIDATE_CSS: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
+          VALIDATE_EDITORCONFIG: true
           VALIDATE_HTML: true
           VALIDATE_JAVASCRIPT_ES: true
           VALIDATE_JAVASCRIPT_STANDARD: true
@@ -79,7 +80,6 @@ jobs:
           #VALIDATE_COFFEE: false
           #VALIDATE_CSHARP: true
           #VALIDATE_DART: false
-          #VALIDATE_EDITORCONFIG: false
           #VALIDATE_ENV: false
           #VALIDATE_GO: false
           #VALIDATE_GROOVY: false
