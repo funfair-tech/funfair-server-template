@@ -71,8 +71,8 @@ jobs:
           VALIDATE_TYPESCRIPT_ES: true
           VALIDATE_TYPESCRIPT_STANDARD: true
           VALIDATE_XML: true
-          VALIDATE_YAML: true
           YAML_CONFIG_FILE: true
+          # VALIDATE_YAML: true # this currently crashes
           # VALIDATE_EDITORCONFIG: true # really want this on though
           #VALIDATE_ANSIBLE: false
           #VALIDATE_ARM: false
