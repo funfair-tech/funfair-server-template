@@ -1,7 +1,7 @@
 # funfair-server-template
 Template repository for C# / server code
 
-### Changelog
+## Changelog
 
 View [changelog](CHANGELOG.md)
 
