@@ -50,6 +50,7 @@ jobs:
           MULTI_STATUS: true
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_BASH: true
+          VALIDATE_CSHARP: true
           VALIDATE_CSS: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
@@ -78,7 +79,6 @@ jobs:
           #VALIDATE_CLOJURE: false
           #VALIDATE_CLOUDFORMATION: false
           #VALIDATE_COFFEE: false
-          #VALIDATE_CSHARP: true
           #VALIDATE_DART: false
           #VALIDATE_ENV: false
           #VALIDATE_GO: false
