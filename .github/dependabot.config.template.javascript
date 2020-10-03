@@ -15,6 +15,6 @@
     prefix: "[FF-1429]"
   rebase-strategy: "auto"
   labels:
-   - "npm"
-   - "dependencies"
-   - "Changelog Not Required"
+  - "npm"
+  - "dependencies"
+  - "Changelog Not Required"
