@@ -327,7 +327,7 @@ resharper_web_config_wrong_module_highlighting=warning
 resharper_xunit_xunit_test_with_console_output_highlighting=error
 
 
-[*.{appxmanifest,asax,ascx,aspx,build,cs,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
+[*.{appxmanifest,asax,ascx,aspx,build,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
 indent_style=space
 indent_size=4
 tab_width=4
