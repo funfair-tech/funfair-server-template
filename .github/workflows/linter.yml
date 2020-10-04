@@ -50,7 +50,6 @@ jobs:
           MULTI_STATUS: true
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_BASH: true
-          VALIDATE_CSHARP: true
           VALIDATE_CSS: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
@@ -73,6 +72,7 @@ jobs:
           VALIDATE_TYPESCRIPT_STANDARD: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
+          #VALIDATE_CSHARP: true # Just complains about end of line being wrong
           # VALIDATE_YAML: true # this currently crashes
           # VALIDATE_EDITORCONFIG: true # really want this on though
           #VALIDATE_ANSIBLE: false
