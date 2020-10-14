@@ -13,7 +13,7 @@
   - dependency-type: all
   ignore:
   - dependency-name: "Yoti"
-  - dependency-name: "Microsoft.Extensions.*"
+  - dependency-name: "Microsoft.*"
   commit-message:
     prefix: "[FF-1429]"
   rebase-strategy: "auto"
