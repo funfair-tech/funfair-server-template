@@ -1,7 +1,7 @@
 name: Code Analysis
 
 on:
-  push
+  push:
     branches-ignore:
     - master
     - "release/**"
