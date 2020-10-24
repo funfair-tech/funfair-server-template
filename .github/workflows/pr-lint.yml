@@ -12,6 +12,7 @@ jobs:
     - if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
       uses: seferov/pr-lint-action@v1.1.2
       env:
+        title-regex: '^\[FF-\d*\]\s'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   include-changelog-entry:
