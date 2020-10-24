@@ -14,7 +14,7 @@ jobs:
       env:
         title-regex: '^\[FF-\d*\](\ )'
         title-regex-flags: 'g' 
-         error-message: 'Add Jira Ticket ID to your title'
+        error-message: 'Add Jira Ticket ID to your title'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   include-changelog-entry:
