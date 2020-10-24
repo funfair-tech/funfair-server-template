@@ -1,7 +1,7 @@
 name: PR Lint
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened]
     branches:
       - master
 jobs:
@@ -12,7 +12,9 @@ jobs:
     - if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
       uses: seferov/pr-lint-action@v1.1.2
       env:
-        title-regex: '^\[FF-\d*\]\s'
+        title-regex: '^\[FF-\d*\](\ )'
+        title-regex-flags: 'g' 
+         error-message: 'Add Jira Ticket ID to your title'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   include-changelog-entry:
