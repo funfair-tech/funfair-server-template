@@ -4,7 +4,7 @@ on:
     types: [opened, edited, synchronize, reopened]
     branches:
       - master
-    
+
 jobs:
   include-JIRA-ticket:
     runs-on: ubuntu-latest
