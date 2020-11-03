@@ -15,6 +15,7 @@
   - dependency-name: "Yoti"
   - dependency-name: "Microsoft.*"
   - dependency-name: "FunFair.*"
+  - dependency-name: "Octopus.*"
   commit-message:
     prefix: "[FF-1429]"
   rebase-strategy: "auto"
