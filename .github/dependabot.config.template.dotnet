@@ -13,6 +13,7 @@
   - dependency-type: all
   ignore:
   - dependency-name: "FunFair.*"
+  - dependency-name: "Microsoft.AspNetCore.*"
   - dependency-name: "Microsoft.CodeAnalysis.*"
   - dependency-name: "Microsoft.Extensions.*"
   - dependency-name: "AsyncFixer"
