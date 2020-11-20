@@ -13,6 +13,7 @@
   - dependency-type: all
   ignore:
   - dependency-name: "FunFair.*"
+  - dependency-name: "Microsoft.CodeAnalysis.*"
   - dependency-name: "Microsoft.Extensions.*"
   - dependency-name: "AsyncFixer"
   - dependency-name: "Castle.Core"
@@ -30,9 +31,6 @@
   - dependency-name: "MaxMind.GeoIP2"
   - dependency-name: "MaxMind.MinFraud"
   - dependency-name: "Microsoft.ApplicationInsights.AspNetCore"
-  - dependency-name: "Microsoft.CodeAnalysis.Analyzers"
-  - dependency-name: "Microsoft.CodeAnalysis.CSharp.Workspaces"
-  - dependency-name: "Microsoft.CodeAnalysis.FxCopAnalyzers"
   - dependency-name: "Microsoft.NET.Test.Sdk"
   - dependency-name: "Microsoft.VisualStudio.Threading.Analyzers"
   - dependency-name: "NBitcoin"
