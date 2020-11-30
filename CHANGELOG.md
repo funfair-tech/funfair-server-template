@@ -7,7 +7,6 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 
 ## [Unreleased]
 ### Added
-- FF-2957 - adds 'ecdsa' to allowed words
 ### Fixed
 ### Changed
 ### Removed
