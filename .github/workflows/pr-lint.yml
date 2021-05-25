@@ -60,6 +60,8 @@ jobs:
       with:
         fetch-depth: 0
     - uses: zricethezav/gitleaks-action@v1.6.0
+      with:
+        config-path: .gitleaks.toml
 
   has-no-merge-conflicts:
     if: github.event.pull_request.draft == false
