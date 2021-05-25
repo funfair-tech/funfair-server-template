@@ -53,6 +53,6 @@ title = "gitleaks config"
 [whitelist]
     description = "Whitelisted"
     file = '''(^\.?gitleaks.toml$|(.*?)(jpg|gif|doc|pdf|bin)$)'''
-	regexes = [
-	    '''(.*?)gitleaks:allow'''
-	]
+    regexes = [
+        '''(.*?)gitleaks:allow'''
+    ]
