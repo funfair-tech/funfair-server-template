@@ -7,11 +7,14 @@ on:
 
 jobs:
   info:
-    if: github.event.pull_request.draft == false
+    if: ${{ endsWit(github.repository , '-template')  }}
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo "${{ github.head_ref }}"
+        echo "Branch: ${{ github.head_ref }}"
+        echo "Base Branch: ${{ github.base_ref }}"
+        echo "Repo: ${{ github.repository }}"
+        echo "Owner: ${{ github.repository_owner }}"
 
   include-JIRA-ticket:
     if: github.event.pull_request.draft == false
