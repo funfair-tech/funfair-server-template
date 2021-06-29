@@ -9,7 +9,7 @@ jobs:
   info:
     runs-on: ubuntu-latest
     steps:
-      run: |
+    - run: |
       echo ${{ github.head_ref }}
 
   include-JIRA-ticket:
