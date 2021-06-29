@@ -25,6 +25,7 @@ jobs:
         echo "Assigned: ${{ github.event.pull_request.assignees[0].login }}"
         echo "Last Modified By: ${{ github.event.pull_request.head.user.login }}"
         echo "PR Creator: ${{ github.event.pull_request.creator.login }}"
+        echo "PR Owner: ${{ github.event.pull_request.owner}}"
 
   add-pr-label:
     runs-on: ubuntu-latest
