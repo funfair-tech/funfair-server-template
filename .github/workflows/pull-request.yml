@@ -6,11 +6,16 @@ on:
     - "release/**"
     - "hotfix/**"
     - "feature/**"
+  pull_request:
+    types:
+      - synchronize
 
 jobs:
   pull-request:
     runs-on: ubuntu-latest
     steps:
+    - run: |
+       echo "Event: ${{ github.event }}"
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 1
