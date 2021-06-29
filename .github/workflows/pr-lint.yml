@@ -7,7 +7,7 @@ on:
 
 jobs:
   info:
-    if: ${{ endsWit(github.repository , '-template')  }}
+    if: ${{ endsWith(github.repository , '-template') }}
     runs-on: ubuntu-latest
     steps:
     - run: |
@@ -81,7 +81,6 @@ jobs:
       with:
         fetch-depth: 0
     - uses: olivernybroe/action-conflict-finder@v2.0
-
 
   has-no-file-or-folder-case-sensitivity-issues:
     if: github.event.pull_request.draft == false
