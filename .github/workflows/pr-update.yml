@@ -22,6 +22,7 @@ jobs:
         echo "Owner: ${{ github.repository_owner }}"
         echo "Assigned: ${{ github.event.assignees }}"
         echo "Event: ${{ toJSON( github.event ) }}"
+        echo "Hello World"
 
   add-pr-label:
     runs-on: ubuntu-latest
