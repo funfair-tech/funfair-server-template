@@ -23,6 +23,7 @@ jobs:
         echo "Owner: ${{ github.repository_owner }}"
         echo "Assigned: ${{ github.event.pull_request.assignee.login }}"
         echo "Assigned: ${{ github.event.pull_request.assignees[0].login }}"
+        echo "Assigned Count: ${{ github.event.pull_request.assignees.length }}"
 
   add-pr-label:
     runs-on: ubuntu-latest
