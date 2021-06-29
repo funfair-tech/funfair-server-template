@@ -7,9 +7,9 @@ on:
 
 jobs:
   info:
-  runs-on: ubuntu-latest
-  steps:
-    run: |
+    runs-on: ubuntu-latest
+    steps:
+      run: |
       echo ${{ github.head_ref }}
 
   include-JIRA-ticket:
