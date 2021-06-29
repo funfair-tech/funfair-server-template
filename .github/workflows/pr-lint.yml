@@ -6,6 +6,12 @@ on:
       - master
 
 jobs:
+  info:
+  runs-on: ubuntu-latest
+  steps:
+    run: |
+      echo ${{ github.head_ref }}
+
   include-JIRA-ticket:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
@@ -50,7 +56,7 @@ jobs:
     - name: Install Changelog tool
       run: dotnet tool install --local Credfeto.ChangeLog.Cmd
     - name: Check Changelog
-      run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref}}"
+      run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref }}"
 
   does-not-contain-secrets:
     if: github.event.pull_request.draft == false
