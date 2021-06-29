@@ -19,6 +19,11 @@ jobs:
       with:
         fetch-depth: 1
 
+    - if: ${{ steps.findPr.outputs.number != '' }}
+      run: |
+        echo "Pull request already exists with id: ${{ steps.findPr.outputs.number }}"
+        echo "URL: https://github.com/${{github.repository}}/pull/${{ steps.findPr.outputs.number }}"
+
     - if: ${{ steps.findPr.outputs.number == '' }}
       id: pr-template
       uses: juliangruber/read-file-action@v1
