@@ -93,7 +93,7 @@ jobs:
     - uses: credfeto/action-case-checker@v1.1
 
   lint-code:
-    if: github.event.pull_request.draft == false && ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
+    if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
