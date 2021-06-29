@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-       echo "Event: ${{ github.event }}"
+       echo "Event: ${{ github.event_name }}"
+       echo "Event: ${{ github.event_path }}"
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 1
