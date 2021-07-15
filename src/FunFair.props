@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project>
+    <!-- Common company metadata -->
     <PropertyGroup>
+        <Authors>FunFair</Authors>
         <Company>FunFair</Company>
         <Copyright>FunFair</Copyright>
         <Product>FunFair</Product>
+    </PropertyGroup>
+
+    <!-- Release notes; if any - injected in at build time -->
+    <PropertyGroup>
         <PackageReleaseNotes>$(ReleaseNotes)</PackageReleaseNotes>
     </PropertyGroup>
+
+    <!-- Repository type -->
     <PropertyGroup>
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     </PropertyGroup>
 
+    <!-- Only add these properties in if the project is publishable or packable.  
+         TODO: Find a better piece of metadata that gets defined _only_ during publish or pack
+    -->
     <PropertyGroup>
         <FFPacking>False</FFPacking>
         <FFPacking Condition="$(IsPackable) == 'true' OR $(IsPublishable) == 'true'">True</FFPacking>
