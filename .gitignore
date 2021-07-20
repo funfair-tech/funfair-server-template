@@ -323,11 +323,11 @@ src/Data
 /src/.idea/**/workspace.xml
 
 # Datasource local storage ignored files
-/src/.idea/*/dataSources/*
-/src/.idea/*/dataSources.local.xml
+/src/.idea/**/dataSources/*
+/src/.idea/**/dataSources.local.xml
 
 # Editor-based HTTP Client requests
-/src/.idea/*/httpRequests/*
+/src/.idea/**/httpRequests/*
 
 # settings updater
 !/src/.idea/*/projectSettingsUpdater.xml
