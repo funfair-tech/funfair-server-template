@@ -9,7 +9,7 @@ jobs:
   info:
     if: ${{ endsWith(github.repository , '-template') }}
     runs-on: 
-	[self-hosted, linux]
+	self-hosted, linux
         ubuntu-latest
     steps:
     - run: |
