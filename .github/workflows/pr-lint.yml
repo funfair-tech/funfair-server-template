@@ -8,7 +8,7 @@ on:
 jobs:
   info:
     if: ${{ endsWith(github.repository , '-template') }}
-    runs-on: [self-hosted, linux, ubuntu-latest]
+#    runs-on: [self-hosted, linux]
     steps:
     - run: |
         echo "Branch: ${{ github.head_ref }}"
