@@ -27,7 +27,7 @@ jobs:
 
   add-pr-label:
     if: github.event_name == 'pull_request' && ( github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize')
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/labeler@v3
       with:
