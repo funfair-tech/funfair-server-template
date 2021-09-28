@@ -12,7 +12,7 @@ jobs:
   standardise-tsql-files:
 
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     steps:
     - uses: actions/checkout@v2.3.4
