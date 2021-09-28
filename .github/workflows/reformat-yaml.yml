@@ -16,6 +16,9 @@ jobs:
     runs-on: [self-hosted, linux]
 
     steps:
+    # Cleanup https://github.com/actions/checkout/issues/211
+    - run: |
+        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
