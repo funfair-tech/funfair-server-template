@@ -9,7 +9,7 @@ on:
 
 jobs:
   pull-request:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: jwalton/gh-find-current-pr@v1.2.0
       id: findPr
