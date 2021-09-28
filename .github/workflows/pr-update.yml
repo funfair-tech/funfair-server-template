@@ -36,7 +36,7 @@ jobs:
 
   assign-to-creator:
     if: ${{ !github.event.pull_request.assignee.login && github.event_name == 'pull_request' && ( github.event.action == 'opened' || github.event.action == 'reopened')}}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: thomaseizinger/assign-pr-creator-action@v1.0.0
       with:
