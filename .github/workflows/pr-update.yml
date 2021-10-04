@@ -48,7 +48,6 @@ jobs:
     steps:
     - run: |
         sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-    steps:
     - uses: thomaseizinger/assign-pr-creator-action@v1.0.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
