@@ -26,7 +26,7 @@ jobs:
         echo "Actor: ${{ github.actor }}"
 
   add-pr-label:
-    if: github.event_name == 'pull_request' && ( github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize')
+#    if: github.event_name == 'pull_request' && ( github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize')
     runs-on: ubuntu-latest
     steps:
     - uses: actions/labeler@v3
