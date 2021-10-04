@@ -1,12 +1,13 @@
 name: PR Update
 on:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-    branches:
-      - master
+- pull_request_target
+#  pull_request:
+#    types:
+#      - opened
+#      - reopened
+#      - synchronize
+#    branches:
+#      - master
 
 jobs:
   info:
@@ -32,6 +33,7 @@ jobs:
     - uses: actions/labeler@v3
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: .github/labeler.yml
         sync-labels: true
 
   assign-to-creator:
