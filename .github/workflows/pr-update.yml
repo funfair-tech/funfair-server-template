@@ -11,7 +11,6 @@ on:
 jobs:
   info:
     if: ${{ endsWith(github.repository , '-template') }}
-#    runs-on: ubuntu-latest
     runs-on: [self-hosted, linux]
     steps:
     - run: |
@@ -29,8 +28,6 @@ jobs:
         echo "Actor: ${{ github.actor }}"
 
   add-pr-label:
-#    if: github.event_name == 'pull_request' && ( github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'synchronize')
-#    runs-on: ubuntu-latest
     runs-on: [self-hosted, linux]
     steps:
     - run: |
@@ -43,7 +40,6 @@ jobs:
 
   assign-to-creator:
     if: ${{ !github.event.pull_request.assignee.login && github.event_name == 'pull_request' && ( github.event.action == 'opened' || github.event.action == 'reopened')}}
-#    runs-on: ubuntu-latest
     runs-on: [self-hosted, linux]
     steps:
     - run: |
