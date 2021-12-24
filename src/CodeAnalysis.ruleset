@@ -453,7 +453,7 @@
         <!-- RCS1197 - OptimizeStringBuilderAppendCall -->
         <Rule Id="RCS1197" Action="Error"/>
         <!-- RCS1198 - Avoid unnecessary boxing of value type -->
-        <Rule Id="RCS1198" Action="Error"/>
+        <Rule Id="RCS1198" Action="None"/>
         <!-- RCS1214 - Unnecessary interpolated string -->
         <Rule Id="RCS1214" Action="Error"/>
         <!-- RCS1217 - Convert interpolated string to concatenation -->
