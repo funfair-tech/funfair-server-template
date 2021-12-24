@@ -405,7 +405,7 @@
         <!-- RCS1038 - RemoveEmptyStatement -->
         <Rule Id="RCS1038" Action="Error"/>
         <!-- RCS1056 - Avoid usage of using alias directive -->
-        <Rule Id="" Action="Error"/>
+        <Rule Id="RCS1056" Action="Error"/>
         <!-- RCS1060 - DeclareEachTypeInSeparateFile n.b. this is too agresssive as it wants Type and Type{T} to be in different files. -->
         <Rule Id="RCS1060" Action="Info"/>
         <!-- RCS1077 - Optimize Linq Method Call -->
