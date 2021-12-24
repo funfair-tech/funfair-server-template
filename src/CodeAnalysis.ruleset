@@ -546,7 +546,7 @@
         <!-- PH2066	- Readonly lock -->
         <Rule Id="PH2066" Action="Error"/>
         <!-- PH2067	- Avoid nested string.Format -->
-        <Rule Id="PH2067" Action="Error"/>
+        <Rule Id="PH2067" Action="None"/>
         <!-- PH2073	- Call extension method as instance -->
         <Rule Id="PH2073" Action="Error"/>
         <!-- PH2068	- Avoid goto -->
