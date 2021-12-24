@@ -518,7 +518,7 @@
         <!-- PH2028 - File should start with a copyright statement -->
         <Rule Id="PH2028" Action="None"/>
         <!-- PH2029	- Avoid #pragma -->
-        <Rule Id="" Action="None"/>
+        <Rule Id="PH2029" Action="None"/>
         <!-- PH2030 - Variable naming conventions -->
         <Rule Id="PH2030" Action="None"/>
         <!-- PH2031	- Avoid TryParse without Culture -->
