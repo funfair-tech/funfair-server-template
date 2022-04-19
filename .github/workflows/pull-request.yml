@@ -40,6 +40,7 @@ jobs:
         echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
 
     - if: ${{ steps.findPr.outputs.number == '' }}
+      id: open-pr
       uses: repo-sync/pull-request@v2.6
       with:
         source_branch: ""                     # If blank, default: triggered branch
