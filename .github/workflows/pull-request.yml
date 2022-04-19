@@ -60,8 +60,8 @@ jobs:
       name: output-number
       run: |
           echo ${{steps.open-pr.outputs.pr_number}}
-          echo "GITHUB_EVENT_PATH=\{'pull_request': ${{steps.open-pr.outputs.pr_number}} \}"
-          echo "GITHUB_EVENT_PATH=\{'pull_request': ${{steps.open-pr.outputs.pr_number}} \}" >> $GITHUB_ENV
+          echo "GITHUB_EVENT_PATH={'pull_request': ${{steps.open-pr.outputs.pr_number}} }"
+          echo "GITHUB_EVENT_PATH={'pull_request': ${{steps.open-pr.outputs.pr_number}} }" >> $GITHUB_ENV
 
     - if: ${{ steps.findPr.outputs.number == '' }}
       name: output-has-changed-files
