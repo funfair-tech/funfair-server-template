@@ -67,7 +67,8 @@ jobs:
           echo "PR: ${{steps.open-pr.outputs.pr_number}}"
           echo "CF: ${{steps.open-pr.outputs.has_changed_files}}"
           echo "GITHUB_EVENT_PATH={'pull_request': { 'number': ${{steps.open-pr.outputs.pr_number}} } }"
-          echo "{'pull_request': { 'number': ${{steps.open-pr.outputs.pr_number}} } }" >> $GITHUB_EVENT_PATH
+          echo "{'pull_request': { 'number': ${{steps.open-pr.outputs.pr_number}} } }" > $GITHUB_EVENT_PATH
+          cat $GITHUB_EVENT_PATH
 
     # NEED TO SET github.context.payload.pull_request TO BE THE pr NUMBER
     - if: ${{ steps.findPr.outputs.number == '' }}
