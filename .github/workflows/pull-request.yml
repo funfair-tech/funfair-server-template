@@ -43,6 +43,9 @@ jobs:
       run: |
         git config --global --add safe.directory /github/workspace
 
+    - run: |
+        echo "GITHUB_EVENT_PATH = $GITHUB_EVENT_PATH"
+
     - if: ${{ steps.findPr.outputs.number == '' }}
       id: open-pr
       uses: repo-sync/pull-request@v2.6
