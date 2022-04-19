@@ -60,7 +60,7 @@ jobs:
           echo "PR: ${{steps.open-pr.outputs.pr_number}}"
           echo "CF: ${{steps.open-pr.outputs.has_changed_files}}"
 
-    # NEED TO SET github.context.payload.pull_request TO BE THE pr NUMBER
+    # TODO: Switch to actions/labeler@Vx.y if https://github.com/actions/labeler/pull/349 is merged and a release created
     - if: ${{ steps.findPr.outputs.number == '' }}
       uses: credfeto/labeler@feature/pass-in-pull-request-or-issue
       with:
