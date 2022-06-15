@@ -52,6 +52,7 @@ jobs:
         with:
           fileName: CHANGELOG.md
           noChangelogLabel: Changelog Not Required
+          checkNotification: Simple
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: colpal/actions-clean@v1.1.1
