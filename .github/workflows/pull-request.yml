@@ -41,7 +41,9 @@ jobs:
         echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
 
     - if: ${{ steps.findPr.outputs.number == '' }}
-      run: git config --global --add safe.directory /github/workspace
+      run: |
+         echo "Workspace: ${{ github.workspace }}"
+         git config --global --add safe.directory ${{ github.workspace }}
 
     - if: ${{ steps.findPr.outputs.number == '' }}
       id: open-pr
