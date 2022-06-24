@@ -59,7 +59,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - if: ${{ steps.findPr.outputs.number == '' }}
-      name: Details
+      name: New PR Details
       run: |
           echo "URL: ${{steps.open-pr.outputs.pr_url}}"
           echo "PR: ${{steps.open-pr.outputs.pr_number}}"
