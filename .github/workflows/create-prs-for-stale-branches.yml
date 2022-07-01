@@ -1,16 +1,13 @@
 name: Find branches without PR's
 
 on:
-  # push:
-  #   branches:
-  #     - "main"
   schedule:
   - cron: "0 1 * * *"
 
 jobs:
   build-matrix:
     runs-on: [self-hosted, linux]
-    
+
     steps:
       - uses: actions/checkout@v3
         with:
