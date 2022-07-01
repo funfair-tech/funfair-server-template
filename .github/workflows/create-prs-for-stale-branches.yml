@@ -9,7 +9,8 @@ on:
 
 jobs:
   build-matrix:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+    
     steps:
       - uses: actions/checkout@v3
         with:
