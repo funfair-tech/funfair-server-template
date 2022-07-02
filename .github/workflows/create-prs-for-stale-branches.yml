@@ -1,6 +1,11 @@
 name: Find branches without PR's
 
 on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/create-prs-for-stale-branches.yml"
   schedule:
   - cron: "0 1 * * *"
 
