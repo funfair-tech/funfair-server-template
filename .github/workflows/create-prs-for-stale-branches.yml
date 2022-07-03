@@ -85,6 +85,7 @@ jobs:
         name: Check Ahead\Behind Status
         run: |
           echo "Check to see if ${{steps.detection.outputs.defaultbranch}} is ahead or behind ${{matrix.branch}}..."
+          git rev-list --left-right --count  origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}
           git rev-list --left-right --count  origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{
                       print "${{matrix.branch}} is behind ${{steps.detection.outputs.defaultbranch}} by "$1" commit(s)"
                       print "::set-output name=behind::"$1
