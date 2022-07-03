@@ -114,7 +114,7 @@ jobs:
           pr_assignee: "${{ github.actor }}"    # Comma-separated list (no spaces)
           pr_label: "auto-pr,stale"             # Comma-separated list (no spaces)
           pr_draft: true                        # Creates pull request as draft
-          pr_title: "${{ env.COMMIT_MSG }}"
+          pr_title: "${{ env.COMMIT_MSG }} [No commits for ${{steps.aheadbehind.outputs.dayssinceupdate}} days]"
           pr_body: "${{ steps.pr-template.outputs.content }}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
