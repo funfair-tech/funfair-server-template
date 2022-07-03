@@ -42,7 +42,7 @@ jobs:
     # runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
 
     strategy:
@@ -138,9 +138,12 @@ jobs:
         name: Rebase
         run: echo "Rebase?"
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead == '0' && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead == '0' && steps.aheadbehind.outputs.dayssinceupdate > 60 }}
         name: Delete Branch
-        run: echo "Delete?"
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branches: ${{ matrix.branch }}
         
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
         run: |
