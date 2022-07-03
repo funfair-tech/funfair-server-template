@@ -11,16 +11,19 @@ on:
 
 jobs:
   build-matrix:
-    # runs-on: [self-hosted, linux]
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+    # runs-on: ubuntu-latest
 
     permissions:
       contents: read
 
     steps:
       - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+      - run: |
           echo "Repo: ${{ github.repository }}"
           echo "Owner: ${{ github.repository_owner }}"
+      - run: sudo apt install -y jq
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -34,7 +37,8 @@ jobs:
 
   check-branch:
     needs: build-matrix
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+    # runs-on: ubuntu-latest
 
     permissions:
       contents: read
@@ -44,6 +48,8 @@ jobs:
       matrix:
         branch: ${{ fromJson(needs.build-matrix.outputs.branches) }}
     steps:
+      - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
