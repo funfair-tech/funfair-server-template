@@ -78,7 +78,7 @@ jobs:
           github-token: ${{ secrets.SOURCE_PUSH_TOKEN }}
           branch: "${{ matrix.branch }}"
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch }}
-        run: echo "Pull Request ${number} (${sha})"
+        run: echo "Pull Request ${{number}} (${{sha}})"
         env:
           number: ${{ steps.find-pull-request.outputs.number }}
           sha: ${{ steps.find-pull-request.outputs.head-sha }}
