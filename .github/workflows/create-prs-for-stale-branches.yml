@@ -56,7 +56,7 @@ jobs:
           fetch-depth: 0
           ref: main
           repository: ${{ github.repository }}
-          token: ${{ secrets.SOURCE_PUSH_TOKEN }}
+#          token: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
       - id: detection
         run: |
