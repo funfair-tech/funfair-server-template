@@ -32,7 +32,9 @@ jobs:
 #          token: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
       - id: set-matrix
-        run: echo "branches=$(git branch --remote --format='%(refname:short)' | grep -Po 'origin/\K[^*]*' | grep -vE 'HEAD|release/|hotfix/' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        run: echo "branches=$(git branch --remote --format='%(refname:short)' \
+                | grep -Po 'origin/\K[^*]*' | grep -vE 'HEAD|release/|hotfix/' \
+                | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
     outputs:
       branches: ${{ steps.set-matrix.outputs.branches }}
 
