@@ -9,7 +9,7 @@ on:
       - '**.sql'
 
 concurrency:
-  group: ${{ github.ref }}
+  group: reformat-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:

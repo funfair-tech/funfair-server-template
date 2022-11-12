@@ -9,7 +9,7 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.ref }}
+  group: update-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
