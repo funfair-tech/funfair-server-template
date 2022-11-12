@@ -22,9 +22,7 @@ jobs:
 
     steps:
       - name: Cleanup Repo
-        run: |
-          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-          rm -fr $GITHUB_WORKSPACE/*
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
       - uses: actions/checkout@v3.1.0
         with:
@@ -47,13 +45,7 @@ jobs:
           path: ./.github/PULL_REQUEST_TEMPLATE.md
 
       - if: ${{ steps.findPr.outputs.number == '' }}
-        run: |
-          echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
-
-      # - if: ${{ steps.findPr.outputs.number == '' }}
-      #   run: |
-      #      echo "Workspace: ${{ github.workspace }}"
-      #      git config --global --add safe.directory ${{ github.workspace }}
+        run: echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
 
       - if: ${{ steps.findPr.outputs.number == '' }}
         id: open-pr
