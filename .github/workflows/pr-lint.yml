@@ -55,8 +55,13 @@ jobs:
           fetch-depth: 0
       - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
         run: |
-           [[ $(git diff --exit-code origin/main CHANGELOG.md) == 0 ]] && (echo "Error: Changelog unchanged" && exit -1)
-           [[ $(git diff --quiet origin/main CHANGELOG.md) != 0 ]] && echo "OK: Changelog updated"
+           [[ $(git diff --exit-code origin/main CHANGELOG.md) == 0 ]] && echo "CHANGELOG=Unchanged" >> $GITHUB_ENV
+           [[ $(git diff --quiet origin/main CHANGELOG.md) != 0 ]] && echo "CHANGELOG=Updated" >> $GITHUB_ENV
+      - if: ${{ env.CHANGELOG == 'Unchanged' }}
+        uses: actions/github-script@v6.3.3
+        with:
+          script: |
+            core.setFailed('Changelog has not changed')
 
   change-log-entry-is-in-unreleased:
     if: github.event.pull_request.draft == false
