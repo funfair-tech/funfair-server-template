@@ -19,7 +19,7 @@ jobs:
     steps:
       - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - run: |
-          echo "Branch: ${{ github.head_ref || "n/a" }}"
+          echo "Branch: ${{ github.head_ref }}"
           echo "Base Branch: ${{ github.base_ref }}"
           echo "Repo: ${{ github.repository }}"
           echo "Owner: ${{ github.repository_owner }}"
