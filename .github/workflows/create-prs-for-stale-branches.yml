@@ -85,7 +85,8 @@ jobs:
           git rev-list --left-right --count "origin/${{env.DEFAULT_BRANCH}}...origin/${{matrix.branch}}" | awk '{ print "${{matrix.BRANCH}} is ahead of ${{env.DEFAULT_BRANCH}} by "$2" commit(s)" }'
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
-      - run:
+      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
+        run:
           echo "LAST_UPDATE=$(git log -1 --format=@%ct origin/${{env.BRANCH}})" >> "$GITHUB_ENV"
 
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
@@ -100,7 +101,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
-      - run: echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date $(git log -1 --format=@%ct origin/${{env.BRANCH}})))/(3600*24)))"
+      - run: echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date $(git log -1 --format=${{env.LAST_UPDATE}})))/(3600*24)))"
 
 #            echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" ; \
 #          echo "COMMIT_MSG=$(git log -1 --pretty=%B "origin/${{matrix.branch}}")" ; \
