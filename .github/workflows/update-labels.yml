@@ -9,7 +9,7 @@ on:
       - '.github/workflows/update-labels.yml'
 
 concurrency:
-  group: label-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

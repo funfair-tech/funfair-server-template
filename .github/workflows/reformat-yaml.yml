@@ -10,7 +10,7 @@ on:
       - '**.yaml'
 
 concurrency:
-  group: reformat-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
