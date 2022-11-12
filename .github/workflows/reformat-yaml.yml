@@ -35,9 +35,9 @@ jobs:
           repository: ${{ github.repository }}
           # token: ${{ secrets.SOURCE_PUSH_TOKEN }}
       - run: |
-          echo Current Branch ${GITHUB_REF#refs/heads/}
-          echo GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/}) >> $GITHUB_ENV
-          echo User: ${{github.actor}}
+          echo "Current Branch ${GITHUB_REF#refs/heads/}"
+          echo "GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+          echo "User: ${{github.actor}}"
       - uses: credfeto/action-yaml-format@v1.3.1
       - uses: stefanzweifel/git-auto-commit-action@v4.15.4
         with:
