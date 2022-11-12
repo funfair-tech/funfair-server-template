@@ -31,7 +31,7 @@ jobs:
 
       - id: set-matrix
         run: |
-          echo "branches=$(git branch --remote --format='%(refname:short)' | grep -Po 'origin/\K[^*]*' | grep -vE 'HEAD|release/|hotfix/' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_ENV"
+          echo "branches=$(git branch --remote --format='%(refname:short)' | grep -Po 'origin/\K[^*]*' | grep -vE 'HEAD|release/|hotfix/' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
     outputs:
       branches: ${{ steps.set-matrix.outputs.branches }}
 
@@ -56,7 +56,7 @@ jobs:
 
       - id: detection
         run: |
-          echo "defaultbranch=$(git remote show origin | grep -Po 'HEAD\sbranch:\s+\K[^.*]*')" >> "$GITHUB_ENV"
+          echo "defaultbranch=$(git remote show origin | grep -Po 'HEAD\sbranch:\s+\K[^.*]*')" >> "$GITHUB_OUTPUT"
 
       # On Default branch
       - if: ${{ steps.detection.outputs.defaultbranch == matrix.branch }}
@@ -81,10 +81,10 @@ jobs:
           git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}"
           git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "${{matrix.branch}} is behind ${{steps.detection.outputs.defaultbranch}} by "$1" commit(s)" }'
           git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "${{matrix.branch}} is ahead of ${{steps.detection.outputs.defaultbranch}} by "$2" commit(s)" }'
-          git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "behind="$1 }' >> "$GITHUB_ENV"
-          git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "ahead="$2 }' >> "$GITHUB_ENV"
-          echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" >> "$GITHUB_ENV"
-          echo "COMMIT_MSG=$(git log -1 --pretty=%B origin/${{matrix.branch}})" >> "$GITHUB_ENV"
+          git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "behind="$1 }' >> "$GITHUB_OUTPUT"
+          git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "ahead="$2 }' >> "$GITHUB_OUTPUT"
+          echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" >> "$GITHUB_OUTPUT"
+          echo "COMMIT_MSG=$(git log -1 --pretty=%B origin/${{matrix.branch}})" >> "$GITHUB_OUTPUT"
 
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
       - if: |-
