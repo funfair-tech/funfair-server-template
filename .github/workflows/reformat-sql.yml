@@ -33,9 +33,8 @@ jobs:
           ref: ${{ github.head_ref }}
           repository: ${{ github.repository }}
 
-      - run: |
-          echo "Current Branch ${GITHUB_REF#refs/heads/}"
-          echo "GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+      - run: echo "Current Branch ${GITHUB_REF#refs/heads/}"
+      - run: echo "GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       - name: Reformat
         uses: credfeto/action-sql-format@v1.3.1
       - uses: stefanzweifel/git-auto-commit-action@v4.15.4
