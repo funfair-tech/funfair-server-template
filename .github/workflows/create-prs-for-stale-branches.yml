@@ -59,6 +59,7 @@ jobs:
       - id: detection
         run: |
           echo "defaultbranch=$(git remote show origin | grep -Po 'HEAD\sbranch:\s+\K[^.*]*')" >> "$GITHUB_OUTPUT"
+          echo "DEFAULT_BRANCH=$(git remote show origin | grep -Po 'HEAD\sbranch:\s+\K[^.*]*')" >> "$GITHUB_ENV"
 
       # On Default branch
       - if: ${{ steps.detection.outputs.defaultbranch == matrix.branch }}
@@ -73,6 +74,7 @@ jobs:
         id: find-pull-request
         with:
           branch: "${{ env.BRANCH }}"
+
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch }}
         run: echo "Pull Request ${{ steps.find-pull-request.outputs.number }} (${{ steps.find-pull-request.outputs.head-sha }})"
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
@@ -83,6 +85,9 @@ jobs:
           git rev-list --left-right --count "origin/${{env.DEFAULT_BRANCH}}...origin/${{matrix.branch}}" | awk '{ print "${{matrix.BRANCH}} is ahead of ${{env.DEFAULT_BRANCH}} by "$2" commit(s)" }'
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
+      - run:
+          echo "LAST_UPDATE=$(git log -1 --format=@%ct origin/${{env.BRANCH}})" >> "$GITHUB_ENV"
+
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
         id: aheadbehind
         name: Check Ahead\Behind Status
@@ -95,7 +100,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
-      - run: echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date $(git log -1 --format=@%ct origin/${{env.MATRIX_BRANCH}})))/(3600*24)))"
+      - run: echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date $(git log -1 --format=@%ct origin/${{env.BRANCH}})))/(3600*24)))"
 
 #            echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" ; \
 #          echo "COMMIT_MSG=$(git log -1 --pretty=%B "origin/${{matrix.branch}}")" ; \
