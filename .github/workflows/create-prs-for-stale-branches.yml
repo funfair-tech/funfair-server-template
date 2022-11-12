@@ -87,17 +87,29 @@ jobs:
           echo "COMMIT_MSG=$(git log -1 --pretty=%B origin/${{matrix.branch}})" >> $GITHUB_OUTPUT
 
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: |-
+          ${{ steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == ''
+          && steps.aheadbehind.outputs.ahead != 0
+          && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         id: pr-template
         uses: juliangruber/read-file-action@v1.1.6
         with:
           path: ./.github/PULL_REQUEST_TEMPLATE.md
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: |-
+          ${{ steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == ''
+          && steps.aheadbehind.outputs.ahead != 0
+          && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         name: Get last commit message
         run: echo "COMMIT_MSG=$(git log -1 --pretty=%B origin/${{matrix.branch}})" >> $GITHUB_ENV
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: |-
+          ${{ steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == ''
+          && steps.aheadbehind.outputs.ahead != 0
+          && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         id: open-pr
         uses: repo-sync/pull-request@v2.8
         with:
@@ -110,7 +122,11 @@ jobs:
           pr_body: "${{ steps.pr-template.outputs.content }}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: |-
+          ${{ steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == ''
+          && steps.aheadbehind.outputs.ahead != 0
+          && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         name: New PR Details
         run: |
             echo "URL: ${{steps.open-pr.outputs.pr_url}}"
@@ -126,18 +142,29 @@ jobs:
           sync-labels: true
           pr-number: ${{steps.open-pr.outputs.pr_number}}
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.behind != 0 && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: |-
+          ${{ steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == ''
+          && steps.aheadbehind.outputs.behind != 0
+          && steps.aheadbehind.outputs.ahead != 0
+          && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         name: Rebase
         run: echo "Rebase?"
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead == '0' && steps.aheadbehind.outputs.dayssinceupdate > 60 }}
+      - if: |-
+          ${{ steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == ''
+          && steps.aheadbehind.outputs.ahead == '0'
+          && steps.aheadbehind.outputs.dayssinceupdate > 60 }}
         name: Delete Branch
         uses: dawidd6/action-delete-branch@v3.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branches: ${{ matrix.branch }}
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
+      - if: |-
+          ${{ steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == '' }}
         run: |
           echo "Ahead: ${{ steps.aheadbehind.outputs.ahead }}"
           echo "Behind: ${{ steps.aheadbehind.outputs.behind }}"
