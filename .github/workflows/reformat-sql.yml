@@ -32,10 +32,10 @@ jobs:
         fetch-depth: 0
         ref: ${{ github.head_ref }}
         repository: ${{ github.repository }}
-        # token: ${{ secrets.SOURCE_PUSH_TOKEN }}
+
     - run: |
-        echo Current Branch ${GITHUB_REF#refs/heads/}
-        echo GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/}) >> $GITHUB_ENV
+        echo "Current Branch ${GITHUB_REF#refs/heads/}"
+        echo "GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
     - name: Reformat
       uses: credfeto/action-sql-format@v1.3.1
     - uses: stefanzweifel/git-auto-commit-action@v4.15.4
