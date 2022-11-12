@@ -98,10 +98,14 @@ jobs:
               | awk '{ print "behind="$1 }' ; \
             git rev-list --left-right --count "origin/${{env.DEFAULT_BRANCH}}...origin/${{env.BRANCH}}" \
               | awk '{ print "ahead="$2 }' ; \
+            echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date ${{env.LAST_UPDATE}}))/(3600*24)))" ; \
           } >> "$GITHUB_OUTPUT"
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
-      - run: echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date ${{env.LAST_UPDATE}}))/(3600*24)))"
+      - run: echo "COMMIT_MSG=$(git log -1 --pretty=%B "${{env.ORIGIN_DEFAULT_BRANCH}}")"
+        env:
+          DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
+          ORIGIN_DEFAULT_BRANCH: origin/${{ steps.detection.outputs.defaultbranch }}
 
 #            echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" ; \
 #          echo "COMMIT_MSG=$(git log -1 --pretty=%B "origin/${{matrix.branch}}")" ; \
