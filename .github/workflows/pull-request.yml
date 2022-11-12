@@ -47,7 +47,8 @@ jobs:
       - if: ${{ steps.findPr.outputs.number == '' }}
         run: echo "COMMIT_MSG=$(CM)" >> $GITHUB_ENV
         env:
-          CM: ${{ git log -1 --pretty=%B }}
+          CM: ${{ github.event.head_commit.message }}
+      ## git log -1 --pretty=%B
 
       - if: ${{ steps.findPr.outputs.number == '' }}
         id: open-pr
