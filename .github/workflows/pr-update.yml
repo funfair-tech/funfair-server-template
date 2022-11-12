@@ -42,7 +42,11 @@ jobs:
         sync-labels: true
 
   assign-to-creator:
-    if: ${{ !github.event.pull_request.assignee.login && github.event_name == 'pull_request' && ( github.event.action == 'opened' || github.event.action == 'reopened') && github.actor != 'dependabot[bot]' }}
+    if: |-
+      ${{ !github.event.pull_request.assignee.login
+      && github.event_name == 'pull_request'
+      && ( github.event.action == 'opened' || github.event.action == 'reopened')
+      && github.actor != 'dependabot[bot]' }}
     runs-on: [self-hosted, linux]
     steps:
     - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
