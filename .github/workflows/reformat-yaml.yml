@@ -19,10 +19,11 @@ permissions:
 jobs:
   standardise-yaml-files:
 
-    if: ${{ github.event.pull_request.draft == false \
-          && ( !startsWith(github.head_ref, 'release/') \
-          && !startsWith(github.head_ref, 'hotfix/') ) \
-          && github.actor != 'dependabot[bot]' }}
+    if: |-
+      ${{ github.event.pull_request.draft == false
+      && ( !startsWith(github.head_ref, 'release/')
+      && !startsWith(github.head_ref, 'hotfix/') )
+      && github.actor != 'dependabot[bot]' }}
     runs-on: [self-hosted, linux]
 
     steps:
