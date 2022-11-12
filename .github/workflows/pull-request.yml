@@ -2,11 +2,11 @@ name: Auto PR Creation
 on:
   push:
     branches-ignore:
-    - master
-    - main
-    - "release/**"
-    - "hotfix/**"
-    - "feature/**"
+      - master
+      - main
+      - "release/**"
+      - "hotfix/**"
+      - "feature/**"
 
 permissions:
   contents: read
