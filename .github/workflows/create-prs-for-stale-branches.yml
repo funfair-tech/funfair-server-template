@@ -84,7 +84,7 @@ jobs:
           git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "behind="$1 }' >> "$GITHUB_OUTPUT"
           git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" | awk '{ print "ahead="$2 }' >> "$GITHUB_OUTPUT"
           echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" >> "$GITHUB_OUTPUT"
-          echo "COMMIT_MSG=$(git log -1 --pretty=%B origin/${{matrix.branch}})" >> "$GITHUB_OUTPUT"
+          echo "COMMIT_MSG=$(git log -1 --pretty=%B "origin/${{matrix.branch}}")" >> "$GITHUB_OUTPUT"
 
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
       - if: |-
