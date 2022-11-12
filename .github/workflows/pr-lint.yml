@@ -58,7 +58,7 @@ jobs:
 #        run: |
 #           [[ $(git diff --exit-code origin/main CHANGELOG.md) == 0 ]] && echo "CHANGELOG=Unchanged" >> $GITHUB_ENV
 #           [[ $(git diff --quiet origin/main CHANGELOG.md) != 0 ]] && echo "CHANGELOG=Updated" >> $GITHUB_ENV
-      - if: ${{ env.CHANGES == '-' }}
+      - if: ${{ env.CHANGES == '0' }}
         uses: actions/github-script@v6.3.3
         with:
           script: |
