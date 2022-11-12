@@ -102,14 +102,6 @@ jobs:
           && steps.find-pull-request.outputs.number == ''
           && steps.aheadbehind.outputs.ahead != 0
           && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
-        name: Get last commit message
-        run: echo "COMMIT_MSG=$(git log -1 --pretty=%B origin/${{matrix.branch}})" >> $GITHUB_ENV
-
-      - if: |-
-          ${{ steps.detection.outputs.defaultbranch != matrix.branch
-          && steps.find-pull-request.outputs.number == ''
-          && steps.aheadbehind.outputs.ahead != 0
-          && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         id: open-pr
         uses: repo-sync/pull-request@v2.8
         with:
