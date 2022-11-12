@@ -12,6 +12,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  HEAD_REF: ${{ github.head_ref }}
+  BASE_REF: ${{ github.base_ref }}
 jobs:
   info:
     if: ${{ endsWith(github.repository , '-template') }}
@@ -19,8 +22,8 @@ jobs:
     steps:
       - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - run: |
-          echo "Branch: ${{ github.head_ref }}"
-          echo "Base Branch: ${{ github.base_ref }}"
+          echo "Branch: ${{ env.HEAD_REF }}"
+          echo "Base Branch: ${{ env.BASE_REF }}"
           echo "Repo: ${{ github.repository }}"
           echo "Owner: ${{ github.repository_owner }}"
 
