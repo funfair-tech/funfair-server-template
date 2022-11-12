@@ -84,10 +84,10 @@ jobs:
         name: Check Ahead\Behind Status
         run: >
           {
-            git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" \
-              | awk '{ print "behind="$1 }' ; \
-            git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}" \
-              | awk '{ print "ahead="$2 }' ; \
+            git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}"
+              | awk '{ print "behind="$1 }' ;
+            git rev-list --left-right --count "origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}"
+              | awk '{ print "ahead="$2 }' ;
             echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" ;
             echo "COMMIT_MSG=$(git log -1 --pretty=%B "origin/${{matrix.branch}}")"
           } >> "$GITHUB_OUTPUT"
