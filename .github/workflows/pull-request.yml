@@ -45,7 +45,9 @@ jobs:
           path: ./.github/PULL_REQUEST_TEMPLATE.md
 
       - if: ${{ steps.findPr.outputs.number == '' }}
-        run: echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+        run: echo "COMMIT_MSG=$(CM)" >> $GITHUB_ENV
+        env:
+          CM: ${{ git log -1 --pretty=%B }}
 
       - if: ${{ steps.findPr.outputs.number == '' }}
         id: open-pr
