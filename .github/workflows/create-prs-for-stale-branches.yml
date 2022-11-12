@@ -71,7 +71,7 @@ jobs:
         with:
           branch: "${{ matrix.branch }}"
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch }}
-        run: echo "Pull Request ${{ steps.find-pull-request.outputs.number }} ( ${{ steps.find-pull-request.outputs.head-sha }})"
+        run: echo "Pull Request ${{ steps.find-pull-request.outputs.number }} (${{ steps.find-pull-request.outputs.head-sha }})"
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
         id: aheadbehind
         name: Check Ahead\Behind Status
