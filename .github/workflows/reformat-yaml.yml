@@ -31,7 +31,6 @@ jobs:
       - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
-          ref: ${{ github.head_ref }}
           repository: ${{ github.repository }}
       - run: echo "Current Branch ${GITHUB_REF#refs/heads/}"
       - run: echo "GIT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
