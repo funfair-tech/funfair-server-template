@@ -34,7 +34,7 @@ jobs:
           ref: ${{ github.head_ref }}
           repository: ${{ github.repository }}
       - run: echo "Current Branch ${GITHUB_REF#refs/heads/}"
-      - run: echo "GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+      - run: echo "GIT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
       - uses: credfeto/action-yaml-format@v1.3.1
       - uses: stefanzweifel/git-auto-commit-action@v4.15.4
         with:
