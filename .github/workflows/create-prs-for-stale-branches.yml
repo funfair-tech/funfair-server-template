@@ -95,7 +95,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
-      - run: echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{env.MATRIX_BRANCH}})))/(3600*24)))"
+      - run: echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date $(git log -1 --format=@%ct origin/${{env.MATRIX_BRANCH}})))/(3600*24)))"
 
 #            echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" ; \
 #          echo "COMMIT_MSG=$(git log -1 --pretty=%B "origin/${{matrix.branch}}")" ; \
