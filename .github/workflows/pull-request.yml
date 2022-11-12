@@ -44,11 +44,8 @@ jobs:
         with:
           path: ./.github/PULL_REQUEST_TEMPLATE.md
 
-#      - if: ${{ steps.findPr.outputs.number == '' }}
-#        run: echo "COMMIT_MSG=$(CM)" >> $GITHUB_ENV
-#        env:
-#          CM: ${{ github.event.commits[0].message}}
-#      ## git log -1 --pretty=%B
+      - if: ${{ steps.findPr.outputs.number == '' }}
+        run: echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> "$GITHUB_ENV"
 
       - if: ${{ steps.findPr.outputs.number == '' }}
         id: open-pr
@@ -59,7 +56,7 @@ jobs:
           pr_assignee: ${{ github.actor }}      # Comma-separated list (no spaces)
           pr_label: "auto-pr"                   # Comma-separated list (no spaces)
           pr_draft: true                        # Creates pull request as draft
-          pr_title: ${{ github.event.commits[0].message}}
+          pr_title: ${{env.COMMIT_MSG}}
           pr_body: ${{ steps.pr-template.outputs.content }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
