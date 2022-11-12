@@ -3,11 +3,11 @@ name: Standardise YAML format
 on:
   push:
     branches-ignore:
-    - "release/*"
-    - "hotfix/*"
+      - "release/*"
+      - "hotfix/*"
     paths:
-    - '**.yml'
-    - '**.yaml'
+      - '**.yml'
+      - '**.yaml'
 
 concurrency:
   group: ${{ github.ref }}
@@ -19,7 +19,10 @@ permissions:
 jobs:
   standardise-yaml-files:
 
-    if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) && github.actor != 'dependabot[bot]' }}
+    if: ${{ github.event.pull_request.draft == false \
+          && ( !startsWith(github.head_ref, 'release/') \
+          && !startsWith(github.head_ref, 'hotfix/') ) \
+          && github.actor != 'dependabot[bot]' }}
     runs-on: [self-hosted, linux]
 
     steps:

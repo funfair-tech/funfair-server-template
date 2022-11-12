@@ -3,10 +3,10 @@ name: Standardise MSSQL Format [FF-2107]
 on:
   push:
     branches-ignore:
-    - "release/*"
-    - "hotfix/*"
+      - "release/*"
+      - "hotfix/*"
     paths:
-    - '**.sql'
+      - '**.sql'
 
 concurrency:
   group: ${{ github.ref }}
