@@ -12,7 +12,6 @@ on:
 jobs:
   build-matrix:
     runs-on: [self-hosted, linux]
-    # runs-on: ubuntu-latest
 
     permissions:
       contents: read
@@ -29,7 +28,6 @@ jobs:
           fetch-depth: 0
           ref: main
           repository: ${{ github.repository }}
-#          token: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
       - id: set-matrix
         run: echo "branches=$(git branch --remote --format='%(refname:short)' \
@@ -41,7 +39,6 @@ jobs:
   check-branch:
     needs: build-matrix
     runs-on: [self-hosted, linux]
-    # runs-on: ubuntu-latest
 
     permissions:
       contents: write
@@ -58,7 +55,6 @@ jobs:
           fetch-depth: 0
           ref: main
           repository: ${{ github.repository }}
-#          token: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
       - id: detection
         run: |
@@ -67,7 +63,6 @@ jobs:
       # On Default branch
       - if: ${{ steps.detection.outputs.defaultbranch == matrix.branch }}
         run: echo "On Default branch - don't do anything"
-
 
       # On Non-Default branch
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch }}
@@ -78,7 +73,6 @@ jobs:
         id: find-pull-request
         with:
           branch: "${{ matrix.branch }}"
-#          github-token: ${{ secrets.SOURCE_PUSH_TOKEN }}
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch }}
         run: echo "Pull Request ${{ steps.find-pull-request.outputs.number }} ( ${{ steps.find-pull-request.outputs.head-sha }})"
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
