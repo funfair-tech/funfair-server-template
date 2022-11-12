@@ -18,8 +18,7 @@ jobs:
 
     steps:
       - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - with:
-        run: |
+      - run: |
           echo "Repo: ${{ github.repository }}"
           echo "Owner: ${{ github.repository_owner }}"
 
