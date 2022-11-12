@@ -56,11 +56,11 @@ jobs:
         with:
           source_branch: ""                     # If blank, default: triggered branch
           destination_branch: "main"            # If blank, default: master
-          pr_assignee: "${{ github.actor }}"    # Comma-separated list (no spaces)
+          pr_assignee: ${{ github.actor }}      # Comma-separated list (no spaces)
           pr_label: "auto-pr"                   # Comma-separated list (no spaces)
           pr_draft: true                        # Creates pull request as draft
-          pr_title: "${{ github.event.commits[0].message}}"
-          pr_body: "${{ steps.pr-template.outputs.content }}"
+          pr_title: ${{ github.event.commits[0].message}}
+          pr_body: ${{ steps.pr-template.outputs.content }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - if: ${{ steps.findPr.outputs.number == '' }}
