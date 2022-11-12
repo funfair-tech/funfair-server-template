@@ -86,8 +86,8 @@ jobs:
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
-        run:
-          echo "LAST_UPDATE=$(git log -1 --format=@%ct origin/${{env.BRANCH}})" >> "$GITHUB_ENV"
+        id: lastupdate
+        run: echo "time=$(git log -1 --format=@%ct origin/${{env.BRANCH}})" >> "$GITHUB_OUTPUT"
 
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
         id: aheadbehind
@@ -99,16 +99,12 @@ jobs:
             git rev-list --left-right --count "origin/${{env.DEFAULT_BRANCH}}...origin/${{env.BRANCH}}" \
               | awk '{ print "ahead="$2 }' ; \
             echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date ${{env.LAST_UPDATE}}))/(3600*24)))" ; \
+            echo "COMMIT_MSG=$(git log -1 --pretty=%B "${{env.ORIGIN_DEFAULT_BRANCH}}")" ; \
           } >> "$GITHUB_OUTPUT"
         env:
           DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
-      - run: echo "COMMIT_MSG=$(git log -1 --pretty=%B "${{env.ORIGIN_DEFAULT_BRANCH}}")"
-        env:
-          DEFAULT_BRANCH: ${{ steps.detection.outputs.defaultbranch }}
           ORIGIN_DEFAULT_BRANCH: origin/${{ steps.detection.outputs.defaultbranch }}
-
-#            echo "dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))" ; \
-#          echo "COMMIT_MSG=$(git log -1 --pretty=%B "origin/${{matrix.branch}}")" ; \
+          LAST_UPDATE: ${{ steps.lastupdate.outputs.time }}
 
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
       - if: |-
