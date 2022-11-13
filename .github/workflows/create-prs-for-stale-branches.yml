@@ -9,6 +9,10 @@ on:
   schedule:
     - cron: "0 1 * * *"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build-matrix:
     runs-on: [self-hosted, linux]
