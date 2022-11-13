@@ -76,7 +76,7 @@ jobs:
           fallback: 6.0.*
       - uses: actions/setup-dotnet@v3.0.3
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
           DOTNET_INSTALL_DIR: ${{ github.workspace }}/.dotnet
           DOTNET_NOLOGO: true
           DOTNET_CLI_TELEMETRY_OPTOUT: false
