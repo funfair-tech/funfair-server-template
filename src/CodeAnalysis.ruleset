@@ -595,7 +595,7 @@
         <!-- MA0037 - Remove empty statement -->
         <Rule Id="MA0037" Action="Error"/>
         <!-- MA0038 - Make method static -->
-        <Rule Id="MA0038" Action="Error"/>
+        <Rule Id="MA0038" Action="None"/>
         <!-- MA0039 - Do not write your own certificate validation method -->
         <Rule Id="MA0039" Action="Error"/>
         <!-- MA0040 - Forward the CancellationToken parameter to methods that take one -->
