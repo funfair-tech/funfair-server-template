@@ -527,7 +527,7 @@
         <!-- MA0002 - IEqualityComparer<string> or IComparer<string> is missing	warning	-->
         <Rule Id="MA0002" Action="Error"/>
         <!-- MA0003	-Add parameter name to improve readability -->
-        <Rule Id="MA0003" Action="Error"/>
+        <Rule Id="MA0003" Action="None"/>
         <!-- MA0004 - Use ConfigureAwait(false) as the current SynchronizationContext is not needed -->
         <Rule Id="MA0004" Action="None"/>
         <!-- MA0005 - Use Array.Empty<T>() -->
