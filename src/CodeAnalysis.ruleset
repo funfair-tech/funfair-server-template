@@ -733,7 +733,7 @@
         <!-- MA0106 - Avoid closure by using an overload with the 'factoryArgument' parameter -->
         <Rule Id="MA0106" Action="Error"/>
         <!-- MA0107 - Do not use culture-sensitive object.ToString -->
-        <Rule Id="MA0107" Action="Error"/>
+        <Rule Id="MA0107" Action="None"/>
         <!-- MA0108 - Remove redundant argument value -->
         <Rule Id="MA0108" Action="Error"/>
         <!-- MA0109 - Consider adding an overload with a Span<T> or Memory<T> -->
