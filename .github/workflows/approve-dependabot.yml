@@ -58,6 +58,12 @@ jobs:
       with:
         github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
     - if: github.repository_owner == 'funfair-tech'
-      uses: "pascalgn/automerge-action@v0.15.5"
-      with:
+      uses: pascalgn/automerge-action@v0.15.5
+      env:
         GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        MERGE_METHOD: merge
+        MERGE_COMMIT_MESSAGE: pull-request-title-and-description
+        MERGE_REQUIRED_APPROVALS: 1
+        MERGE_DELETE_BRANCH: true
+        MERGE_FORKS: false
+
