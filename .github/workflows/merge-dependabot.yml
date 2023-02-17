@@ -47,3 +47,4 @@ jobs:
         MERGE_DELETE_BRANCH: true
         MERGE_FORKS: false
         MERGE_LABELS: github-actions
+        UPDATE_RETRIES: 10
