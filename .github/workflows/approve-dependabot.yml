@@ -36,11 +36,7 @@ jobs:
 
     steps:
     - run: echo "${{github.repository_owner}}"
-    - if: github.repository_owner == 'funfair'
-      uses: "pascalgn/automerge-action@v0.15.5"
-      with:
-        GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
-    - if: github.repository_owner != 'funfair'
+    - if: github.repository_owner != 'funfair-tech'
       uses: alexwilson/enable-github-automerge-action@1.0.0
       with:
         github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
@@ -57,6 +53,11 @@ jobs:
       pull-requests: write
 
     steps:
+    - run: echo "${{github.repository_owner}}"
     - uses: hmarr/auto-approve-action@v3
       with:
         github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
+    - if: github.repository_owner == 'funfair-tech'
+      uses: "pascalgn/automerge-action@v0.15.5"
+      with:
+        GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
