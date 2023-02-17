@@ -35,11 +35,12 @@ jobs:
     # Specifically check that dependabot (or another trusted party) created this pull-request, and that it has been labelled correctly.
 
     steps:
-    - if: ${{github.repository_owner == 'funfair'}}
+    - run: echo "${{github.repository_owner}}"
+    - if: github.repository_owner == 'funfair'
       uses: "pascalgn/automerge-action@v0.15.5"
       with:
         GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
-    - if: ${{github.repository_owner != 'funfair'}}
+    - if: github.repository_owner != 'funfair'
       uses: alexwilson/enable-github-automerge-action@1.0.0
       with:
         github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
