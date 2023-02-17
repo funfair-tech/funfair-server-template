@@ -21,10 +21,6 @@ on:
       - completed
   status: {}
 
-concurrency:
-  group: ${{github.workflow}}-${{github.ref}}
-  cancel-in-progress: false
-
 jobs:
   enable-auto-merge:
     if: |-
