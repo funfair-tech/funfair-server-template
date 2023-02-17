@@ -16,13 +16,11 @@ concurrency:
   group: ${{github.workflow}}-${{github.ref}}
   cancel-in-progress: false
 
-env:
-  HEAD_REF: ${{github.head_ref}}
-  BASE_REF: ${{github.base_ref}}
-
 jobs:
   enable-auto-merge:
-    if: ${{endsWith(github.repository , '-template') && startsWith(env.HEAD_REF, 'dependabot/github_actions/')}}
+    if: |-
+      ${{endsWith(github.repository, '-template') &&
+      startsWith(github.head_ref, 'dependabot/github_actions/')}}
     runs-on: [self-hosted, linux]
 
     permissions:
@@ -38,7 +36,9 @@ jobs:
         merge-method: "MERGE"
 
   auto_approve_dependabot:
-    if: ${{endsWith(github.repository , '-template') && startsWith(env.HEAD_REF, 'dependabot/github_actions/')}}
+    if: |-
+      ${{endsWith(github.repository, '-template') &&
+      startsWith(github.head_ref, 'dependabot/github_actions/')}}
     runs-on: [self-hosted, linux]
 
     permissions:
