@@ -18,8 +18,8 @@ concurrency:
 
 jobs:
   enable-auto-merge:
-    if: ${{endsWith(github.repository , '-template') && startsWith(github.ref, 'dependabot/github_actions/')}}
-    runs-on: ubuntu-latest
+    if: ${{endsWith(github.repository , '-template') && startsWith(env.HEAD_REF, 'dependabot/github_actions/')}}
+    runs-on: [self-hosted, linux]
 
     permissions:
       contents: write
@@ -34,8 +34,8 @@ jobs:
         merge-method: "MERGE"
 
   auto_approve_dependabot:
-    if: ${{endsWith(github.repository , '-template') && startsWith(github.ref, 'dependabot/github_actions/')}}
-    runs-on: ubuntu-latest
+    if: ${{endsWith(github.repository , '-template') && startsWith(env.HEAD_REF, 'dependabot/github_actions/')}}
+    runs-on: [self-hosted, linux]
 
     permissions:
       contents: write
