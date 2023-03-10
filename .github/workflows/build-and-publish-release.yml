@@ -41,7 +41,7 @@ jobs:
     steps:
       - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - run: |
-          echo "OCTOPUS_DEPLOY_PACKAGE: ${{envOCTOPUS_DEPLOY_PACKAGE}}"
+          echo "OCTOPUS_DEPLOY_PACKAGE: ${{env.OCTOPUS_DEPLOY_PACKAGE}}"
           echo "OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}"
           echo "OCTOPUS_PROJECT: ${{env.OCTOPUS_PROJECT}}"
           echo "OCTOPUS_CHANNEL: ${{env.OCTOPUS_CHANNEL}}"
