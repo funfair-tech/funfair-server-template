@@ -246,7 +246,7 @@ jobs:
         run: npm run build
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
-        name: Build Package
+        name: "NPM: Build Package"
         run: dotnet buildcontentpackage -SourcePath "${{github.workspace}}/src/dist" -targetPath "${{github.workspace}}" -version "${{env.BUILD_VERSION}}" -WarningAsErrors false -Wallet "${{github.workspace}}/Wallet.json" -WalletPassword "${{secrets.CONTENT_PACKAGE_WALLET_PASSWORD}}"
 
       ## NUGET PACKAGES
@@ -322,7 +322,7 @@ jobs:
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' && env.OCTOPUS_DEPLOY_PACKAGE != ''}}
         name: "Dotnet: Push package to Octopus (NPM NUPKG ONLY)"
-        run: octopus package upload --no-prompt --overwrite-mode=ignore --package="${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}.${{env.BUILD_VERSION}}.nupkg"
+        run: octopus package upload --no-prompt --overwrite-mode=ignore --package="${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-${{env.BUILD_VERSION}}.nupkg"
         env:
           OCTOPUS_URL: "${{env.OCTOPUS_SERVER}}"
           OCTOPUS_API_KEY: "${{env.OCTOPUS_API_KEY}}"
