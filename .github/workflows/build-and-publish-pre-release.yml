@@ -143,10 +143,10 @@ jobs:
       - if: ${{steps.build_tools.outputs.BUILD_ENV == 'true'}}
         name: Install Changelog Tool
         run: dotnet tool install --local Credfeto.Changelog.Cmd
-      - if: ${{steps.build_tools.outputs.NPM_EXIST == 'true' && steps.build_tools.outputs.NPM_SIGNING_EXIST == 'true' }}
+      - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' }}
         name: Install Package Builder
         run: dotnet tool install --local FunFair.Content.Packager.Cmd
-      - if: ${{steps.build_tools.outputs.NPM_EXIST == 'true' && steps.build_tools.outputs.NPM_SIGNING_EXIST == 'true' }}
+      - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' }}
         name: Install Package Store Signer
         run: dotnet tool install --local FunFair.Content.PackageSigner.Cmd
       - if: ${{steps.build_tools.outputs.BUILD_ENV == 'true' && env.OCTOPUS_DEPLOY_PACKAGE != ''}}
@@ -245,7 +245,7 @@ jobs:
         working-directory: ${{github.workspace}}/src
         run: npm run build
 
-      - if: ${{steps.build_tools.outputs.NPM_EXIST == 'true' && steps.build_tools.outputs.NPM_SIGNING_EXIST == 'true'}}
+      - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
         name: Build Package
         run: dotnet buildcontentpackage -SourcePath ${{github.workspace}}/src/dist -targetPath ${{github.workspace}}/dist-pkg -version %system.build.number% -WarningAsErrors false -Wallet ${{github.workspace}}/Wallet.json -WalletPassword "${{secrets.CONTENT_PACKAGE_WALLET_PASSWORD}}""
 
