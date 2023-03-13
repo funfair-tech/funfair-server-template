@@ -247,7 +247,7 @@ jobs:
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
         name: Build Package
-        run: dotnet buildcontentpackage -SourcePath ${{github.workspace}}/src/dist -targetPath ${{github.workspace}} -version %system.build.number% -WarningAsErrors false -Wallet ${{github.workspace}}/Wallet.json -WalletPassword "${{secrets.CONTENT_PACKAGE_WALLET_PASSWORD}}""
+        run: dotnet buildcontentpackage -SourcePath "${{github.workspace}}/src/dist" -targetPath "${{github.workspace}}"" -version "${{env.BUILD_VERSION}}" -WarningAsErrors false -Wallet ${{github.workspace}}/Wallet.json -WalletPassword "${{secrets.CONTENT_PACKAGE_WALLET_PASSWORD}}"
 
       ## NUGET PACKAGES
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true' && env.NUGET_API_KEY != '' && env.NUGET_PACK == 'true'}}
