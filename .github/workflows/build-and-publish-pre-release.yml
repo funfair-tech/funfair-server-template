@@ -152,6 +152,10 @@ jobs:
           restore-keys: |
             ${{runner.os}}-nuget-
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}
+        name: Stop dotnet build server for clean build
+        working-directory: ./src
+        run: dotnet build-server shutdown && echo "Build server closed" || echo "Failed to shutdown build server"
+      - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}
         name: Restore dotnet packages
         working-directory: ./src
         run: dotnet restore
