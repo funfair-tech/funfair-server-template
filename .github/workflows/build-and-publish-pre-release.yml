@@ -168,15 +168,15 @@ jobs:
             ${{runner.os}}-nuget-
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}
         name: Stop dotnet build server for clean build
-        working-directory: ./src
+        working-directory: ${{github.workspace}}/src
         run: dotnet build-server shutdown && echo "Build server closed" || echo "Failed to shutdown build server"
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}
         name: Restore dotnet packages
-        working-directory: ./src
+        working-directory: ${{github.workspace}}/src
         run: dotnet restore
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}
         name: Build with dotnet
-        working-directory: ./src
+        working-directory: ${{github.workspace}}/src
         run: dotnet build --no-restore --configuration Release "/p:Version=${{env.BUILD_VERSION}}"
         env:
           ReleaseNotes: ${{steps.release-notes.outputs.content}}
@@ -184,7 +184,7 @@ jobs:
       ## RUN TESTS
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}
         name: Test with dotnet
-        working-directory: ./src
+        working-directory: ${{github.workspace}}/src
         run: dotnet test --no-build --no-restore -noConsoleLogger --configuration Release "/p:Version=${{env.BUILD_VERSION}}" --filter FullyQualifiedName\!~Integration --logger:"trx;LogFilePrefix=testResults" --results-directory ../test-results
         env:
           ReleaseNotes: ${{steps.release-notes.outputs.content}}
@@ -220,23 +220,24 @@ jobs:
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true'}}
         name: Install dependencies
+        working-directory: ${{github.workspace}}/src
         run: npm ci --ignore-scripts
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true'}}
         name: Test NPM
         shell: bash
-        working-directory: .
+        working-directory: ${{github.workspace}}/src
         run: npm run test
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true'}}
         name: Build NPM
-        working-directory: .
+        working-directory: ${{github.workspace}}/src
         run: npm run build
 
       ## NUGET PACKAGES
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true' && env.NUGET_API_KEY != '' && env.NUGET_PACK == 'true'}}
         name: Pack tool
-        working-directory: ./src
+        working-directory: ${{github.workspace}}/src
         run: dotnet pack --configuration Release "/p:Version=${{env.BUILD_VERSION}}" --no-restore
         env:
           ReleaseNotes: ${{steps.release-notes.outputs.content}}
@@ -246,7 +247,7 @@ jobs:
           shopt -s globstar
           [ ! -d ../dist ] && mkdir ../dist
           cp **/*.nupkg ../dist
-        working-directory: ./src
+        working-directory: ${{github.workspace}}/src        
         shell: bash
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true' && env.NUGET_API_KEY != '' && env.NUGET_PACK == 'true'}}
         name: Publish Packages to Nuget
@@ -281,7 +282,7 @@ jobs:
 
       - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true' && steps.check_files.outputs.SQL_EXIST == 'true' && env.OCTOPUS_DEPLOY_PACKAGE != ''}}
         name: Zip DB for Octopus
-        working-directory: ./db
+        working-directory: ${{github.workspace}}/db
         run: |
           mkdir -p ../package/db/state
           cp -R -- * ../package/db/state
