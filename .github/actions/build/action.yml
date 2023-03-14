@@ -547,7 +547,7 @@ runs:
   - if: ${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true' && steps.check_files.outputs.SQL_EXIST != 'true' && inputs.OCTOPUS_DEPLOY_PACKAGE != ''}}
     name: "Dotnet: Push package to Octopus (EXE ONLY)"
     shell: bash
-    run: octopus package upload --no-prompt --overwrite-mode=ignore --package="${{eninputsv.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-win-x64.${{env.BUILD_VERSION}}.zip" --package="${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-linux-x64.${{env.BUILD_VERSION}}.zip" --package="${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-linux-arm64.${{env.BUILD_VERSION}}.zip"
+    run: octopus package upload --no-prompt --overwrite-mode=ignore --package="${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-win-x64.${{env.BUILD_VERSION}}.zip" --package="${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-linux-x64.${{env.BUILD_VERSION}}.zip" --package="${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-linux-arm64.${{env.BUILD_VERSION}}.zip"
     env:
       OCTOPUS_URL: "${{inputs.OCTOPUS_SERVER}}"
       OCTOPUS_API_KEY: "${{inputs.OCTOPUS_API_KEY}}"
@@ -592,7 +592,7 @@ runs:
   - if: ${{(steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true') || (steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true') && inputs.OCTOPUS_DEPLOY_PACKAGE != '' && inputs.OCTOPUS_CHANNEL != '' && env.GIT_BRANCH == 'refs/heads/main'}}
     shell: bash
     name: Deploy Octopus Release
-    run: octopus release deploy --no-prompt --project="${{inputs.OCTOPUS_PROJECT}}" --version="${{env.BUILD_VERSION}}" --environment="${{einputsnv.OCTOPUS_DEPLOY_TO}}"
+    run: octopus release deploy --no-prompt --project="${{inputs.OCTOPUS_PROJECT}}" --version="${{env.BUILD_VERSION}}" --environment="${{inputs.OCTOPUS_DEPLOY_TO}}"
     env:
       OCTOPUS_URL: "${{inputs.OCTOPUS_SERVER}}"
       OCTOPUS_API_KEY: "${{inputs.OCTOPUS_API_KEY}}"
