@@ -20,6 +20,7 @@ runs:
     uses: actions/setup-dotnet@v3
     env:
       GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
+      DOTNET_INSTALL_DIR: ${{github.workspace}}/.dotnet
     with:
       dotnet-version: |
           6.0.406
