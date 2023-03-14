@@ -2,6 +2,17 @@
 name: 'Build and deploy'
 description: 'Builds and deploys the source'
 inputs:
+  # NPM
+  NPM_CONTENT_PACKAGE_WALLET_PASSWORD:
+    description: 'Password to unlock /Wallet.json'
+    required: false
+  NPM_PACKAGE_STORE_SIGNING_WALLET:
+    description: 'Store signing wallet.json'
+    required: false
+  NPM_PACKAGE_STORE_SIGNING_WALLET_PASSWORD:
+    description: 'Password to unlock NPM_PACKAGE_STORE_SIGNING_WALLET'
+    required: false
+
   # NUGET
   NUGET_ADDITIONAL_RESTORE_FEED:
     description: 'Any additional nuget feed to download packages from'
@@ -43,6 +54,9 @@ inputs:
     required: false
 
   # RELEASE
+  GITHUB_TOKEN:
+    description: 'Github Token'
+    required: true
   CREATE_RELEASE:
     description: 'Whether to create a release in github'
     required: true
@@ -113,7 +127,7 @@ runs:
     name: Setup .NET Core
     uses: actions/setup-dotnet@v3
     env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
     with:
       dotnet-version: |
           6.0.*
@@ -123,7 +137,7 @@ runs:
     name: Setup .NET Core
     uses: actions/setup-dotnet@v3
     env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
     with:
       dotnet-version: |
           7.0.*
@@ -285,7 +299,7 @@ runs:
   - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
     name: "NPM: Build Package"
     shell: bash
-    run: dotnet buildcontentpackage -SourcePath "${{github.workspace}}/src/dist" -targetPath "${{github.workspace}}" -version "${{env.BUILD_VERSION}}" -WarningAsErrors false -Wallet "${{github.workspace}}/Wallet.json" -WalletPassword "${{secrets.CONTENT_PACKAGE_WALLET_PASSWORD}}"
+    run: dotnet buildcontentpackage -SourcePath "${{github.workspace}}/src/dist" -targetPath "${{github.workspace}}" -version "${{env.BUILD_VERSION}}" -WarningAsErrors false -Wallet "${{github.workspace}}/Wallet.json" -WalletPassword "${{inputs.NPM_CONTENT_PACKAGE_WALLET_PASSWORD}}"
 
 
   - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
@@ -301,13 +315,13 @@ runs:
     uses: ttd2089/secret-file-action@1.0.0
     id: store-siging-wallet
     with:
-      secret: ${{secrets.PACKAGE_STORE_SIGNING_WALLET}}
+      secret: ${{inputs.NPM_PACKAGE_STORE_SIGNING_WALLET}}
       b64-decode: false
 
   - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
     name: "NPM: Store Sign Package"
     shell: bash
-    run: dotnet signcontentpackage -Package "${{github.workspace}}/${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-${{env.BUILD_VERSION}}.nupkg" -WarningAsErrors true -Wallet false -Wallet "${{steps.store-siging-wallet.outputs.file}}" -WalletPassword "${{secrets.PACKAGE_STORE_SIGNING_WALLET_PASSWORD}}"
+    run: dotnet signcontentpackage -Package "${{github.workspace}}/${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-${{env.BUILD_VERSION}}.nupkg" -WarningAsErrors true -Wallet false -Wallet "${{steps.store-siging-wallet.outputs.file}}" -WalletPassword "${{inputs.NPM_PACKAGE_STORE_SIGNING_WALLET_PASSWORD}}"
 
   ############################################################################################################
   # DOTNET PUSH TO NUGET
@@ -459,4 +473,4 @@ runs:
       draft: false
       prerelease: false
       generateReleaseNotes: true
-      token: ${{secrets.GITHUB_TOKEN}}
+      token: ${{inputs.GITHUB_TOKEN}}

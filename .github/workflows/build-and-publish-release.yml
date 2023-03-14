@@ -33,6 +33,9 @@ jobs:
       - name: Build and deploy
         uses: ./.github/actions/build
         with:
+          NPM_CONTENT_PACKAGE_WALLET_PASSWORD: ${{secrets.CONTENT_PACKAGE_WALLET_PASSWORD}}
+          NPM_PACKAGE_STORE_SIGNING_WALLET: ${{secrets.PACKAGE_STORE_SIGNING_WALLET}}
+          NPM_PACKAGE_STORE_SIGNING_WALLET_PASSWORD: ${{secrets.PACKAGE_STORE_SIGNING_WALLET_PASSWORD}}
           NUGET_ADDITIONAL_RESTORE_FEED: ${{secrets.NUGET_ADDITIONAL_RESTORE_FEED}}
           NUGET_PACK: ${{vars.NUGET_PACK}}
           NUGET_FEED: ${{secrets.NUGET_FEED}}
@@ -45,4 +48,5 @@ jobs:
           OCTOPUS_API_KEY: ${{secrets.OCTOPUS_API_KEY}}
           OCTOPUS_DEPLOY_PACKAGE: ${{vars.OCTOPUS_DEPLOY_PACKAGE}}
           OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{vars.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           CREATE_RELEASE: true
