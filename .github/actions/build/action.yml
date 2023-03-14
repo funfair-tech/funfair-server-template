@@ -3,6 +3,9 @@ name: 'Build and deploy'
 description: 'Builds and deploys the source'
 inputs:
   # NPM
+  NPM_PRODUCTION_PACKAGER_VERSION:
+    description: 'Version of the NPM output nuget packager to use'
+    required: false
   NPM_CONTENT_PACKAGE_WALLET_PASSWORD:
     description: 'Password to unlock /Wallet.json'
     required: false
@@ -201,7 +204,7 @@ runs:
   - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' }}
     name: Install Package Builder
     shell: bash
-    run: dotnet tool install --local FunFair.Content.Packager.Cmd --version ${{vars.PRODUCTION_PACKAGER_VERSION}}
+    run: dotnet tool install --local FunFair.Content.Packager.Cmd --version ${{inputs.NPM_PRODUCTION_PACKAGER_VERSION}}
     env:
       DOTNET_NOLOGO: true
       DOTNET_PRINT_TELEMETRY_MESSAGE: false
@@ -212,7 +215,7 @@ runs:
   - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' }}
     name: Install Package Store Signer
     shell: bash
-    run: dotnet tool install --local FunFair.Content.PackageSigner.Cmd --version ${{vars.PRODUCTION_PACKAGER_VERSION}}
+    run: dotnet tool install --local FunFair.Content.PackageSigner.Cmd --version ${{inputs.NPM_PRODUCTION_PACKAGER_VERSION}}
     env:
       DOTNET_NOLOGO: true
       DOTNET_PRINT_TELEMETRY_MESSAGE: false
