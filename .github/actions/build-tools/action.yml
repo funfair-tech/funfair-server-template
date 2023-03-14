@@ -28,7 +28,6 @@ runs:
 
   - name: Enable dotnet tools
     shell: bash
-    # TODO: if there's already a tool-manifest, don't do this, but do a restore
     run: |
       [ -f .config/dotnet-tools.json ] && dotnet tool restore --local
       [ ! -f .config/dotnet-tools.json ] && dotnet new tool-manifest
