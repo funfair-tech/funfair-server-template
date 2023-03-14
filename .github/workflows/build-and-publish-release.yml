@@ -5,7 +5,7 @@ on:
     paths:
       - 'db/**/*'
       - 'src/**/*'
-      - '.github/actions/build/**/*.yml'
+      - '.github/actions/**/*'
       - '.github/workflows/build-and-publish-release.yml'
     branches:
       - 'release/*'
