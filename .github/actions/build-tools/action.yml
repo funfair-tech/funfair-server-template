@@ -30,28 +30,28 @@ runs:
     # TODO: if there's already a tool-manifest, don't do this, but do a restore
     run: dotnet new tool-manifest
     env:
-      DOTNET_NOLOGO: true
-      DOTNET_PRINT_TELEMETRY_MESSAGE: false
-      DOTNET_ReadyToRun: 0
-      DOTNET_TC_QuickJitForLoops: 1
-      DOTNET_TieredPGO: 1
+      DOTNET_NOLOGO: "true"
+      DOTNET_PRINT_TELEMETRY_MESSAGE: "false"
+      DOTNET_ReadyToRun: "0"
+      DOTNET_TC_QuickJitForLoops: "1"
+      DOTNET_TieredPGO: "1"
 
   - name: Install Build Version Tool
     shell: bash
     run: dotnet tool install --local FunFair.BuildVersion
     env:
-      DOTNET_NOLOGO: true
-      DOTNET_PRINT_TELEMETRY_MESSAGE: false
-      DOTNET_ReadyToRun: 0
-      DOTNET_TC_QuickJitForLoops: 1
-      DOTNET_TieredPGO: 1
+      DOTNET_NOLOGO: "true"
+      DOTNET_PRINT_TELEMETRY_MESSAGE: "false"
+      DOTNET_ReadyToRun: "0"
+      DOTNET_TC_QuickJitForLoops: "1"
+      DOTNET_TieredPGO: "1"
 
   - name: Install Changelog Tool
     shell: bash
     run: dotnet tool install --local Credfeto.Changelog.Cmd
     env:
-      DOTNET_NOLOGO: true
-      DOTNET_PRINT_TELEMETRY_MESSAGE: false
-      DOTNET_ReadyToRun: 0
-      DOTNET_TC_QuickJitForLoops: 1
-      DOTNET_TieredPGO: 1
+      DOTNET_NOLOGO: "true"
+      DOTNET_PRINT_TELEMETRY_MESSAGE: "false"
+      DOTNET_ReadyToRun: "0"
+      DOTNET_TC_QuickJitForLoops: "1"
+      DOTNET_TieredPGO: "1"
