@@ -253,7 +253,7 @@ jobs:
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
         name: "NPM: Check Package"
         run: |
-            [ ! -f "${{github.workspace}}/${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-${{env.BUILD_VERSION}}.nupkg" ] && echo "Not found: ${{github.workspace}}/${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-${{env.BUILD_VERSION}}.nupkg"
+            ls -la "${{github.workspace}}"
             [ ! -f "${{github.workspace}}/${{env.OCTOPUS_DEPLOY_PACKAGE_ZIP}}-${{env.BUILD_VERSION}}.nupkg" ] && exit -1
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
