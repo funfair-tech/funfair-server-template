@@ -136,7 +136,7 @@ runs:
           6.0.*
           ${{env.DOTNET_VERSION}}
 
-  - if: ${{steps.check_files.outputs.CSPROJ_EXIST != 'true' && steps.check_files.outputs.SLN_EXIST != 'true' && steps.check_files.outputs.NPM_EXIST == 'true'}}
+  - if: ${{steps.check_files.outputs.CSPROJ_EXIST != 'true' && steps.check_files.outputs.SLN_EXIST != 'true'}}
     name: Setup .NET Core
     uses: actions/setup-dotnet@v3
     env:
