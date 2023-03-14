@@ -109,7 +109,7 @@ runs:
   # ############################################################################################################
   - if: ${{inputs.BUILD_SQL == 'true'}}
     name: "SQL: Build"
-    uses: ./.github/actions/dotnet
+    uses: ./.github/actions/sql
     with:
       BUILD_VERSION: ${{env.BUILD_VERSION}}
       OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
