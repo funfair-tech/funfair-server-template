@@ -23,7 +23,7 @@ runs:
       DOTNET_INSTALL_DIR: ${{github.workspace}}/.dotnet
     with:
       dotnet-version: |
-          6.0.406
+          6.0.*
           ${{env.DOTNET_VERSION}}
 
   - name: Enable dotnet tools
