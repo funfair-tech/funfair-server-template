@@ -251,7 +251,7 @@ jobs:
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
         name: "NPM: Create Store Signer"
-        run: echo "${{secrets.PACKAGE_STORE_SIGNING_WALLET}}" >> "${{github.workspace}}/.StoreSigningWallet.json"
+        run: echo ${{secrets.PACKAGE_STORE_SIGNING_WALLET}} > "${{github.workspace}}/.StoreSigningWallet.json"
 
       - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'}}
         name: "NPM: Store Sign Package"
