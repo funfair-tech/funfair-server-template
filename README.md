@@ -5,8 +5,8 @@ Template repository for C# / server code
 
 | Branch  | Status                                                                                                                                                                                                                                                                    |
 |---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| main    | [![Build: Pre-Release](https://github.com/credfeto/cs-template/actions/workflows/build-and-publish-pre-release.yml/badge.svg)](https://github.com/credfeto/cs-template/actions/workflows/build-and-publish-pre-release.yml) |
-| release | [![Build: Release](https://github.com/credfeto/cs-template/actions/workflows/build-and-publish-release.yml/badge.svg)](https://github.com/credfeto/cs-template/actions/workflows/build-and-publish-release.yml)             |
+| main    | [![Build: Pre-Release](https://github.com/funfair-tech/funfair-server-template/actions/workflows/build-and-publish-pre-release.yml/badge.svg)](https://github.com/funfair-tech/funfair-server-template/actions/workflows/build-and-publish-pre-release.yml) |
+| release | [![Build: Release](https://github.com/funfair-tech/funfair-server-template/actions/workflows/build-and-publish-release.yml/badge.svg)](https://github.com/funfair-tech/funfair-server-template/actions/workflows/build-and-publish-release.yml)             |
 
 ## Changelog
 
