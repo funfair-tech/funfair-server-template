@@ -138,8 +138,8 @@ runs:
     uses: ./.github/actions/sql
     with:
       BUILD_VERSION: ${{env.BUILD_VERSION}}
-      OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-      OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
+      OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
+      OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
 
   ############################################################################################################
   # Publish ready for deploy to octopus
