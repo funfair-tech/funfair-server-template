@@ -24,6 +24,7 @@ jobs:
     steps:
       - name: Initialise Workspace
         run: |
+          echo "Setting owner of $GITHUB_WORKSPACE to $USER"
           sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
           [[ ! -d "${{env.TEMP_WORK_DIR}}" ]] && mkdir -p "${{env.TEMP_WORK_DIR}}"
 
