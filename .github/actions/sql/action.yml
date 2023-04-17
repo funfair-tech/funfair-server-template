@@ -49,7 +49,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - name: "SQL: Get SQL Compare"
     shell: bash
