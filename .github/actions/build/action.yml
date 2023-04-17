@@ -144,7 +144,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{steps.build_tools.outputs.BUILD_ENV == 'true'}}
     name: Set Define Build Version
@@ -197,7 +196,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' }}
     name: Install Package Store Signer
@@ -212,7 +210,6 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{steps.build_tools.outputs.BUILD_ENV == 'true' && inputs.OCTOPUS_DEPLOY_PACKAGE != ''}}
     name: Install Octopus Deploy CLI
