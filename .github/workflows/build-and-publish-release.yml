@@ -50,6 +50,6 @@ jobs:
           OCTOPUS_API_KEY: ${{secrets.OCTOPUS_API_KEY}}
           OCTOPUS_DEPLOY_PACKAGE: ${{vars.OCTOPUS_DEPLOY_PACKAGE}}
           OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{vars.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-          TEMP_WORK_DIR: ${{github.workspace}/.tmp
-          GITHUB_TOKEN: ${{env.TEMP_WORK_DIR}}
+          TEMP_WORK_DIR: ${{env.TEMP_WORK_DIR}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           CREATE_RELEASE: true
