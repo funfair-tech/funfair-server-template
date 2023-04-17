@@ -28,12 +28,14 @@ jobs:
 
     runs-on: [self-hosted, linux]
 
+    env:
+      TEMP_WORK_DIR: ${{github.workspace}}/.tmp
+
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - name: Initialise Workspace
         run: |
           sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-          mkdir -p "$GITHUB_WORKSPACE/.tmp"
+          [[ ! -d "${{env.TEMP_WORK_DIR}}" ]] && mkdir -p "${{env.TEMP_WORK_DIR}}"
 
       - uses: actions/checkout@v3
         with:
@@ -58,5 +60,6 @@ jobs:
           OCTOPUS_API_KEY: ${{secrets.OCTOPUS_API_KEY}}
           OCTOPUS_DEPLOY_PACKAGE: ${{vars.OCTOPUS_DEPLOY_PACKAGE}}
           OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{vars.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          TEMP_WORK_DIR: ${{github.workspace}}/.tmp
+          GITHUB_TOKEN: ${{env.TEMP_WORK_DIR}}
           CREATE_RELEASE: false

@@ -64,6 +64,10 @@ inputs:
     description: 'Whether to create a release in github'
     required: true
 
+  # BUILD
+  TEMP_WORK_DIR:
+    description: 'Temp path'
+    required: true
 
 runs:
   using: "composite"
@@ -138,7 +142,7 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "$GITHUB_WORKSPACE/.tmp"
+      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{steps.build_tools.outputs.BUILD_ENV == 'true'}}
     name: Set Define Build Version
@@ -153,7 +157,7 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "$GITHUB_WORKSPACE/.tmp"
+      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - name: Deploy check - Default
     shell: bash
@@ -191,7 +195,7 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "$GITHUB_WORKSPACE/.tmp"
+      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{steps.check_files.outputs.NPM_EXIST == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' }}
     name: Install Package Store Signer
@@ -206,7 +210,7 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "$GITHUB_WORKSPACE/.tmp"
+      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{steps.build_tools.outputs.BUILD_ENV == 'true' && inputs.OCTOPUS_DEPLOY_PACKAGE != ''}}
     name: Install Octopus Deploy CLI
@@ -227,7 +231,7 @@ runs:
       DOTNET_ReadyToRun: "0"
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
-      TMPDIR: "$GITHUB_WORKSPACE/.tmp"
+      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   - if: ${{steps.build_tools.outputs.BUILD_ENV == 'true'}}
     id: release-notes
@@ -250,7 +254,7 @@ runs:
       NUGET_API_KEY: ${{inputs.NUGET_API_KEY}}
       OCTOPUS_DEPLOY_PACKAGE: ${{inputs.OCTOPUS_DEPLOY_PACKAGE}}
       OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
-      TMPDIR: "$GITHUB_WORKSPACE/.tmp"
+      TMPDIR: "${{inputs.TEMP_WORK_DIR}}"
 
   ############################################################################################################
   # NPM BUILD
