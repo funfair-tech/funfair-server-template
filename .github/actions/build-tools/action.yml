@@ -38,16 +38,18 @@ runs:
           ${{env.DOTNET_VERSION}}
       dotnet-quality: ga
 
-  - if: ${{inputs.NUGET_ADDITIONAL_RESTORE_FEED != ''}}
-    name: "Dotnet: Remove optional nuget feed if it exists"
+  - name: "Dotnet: Remove optional nuget feed if it exists"
     shell: bash
     run: |
+      echo "Removing Additional1 NuGet Feed"
       [ "$(dotnet nuget list source | grep Additional1 | tr -s ' ' | cut -d ' ' -f 3)" == "Additional1" ] && dotnet nuget remove source Additional1
 
   - if: ${{inputs.NUGET_ADDITIONAL_RESTORE_FEED != ''}}
     name: "Dotnet: Add optional nuget feed"
     shell: bash
-    run: dotnet nuget add source --name Additional1 "${{inputs.NUGET_ADDITIONAL_RESTORE_FEED}}"
+    run: |
+      echo "Adding Additional1 NuGet feed..."
+      dotnet nuget add source --name Additional1 "${{inputs.NUGET_ADDITIONAL_RESTORE_FEED}}"
 
   - name: Enable dotnet tools
     shell: bash
