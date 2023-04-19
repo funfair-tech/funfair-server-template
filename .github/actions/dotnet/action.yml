@@ -65,7 +65,7 @@ runs:
     name: "Dotnet: Define Nuget Sources (Additional Feed)"
     working-directory: ${{github.workspace}}/src
     shell: bash
-    run: echo "NUGET_SOURCES=${{env.NUGET_SOURCES}} --source "${{inputs.NUGET_ADDITIONAL_RESTORE_FEED}}" >> "$GITHUB_ENV"
+    run: echo "NUGET_SOURCES=${{env.NUGET_SOURCES}} --source ${{inputs.NUGET_ADDITIONAL_RESTORE_FEED}}" >> "$GITHUB_ENV"
 
   - name: "Dotnet: Restore packages"
     working-directory: ${{github.workspace}}/src
