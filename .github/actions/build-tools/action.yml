@@ -51,6 +51,10 @@ runs:
       echo "Adding Additional1 NuGet feed..."
       dotnet nuget add source --name Additional1 "${{inputs.NUGET_ADDITIONAL_RESTORE_FEED}}"
 
+  - name: "Dotnet: Show sources"
+    shell: bash
+    run: dotnet nuget list source
+
   - name: Enable dotnet tools
     shell: bash
     run: |
