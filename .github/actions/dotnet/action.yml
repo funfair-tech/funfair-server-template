@@ -60,7 +60,7 @@ runs:
     name: "Dotnet: Restore packages (No Alt Feed)"
     working-directory: ${{github.workspace}}/src
     shell: bash
-    run: dotnet restore -nodeReuse:False
+    run: dotnet restore -nodeReuse:False --source https://api.nuget.org/v3/index.json
     env:
       DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
       DOTNET_INSTALL_DIR: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
@@ -75,7 +75,7 @@ runs:
     name: "Dotnet: Restore packages (With Alt Feed)"
     working-directory: ${{github.workspace}}/src
     shell: bash
-    run: dotnet restore -nodeReuse:False --source "${{inputs.NUGET_ADDITIONAL_RESTORE_FEED}}"
+    run: dotnet restore -nodeReuse:False --source https://api.nuget.org/v3/index.json --source "${{inputs.NUGET_ADDITIONAL_RESTORE_FEED}}"
     env:
       DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
       DOTNET_INSTALL_DIR: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
