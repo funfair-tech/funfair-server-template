@@ -2,9 +2,15 @@
 name: 'Install dotnet and build tools'
 description: 'Install dotnet and build tools'
 inputs:
+  # GENERAL
   GITHUB_TOKEN:
     description: 'Github Token'
     required: true
+
+  # NUGET
+  NUGET_ADDITIONAL_RESTORE_FEED:
+    description: 'Any additional nuget feed to download packages from'
+    required: false
 
 runs:
   using: "composite"
