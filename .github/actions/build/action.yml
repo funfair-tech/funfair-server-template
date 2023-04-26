@@ -367,3 +367,12 @@ runs:
       prerelease: false
       generateReleaseNotes: true
       token: ${{inputs.GITHUB_TOKEN}}
+
+  ############################################################################################################
+  # Upload Sarif files to github
+  ############################################################################################################
+  - name: "Upload SARIF file for diagnostics"
+    uses: ./.github/actions/sarif
+    with:
+      GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
+      REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
