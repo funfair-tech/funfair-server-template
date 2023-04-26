@@ -29,4 +29,4 @@ runs:
     - name: "Sarif Upload Summary"
       shell: bash
       working-directory: ${{github.workspace}}/results
-      run: echo "Sarif Uploaded Done"
+      run: echo "Sarif Upload COmpleted"
