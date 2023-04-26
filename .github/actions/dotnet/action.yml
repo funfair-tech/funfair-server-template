@@ -116,7 +116,7 @@ runs:
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
 
-  - if: ${{inputs.REPO_VISIBILITY == 'public'}}
+  - if: ${{inputs.REPO_VISIBILITY == 'public' && github.owner !='funfair-tech'}}
     name: "Upload SARIF file for diagnostics"
     uses: github/codeql-action/upload-sarif@v2
     with:
