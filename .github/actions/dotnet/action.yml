@@ -116,12 +116,6 @@ runs:
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
 
-  - name: "Upload SARIF file for diagnostics"
-    uses: ./.github/actions/sarif
-    with:
-      GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
-      REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
-
   ## RUN TESTS
   - name: "Dotnet: Test"
     working-directory: ${{github.workspace}}/src
