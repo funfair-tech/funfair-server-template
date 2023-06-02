@@ -900,6 +900,12 @@
         <!-- SCS0019 - Controller method is potentionally Vulnerable to Cross Site Request Forgery CSRF -->
         <Rule Id="SCS0019" Action="Error"/>
     </Rules>
+    <Rules AnalyzerId="CSharpIsNull" RuleNamespace="CSharpIsNull">
+        <!-- CSIsNull001 - catch uses of == null -->
+        <Rule Id="CSIsNull001" Action="Error"/>
+        <!-- CSIsNull002 to catch uses of != null -->
+        <Rule Id="CSIsNull002" Action="Error"/>
+    </Rules>
     <Rules AnalyzerId="FunFair.CodeAnalysis" RuleNamespace="FunFair.CodeAnalysis">
         <!-- See https://github.com/funfair-tech/funfair-server-code-analysis -->
         <!-- FFS0001 - Avoid using DateTime.Now - Use IDateTimeSource.UtcNow() -->
