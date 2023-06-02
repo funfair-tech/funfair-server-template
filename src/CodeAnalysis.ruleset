@@ -897,7 +897,7 @@
         <Rule Id="PH2101" Action="Error"/>
     </Rules>
     <Rules AnalyzerId="SecurityCodeScan.VS2019" RuleNamespace="SecurityCodeScan.VS2019">
-        <!-- SCS0019 - Controller method is potentionally Vulnerable to Cross Site Request Forgery CSRF -->
+        <!-- SCS0019 - Controller method is potentially Vulnerable to Cross Site Request Forgery CSRF -->
         <Rule Id="SCS0019" Action="Error"/>
     </Rules>
     <Rules AnalyzerId="CSharpIsNull" RuleNamespace="CSharpIsNull">
