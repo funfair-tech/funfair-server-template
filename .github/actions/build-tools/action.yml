@@ -151,6 +151,12 @@ runs:
       echo "List current nuget feeds (after)"
       dotnet nuget list source
 
+  - name: "Dotnet: Clear nuget cache"
+    shell: bash
+    run: |
+      dotnet nuget locals http-cache --clear
+      dotnet nuget locals temp --clear
+
   - name: Enable dotnet tools
     shell: bash
     run: |
