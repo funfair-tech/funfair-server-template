@@ -55,7 +55,7 @@ jobs:
         id: nuget-local-cache
         run: |
           {
-            echo "NUGET_BAGET_CACHE=${{vars.RELEASE_BAGET_CACHE}}"
+            echo "NUGET_BAGET_CACHE=${{vars.NUGET_BAGET_CACHE}}"
             echo "PRERELEASE_BAGET_CACHE=${{vars.PRERELEASE_BAGET_CACHE}}"
             echo "RELEASE_BAGET_CACHE=${{vars.RELEASE_BAGET_CACHE}}"
           }>> "$GITHUB_OUTPUT"
