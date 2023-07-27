@@ -29,9 +29,6 @@ inputs:
   NUGET_ADDITIONAL_RESTORE_FEED_RELEASE_CACHE:
     description: 'Cache of Any additional nuget feed to download packages from'
     required: false
-  NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE_CACHE:
-    description: 'Any additional nuget feed to download packages from'
-    required: false
   NUGET_ADDITIONAL_RESTORE_FEED_RELEASE:
     description: 'Any additional nuget feed to download packages from'
     required: false
