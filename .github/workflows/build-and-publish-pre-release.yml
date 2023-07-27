@@ -47,8 +47,8 @@ jobs:
 
       - name: "Check Runner details"
         run: |
-          echo "Name: ${{env.RUNNER_NAME}}"
-          echo "OS: ${{env.RUNNER_OS}}"
+          echo "Name: ${{runner.name}}"
+          echo "OS: ${{runner.os}}"
 
       - name: Build and deploy
         uses: ./.github/actions/build
