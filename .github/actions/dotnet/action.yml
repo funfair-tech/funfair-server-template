@@ -3,24 +3,6 @@ name: 'Build Dotnet'
 description: 'Builds and deploys the source'
 inputs:
   # NUGET
-  NUGET_PUBLIC_RESTORE_FEED_CACHE:
-    description: 'Local cache of public nuget feed'
-    required: false
-  NUGET_PUBLIC_RESTORE_FEED:
-    description: 'public nuget feed'
-    required: false
-  NUGET_ADDITIONAL_RESTORE_FEED_RELEASE_CACHE:
-    description: 'Any additional nuget feed to download packages from'
-    required: false
-  NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE_CACHE:
-    description: 'Any additional nuget feed to download packages from'
-    required: false
-  NUGET_ADDITIONAL_RESTORE_FEED_RELEASE:
-    description: 'Any additional nuget feed to download packages from'
-    required: false
-  NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE:
-    description: 'Any additional nuget feed to download packages from'
-    required: false
   NUGET_PACK:
     description: 'Whether to pack packages with feeds'
     required: false
@@ -189,7 +171,7 @@ runs:
   ############################################################################################################
   # DOTNET PUSH TO NUGET
   ############################################################################################################
-  - if: ${{inputs.NUGET_API_KEY != '' && inputs.NUGET_PACK == 'true'}}
+  - if: ${{inputs.NUGET_PACK == 'true'}}
     name: "Dotnet: Pack tool"
     working-directory: ${{github.workspace}}/src
     shell: bash
@@ -205,7 +187,7 @@ runs:
       DOTNET_TC_QuickJitForLoops: "1"
       DOTNET_TieredPGO: "1"
 
-  - if: ${{inputs.NUGET_API_KEY != '' && inputs.NUGET_PACK == 'true'}}
+  - if: ${{inputs.NUGET_PACK == 'true'}}
     name: "Dotnet: Copy packed to dist"
     shell: bash
     run: |
