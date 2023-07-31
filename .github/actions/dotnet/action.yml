@@ -82,7 +82,7 @@ runs:
   - name: "Dotnet: Restore packages"
     working-directory: ${{github.workspace}}/src
     shell: bash
-    run: dotnet restore -nodeReuse:False
+    run: dotnet restore -nodeReuse:False || dotnet restore -nodeReuse:False -verbosity:d
          # -p:NoWarn=MSB4241
     env:
       DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
