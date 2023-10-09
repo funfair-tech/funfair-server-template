@@ -121,7 +121,7 @@ jobs:
         id: lastupdate
         run: echo "time=$(git log -1 --format=@%ct origin/${{env.BRANCH}})" >> "$GITHUB_OUTPUT"
 
-      - name: "Check Ahead\Behind Status"
+      - name: "Check Ahead and Behind Status"
         if: steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == ''
         id: aheadbehind
         run: >
