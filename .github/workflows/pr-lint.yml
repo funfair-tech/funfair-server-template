@@ -31,9 +31,10 @@ jobs:
 #    if: github.event.pull_request.draft == false
 #    runs-on: [self-hosted, linux]
 #    steps:
-#      - name: Initialise Workspace
+#      - name: "Initialise Workspace"
 #        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-#      - uses: actions/checkout@v4
+#      - name: "Checkout Source"
+#        uses: actions/checkout@v4
 #        with:
 #          fetch-depth: 0
 #      - if: |-
@@ -49,7 +50,7 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
         uses: actions/checkout@v4
@@ -68,9 +69,10 @@ jobs:
     # As LibGit2Sharp doesn't work on 20.04
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: actions/checkout@v4
+      - name: "Checkout Source"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
@@ -136,9 +138,10 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: actions/checkout@v4
+      - name: "Checkout Source"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: DariuszPorowski/github-action-gitleaks@v2.0.9
@@ -155,9 +158,10 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: actions/checkout@v4
+      - name: "Checkout Source"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: olivernybroe/action-conflict-finder@v4.0
@@ -166,9 +170,10 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: actions/checkout@v4
+      - name: "Checkout Source"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: credfeto/action-case-checker@v1.3.0
@@ -177,9 +182,10 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: actions/checkout@v4
+      - name: "Checkout Source"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: credfeto/action-no-ignored-files@v1.2.0
@@ -189,8 +195,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
-      run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: "Initialise Workspace"
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: credfeto/action-repo-visibility@v1.2.0
         id: visibility
         with:
@@ -198,8 +204,8 @@ jobs:
           repository: ${{github.repository}}
           # optional parameter defaults to the current user
           token: ${{github.token}}
-      - if: ${{steps.visibility.outputs.is_public == 'true'}}
-        name: 'Checkout Repository'
+      - name: 'Checkout Repository'
+        if: ${{steps.visibility.outputs.is_public == 'true'}}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -213,7 +219,8 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
       - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: actions/checkout@v4
+      - name: "Checkout Source"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: greenled/no-merge-commits-check@v1.0.1
@@ -222,9 +229,10 @@ jobs:
     if: ${{github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') )}}
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: actions/checkout@v4
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: github/super-linter@v5.0.0

@@ -20,7 +20,7 @@ jobs:
   info:
     runs-on: [self-hosted, linux]
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - run: |
           echo "Branch: ${{env.HEAD_REF}}"
@@ -35,7 +35,7 @@ jobs:
       CREATE_DRAFT: true
 
     steps:
-      - name: Initialise Workspace
+      - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
       - name: "Checkout source"
