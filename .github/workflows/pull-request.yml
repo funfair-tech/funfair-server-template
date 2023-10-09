@@ -72,7 +72,7 @@ jobs:
            echo "Current Owner: ${{github.repository_owner}}"
 
       - name: "Check Repo Visibility"
-        if: ${{steps.findPr.outputs.number != '' && github.repository_owner != 'funfair-tech'}}
+        if: steps.findPr.outputs.number != '' && github.repository_owner != 'funfair-tech'
         uses: credfeto/action-repo-visibility@v1.2.0
         id: visibility
         with:
@@ -80,7 +80,7 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
 
       - name: "Override DRAFT Flag"
-        if: ${{steps.findPr.outputs.number != '' && github.repository_owner != 'funfair-tech' && env.REPO_STATUS == 'private'}}
+        if: steps.findPr.outputs.number != '' && github.repository_owner != 'funfair-tech' && env.REPO_STATUS == 'private'
         run: echo "CREATE_DRAFT=false" >> "$GITHUB_ENV"
 
       - name: "Create Pull Request"
