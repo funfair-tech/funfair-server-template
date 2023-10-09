@@ -99,8 +99,8 @@ jobs:
             6.0.*
             7.0.*
             ${{env.DOTNET_VERSION}}
-      - if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
-        name: "Enable dotnet tools"
+      - name: "Enable dotnet tools"
+        if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
         run: dotnet new tool-manifest
         env:
           DDOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
@@ -111,8 +111,8 @@ jobs:
           DOTNET_ReadyToRun: "0"
           DOTNET_TC_QuickJitForLoops: "1"
           DOTNET_TieredPGO: "1"
-      - if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
-        name: "Install Changelog tool"
+      - name: "Install Changelog tool"
+        if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
         run: dotnet tool install --local Credfeto.ChangeLog.Cmd
         env:
           DDOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
@@ -123,8 +123,8 @@ jobs:
           DOTNET_ReadyToRun: "0"
           DOTNET_TC_QuickJitForLoops: "1"
           DOTNET_TieredPGO: "1"
-      - if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
-        name: "Check Changelog"
+      - name: "Check Changelog"
+        if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
         run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{github.base_ref}}"
         env:
           DDOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"

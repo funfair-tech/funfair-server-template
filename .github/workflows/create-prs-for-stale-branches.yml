@@ -65,8 +65,8 @@ jobs:
           ref: main
           repository: ${{github.repository}}
 
-      - if: ${{github.repository_owner != 'funfair-tech'}}
-        name: "Check Repo Visibility"
+      - name: "Check Repo Visibility"
+        if: ${{github.repository_owner != 'funfair-tech'}}
         uses: credfeto/action-repo-visibility@v1.2.0
         id: visibility
         with:
