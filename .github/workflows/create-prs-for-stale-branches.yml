@@ -58,6 +58,7 @@ jobs:
     env:
       BRANCH: ${{matrix.branch}}
       CREATE_DRAFT: true
+      REPO_STATUS: private
     steps:
       - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
