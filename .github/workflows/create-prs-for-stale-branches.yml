@@ -21,7 +21,8 @@ jobs:
       contents: read
 
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - run: |
           echo "Repo: ${{github.repository}}"
           echo "Owner: ${{github.repository_owner}}"
@@ -54,7 +55,8 @@ jobs:
       BRANCH: ${{matrix.branch}}
       CREATE_DRAFT: true
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0

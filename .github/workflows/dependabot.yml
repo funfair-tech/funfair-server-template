@@ -17,7 +17,8 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.event == 'release'
     timeout-minutes: 5
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - name: rebase
         uses: bbeesley/gha-auto-dependabot-rebase@v1.3.291
         env:

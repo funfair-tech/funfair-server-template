@@ -20,7 +20,8 @@ jobs:
   info:
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - run: |
           echo "Branch: ${{env.HEAD_REF}}"
           echo "Base Branch: ${{env.BASE_REF}}"
@@ -34,7 +35,7 @@ jobs:
       CREATE_DRAFT: true
 
     steps:
-      - name: Cleanup Repo
+      - name: Initialise Workspace
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
       - name: "Checkout source"

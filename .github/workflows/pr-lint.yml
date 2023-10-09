@@ -31,7 +31,8 @@ jobs:
 #    if: github.event.pull_request.draft == false
 #    runs-on: [self-hosted, linux]
 #    steps:
-#      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+#      - name: Initialise Workspace
+#        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 #      - uses: actions/checkout@v4
 #        with:
 #          fetch-depth: 0
@@ -48,7 +49,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - if: ${{(github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))}}
         uses: actions/checkout@v4
         with:
@@ -66,7 +68,8 @@ jobs:
     # As LibGit2Sharp doesn't work on 20.04
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -133,7 +136,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -151,7 +155,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -161,7 +166,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -171,7 +177,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -182,7 +189,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+      run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: credfeto/action-repo-visibility@v1.2.0
         id: visibility
         with:
@@ -214,7 +222,8 @@ jobs:
     if: ${{github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') )}}
     runs-on: [self-hosted, linux]
     steps:
-      - run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+      - name: Initialise Workspace
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
