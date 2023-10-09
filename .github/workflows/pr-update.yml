@@ -56,6 +56,7 @@ jobs:
     steps:
       - name: "Initialise Workspace"
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-      - uses: thomaseizinger/assign-pr-creator-action@v1.0.0
+      - name: "Assign PR to the creator"
+        uses: thomaseizinger/assign-pr-creator-action@v1.0.0
         with:
           repo-token: ${{secrets.SOURCE_PUSH_TOKEN}}
