@@ -219,7 +219,7 @@ runs:
       { echo "DEPLOY=true"; echo "RELEASE=false"; } >> "$GITHUB_ENV"
 
   - name: Deploy check - Is release branch
-    if: !contains(env.BUILD_VERSION, "-")
+    if: contains(env.BUILD_VERSION, '-') == false
     shell: bash
     run: |
       { echo "DEPLOY=true"; echo "RELEASE=true"; } >> "$GITHUB_ENV"
