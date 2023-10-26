@@ -424,7 +424,7 @@ runs:
   # Create GitHub Release
   ############################################################################################################
   - name: "Create Release"
-    if: {steps.build_tools.outputs.BUILD_ENV == 'true' && inputs.CREATE_RELEASE == 'true'
+    if: steps.build_tools.outputs.BUILD_ENV == 'true' && inputs.CREATE_RELEASE == 'true'
     id: create_release
     uses: ncipollo/release-action@v1
     with:
