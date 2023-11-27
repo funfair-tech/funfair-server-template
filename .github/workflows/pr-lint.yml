@@ -124,7 +124,7 @@ jobs:
             echo "RELEASE_BAGET_CACHE=${{vars.RELEASE_BAGET_CACHE}}"
           }>> "$GITHUB_OUTPUT"
       - name: "Configure nuget feeds"
-        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template')) &&
+        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
         uses: ./.github/actions/nuget
         with:
           NUGET_PUBLIC_RESTORE_FEED_CACHE: ${{steps.nuget-local-cache.outputs.NUGET_BAGET_CACHE}}
