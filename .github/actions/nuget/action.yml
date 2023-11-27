@@ -1,4 +1,4 @@
---- # Build and deploy packages
+--- # Configure Nuget Feeds
 name: 'Configure Nuget Feeds'
 description: 'Configure Nuget Feeds'
 inputs:
