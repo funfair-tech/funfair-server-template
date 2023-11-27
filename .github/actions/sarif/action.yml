@@ -32,7 +32,8 @@ runs:
         token: ${{github.token}}
         wait-for-processing: true
 
-    - name: "Sarif Upload Summary"
+    - if: inputs.REPO_VISIBILITY == 'public' && env.SARIF_HASH != ''
+      name: "Sarif Upload Summary"
       uses: actions/github-script@v7.0.1
       with:
         script: |
