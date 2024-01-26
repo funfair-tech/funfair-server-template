@@ -30,9 +30,12 @@ runs:
       by-cve: false
 
   - name: "Copy SBOM to sarif (public Repo)"
-    if: inputs.REPO_VISIBILITY == 'public'
+    if: |-
+        inputs.REPO_VISIBILITY == 'public' &&
+        steps.sbom.outputs.sarif != ''
     shell: bash
     run: |
+      echo "SBOM: ${{ steps.scan.outputs.sarif }}"
       cp "${{ steps.scan.outputs.sarif }}" "${{ github.workspace }}/results/${{ github.event.repository.name }}-sbom.sarif"
 
   - name: "Scan SBOM (private repo)"

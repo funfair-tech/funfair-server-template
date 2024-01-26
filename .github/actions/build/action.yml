@@ -308,17 +308,6 @@ runs:
       OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{inputs.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
 
   ############################################################################################################
-  # Software Bill of materials
-  ############################################################################################################
-  - name: "Software Bill of materials"
-    if: |-
-      ((steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true') ||
-      (steps.check_files.outputs.NPM_EXIST == 'true'))
-    uses: ./.github/actions/sbom
-    with:
-      REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
-
-  ############################################################################################################
   # DEPLOY TO OCTOPUS
   ############################################################################################################
 
@@ -435,6 +424,17 @@ runs:
       prerelease: false
       generateReleaseNotes: true
       token: ${{inputs.GITHUB_TOKEN}}
+
+  ############################################################################################################
+  # Software Bill of materials
+  ############################################################################################################
+  - name: "Software Bill of materials"
+    if: |-
+      ((steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true') ||
+      (steps.check_files.outputs.NPM_EXIST == 'true'))
+    uses: ./.github/actions/sbom
+    with:
+      REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
 
   ############################################################################################################
   # Upload Sarif files to GitHub
