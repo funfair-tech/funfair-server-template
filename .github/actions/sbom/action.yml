@@ -41,6 +41,7 @@ runs:
       run: |
         echo "SBOM: ${{ steps.scan.outputs.sarif }}"
         cp "${{ steps.scan.outputs.sarif }}" "${{ github.workspace }}/results/${{ github.event.repository.name }}-sbom.sarif"
+        cat "${{ steps.scan.outputs.sarif }}"
 
     - name: "Scan SBOM (private repo)"
       if: inputs.REPO_VISIBILITY == 'private'
