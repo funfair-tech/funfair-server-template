@@ -12,7 +12,7 @@ runs:
   steps:
     - name: "Create SBOM"
       shell: bash
-      run: Echo "Create SBOM..."
+      run: echo "Create SBOM..."
 
     - name: "Create SBOM"
       uses: anchore/sbom-action@v0

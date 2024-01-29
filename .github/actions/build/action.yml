@@ -429,9 +429,7 @@ runs:
   # Software Bill of materials
   ############################################################################################################
   - name: "Software Bill of materials"
-    if: |-
-      ((steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true') ||
-      (steps.check_files.outputs.NPM_EXIST == 'true'))
+    if: steps.build_tools.outputs.BUILD_ENV == 'true'
     uses: ./.github/actions/sbom
     with:
       REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
