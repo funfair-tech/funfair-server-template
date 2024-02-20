@@ -1,3 +1,4 @@
+--- # Reformatting Yaml
 name: "Standardise: YAML format"
 
 on:

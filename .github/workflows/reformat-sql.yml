@@ -1,3 +1,4 @@
+--- # Reformatting MSSQL
 name: "Standardise: MSSQL Format"
 
 on:
