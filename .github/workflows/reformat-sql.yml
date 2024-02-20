@@ -7,6 +7,7 @@ on:
       - "hotfix/*"
     paths:
       - '**.sql'
+      - '.github/workflows/reformat-sql.yml'
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
