@@ -435,6 +435,7 @@ runs:
     if: steps.build_tools.outputs.BUILD_ENV == 'true'
     uses: ./.github/actions/sbom
     with:
+      GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
       REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
 
   ############################################################################################################
