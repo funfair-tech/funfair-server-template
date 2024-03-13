@@ -51,9 +51,10 @@ jobs:
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
       - name: "Checkout source"
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 1
+          fetch-tags: true
 
       - name: "Find PR For branch"
         uses: juliangruber/find-pull-request-action@v1.8.1

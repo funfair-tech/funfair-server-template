@@ -123,14 +123,9 @@ runs:
         core.info('NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE: ${{inputs.NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE}}');
         core.info('NUGET_PACK: ${{inputs.NUGET_PACK}}');
 
-  - name: "Fetch tags and master"
+  - name: "Set branch"
     shell: bash
-    run: |
-      git fetch --tags
-      echo "REF: $GITHUB_REF"
-      echo "SHA: $GITHUB_SHA"
-      echo "GIT_BRANCH=$GITHUB_REF" >> "$GITHUB_ENV"
-      git branch --remote
+    run: echo "GIT_BRANCH=$GITHUB_REF" >> "$GITHUB_ENV"
 
   - name: "Check file existence"
     id: check_files
