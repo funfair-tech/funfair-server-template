@@ -27,3 +27,11 @@ runs:
         DOTNET_TC_QuickJitForLoops: "1"
         DOTNET_TieredPGO: "1"
         MSBUILDTERMINALLOGGER: "auto"
+
+    - if: steps.build_tools.outputs.BUILD_ENV == 'true'
+      name: "Log build version"
+      shell: bash
+      run: |
+        echo "****************************************************************"
+        echo "* Current Build: ${{env.BUILD_VERSION}}"
+        echo "****************************************************************"
