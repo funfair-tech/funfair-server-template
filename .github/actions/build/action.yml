@@ -180,7 +180,6 @@ runs:
       TOOL_VERSION: latest
 
   - name: "Get Unique Build Number"
-    if: steps.build_tools.outputs.BUILD_ENV == 'true'
     uses: ./.github/actions/build-version
 
   - name: "Deploy check - Default"
