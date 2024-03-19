@@ -54,7 +54,7 @@ jobs:
         if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
         shell: bash
         run: |
-          echo "Should update to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+          echo "Should update to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
           mv "src/global.json" "src/global.json.tmp";
           jq --arg v "$NEW_DOTNET_VERSION" '.version = $v' < "src/global.json.tmp" > "src/global.json";
           [ if "src/global.json.tmp" ] && rm -f "src/global.json.tmp"
