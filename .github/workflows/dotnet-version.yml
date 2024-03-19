@@ -13,6 +13,9 @@ concurrency:
   group: ${{github.workflow}}-${{github.ref}}
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   build-pre-release:
     if: endsWith(github.repository, 'funfair-server-template')
@@ -61,6 +64,14 @@ jobs:
           cat "src/global.json"
         env:
           NEW_DOTNET_VERSION: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+
+#      - name: "Update global.json to latest version"
+#        if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+#        shell: bash
+#        run: |
+#          git checkout -b "depends/dotnet/${{env.NEW_DOTNET_VERSION}}"
+#        env:
+#          NEW_DOTNET_VERSION: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
 
       - name: "Commit changes to new branch"
         if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
