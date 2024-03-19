@@ -85,6 +85,8 @@ jobs:
           git add "global.json"
           git commit -m "SDK - Update DotNet SDK to $NEW_DOTNET_VERSION"
           git push --set-upstream origin "depends/dotnet/$NEW_DOTNET_VERSION"
+        env:
+          NEW_DOTNET_VERSION: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
 
 #      - name: "Commit changes to new branch"
 #        if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
