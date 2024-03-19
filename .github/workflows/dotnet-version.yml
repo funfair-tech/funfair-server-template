@@ -31,6 +31,7 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          token: ${{secrets.SOURCE_PUSH_TOKEN}}
 
       - name: "Install Build tools"
         uses: ./.github/actions/build-tools
