@@ -1,0 +1,62 @@
+--- # Check dotnet version
+name: "Repo: Update Dotnet Version"
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/dotnet-version.yml"
+  schedule:
+    - cron: "0 1 * * *"
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: false
+
+jobs:
+  build-pre-release:
+    if: endsWith(github.repository, 'funfair-server-template')
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - name: "Initialise Workspace"
+        shell: bash
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+
+      - name: "Checkout Source"
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Install Build tools"
+        uses: ./.github/actions/build-tools
+        with:
+          GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+          NUGET_PUBLIC_RESTORE_FEED_CACHE: ${{steps.nuget-local-cache.outputs.NUGET_BAGET_CACHE}}
+          NUGET_PUBLIC_RESTORE_FEED: ${{vars.NUGET_PUBLIC_RESTORE_FEED}}
+          NUGET_ADDITIONAL_RESTORE_FEED_RELEASE_CACHE: ${{steps.nuget-local-cache.outputs.RELEASE_BAGET_CACHE}}
+          NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE_CACHE: ${{steps.nuget-local-cache.outputs.PRERELEASE_BAGET_CACHE}}
+          NUGET_ADDITIONAL_RESTORE_FEED_RELEASE: ${{vars.NUGET_ADDITIONAL_RESTORE_FEED_RELEASE}}
+          NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE: ${{vars.NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE}}
+
+      - name: "Get latest installed dotnet version"
+        id: latest-dotnet-version
+        run: |
+          echo "LATEST_RELEASE_VERSION=$(dotnet --list-sdks | cut -f 1 -d " " | grep "^[0-9]*\.[0-9]*\.[0-9]*$" | sort | tail -1)" >> "$GITHUB_OUTPUT"
+
+      - name: "Display latest installed dotnet version"
+        run: |
+          echo "Latest installed dotnet version: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+          echo "Requested dotnet version: ${{env.DOTNET_VERSION}}"
+
+      - name: "If new version"
+        if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+        shell: bash
+        run: |
+          echo "Should update to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+          mv "src/global.json" "src/global.json.tmp";
+          jq --arg v "$NEW_DOTNET_VERSION" '.version = $v' < "src/global.json.tmp" > "src/global.json";
+          [ if "src/global.json.tmp" ] && rm -f "src/global.json.tmp"
+        env:
+          NEW_DOTNET_VERSION: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
