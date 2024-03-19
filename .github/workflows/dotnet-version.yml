@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 jobs:
-  build-pre-release:
+  bump-dotnet-sdk-version:
     if: endsWith(github.repository, 'funfair-server-template')
     runs-on: [self-hosted, linux]
 
