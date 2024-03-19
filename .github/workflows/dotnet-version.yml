@@ -50,7 +50,7 @@ jobs:
           echo "Latest installed dotnet version: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
           echo "Requested dotnet version: ${{env.DOTNET_VERSION}}"
 
-      - name: "If new version"
+      - name: "Update global.json to latest version"
         if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
         shell: bash
         run: |
@@ -61,3 +61,17 @@ jobs:
           cat "src/global.json"
         env:
           NEW_DOTNET_VERSION: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+
+      - name: "Commit changes to new branch"
+        if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+        uses: stefanzweifel/git-auto-commit-action@v5.0.0
+        with:
+          commit_message: "SDK - Update DotNet SDK to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+          branch: "depends/dotnet/${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+          create_branch: true
+          file_pattern: src/global.json
+          commit_user_name: "fun-version[bot]"
+          commit_user_email: "credfeto@users.noreply.github.com"
+          commit_author: "fun-version[bot] <credfeto@users.noreply.github.com>"
+          skip_dirty_check: false
+          GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
