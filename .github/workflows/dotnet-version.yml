@@ -82,7 +82,7 @@ jobs:
           git config --global user.name 'fun-version[bot]'
           git config --global user.email 'credfeto@users.noreply.github.com'
           git diff
-          git add "src/global.json"
+          git add "global.json"
           git commit -m "SDK - Update DotNet SDK to $NEW_DOTNET_VERSION"
           git push --set-upstream origin "depends/dotnet/$NEW_DOTNET_VERSION"
 
