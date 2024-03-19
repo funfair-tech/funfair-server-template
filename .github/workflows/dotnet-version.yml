@@ -57,6 +57,7 @@ jobs:
           echo "Should update to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
           mv "src/global.json" "src/global.json.tmp";
           jq --arg v "$NEW_DOTNET_VERSION" '.version = $v' < "src/global.json.tmp" > "src/global.json";
-          [ if "src/global.json.tmp" ] && rm -f "src/global.json.tmp"
+          [ -f "src/global.json.tmp" ] && rm -f "src/global.json.tmp"
+          cat "src/global.json"
         env:
           NEW_DOTNET_VERSION: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
