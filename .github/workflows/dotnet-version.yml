@@ -73,14 +73,20 @@ jobs:
         env:
           NEW_DOTNET_VERSION: ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
 
-      - name: "Commit changes to new branch"
+      - name: "Push"
         if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
-        uses: stefanzweifel/git-auto-commit-action@v5.0.0
-        with:
-          commit_message: "SDK - Update DotNet SDK to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
-          branch: "depends/dotnet/${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
-          file_pattern: src/global.json
-          commit_user_name: "fun-version[bot]"
-          commit_user_email: "credfeto@users.noreply.github.com"
-          commit_author: "fun-version[bot] <credfeto@users.noreply.github.com>"
-          skip_dirty_check: false
+        shell: bash
+        run: |
+          git add "src/global.json" && git commit -m "SDK - Update DotNet SDK to $NEW_DOTNET_VERSION" && git push --set-upstream origin "depends/dotnet/$NEW_DOTNET_VERSION"
+
+#      - name: "Commit changes to new branch"
+#        if: ${{env.DOTNET_VERSION}} < ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}
+#        uses: stefanzweifel/git-auto-commit-action@v5.0.0
+#        with:
+#          commit_message: "SDK - Update DotNet SDK to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+#          branch: "depends/dotnet/${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+#          file_pattern: src/global.json
+#          commit_user_name: "fun-version[bot]"
+#          commit_user_email: "credfeto@users.noreply.github.com"
+#          commit_author: "fun-version[bot] <credfeto@users.noreply.github.com>"
+#          skip_dirty_check: false
