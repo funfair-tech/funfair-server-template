@@ -1,5 +1,5 @@
---- # Check dotnet version
-name: "Repo: Update Dotnet Version"
+--- # Create a new branch for the latest (released) dotnet version if there's an update
+name: "Repo: Update Dotnet Version to latest released version"
 on:
   push:
     branches:
