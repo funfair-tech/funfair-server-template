@@ -125,7 +125,7 @@ jobs:
           CREATE_RELEASE: false
 
       - name: "Build and deploy"
-        if: startsWith(runner.name, 'buildagent-')
+        if: startsWith(runner.name, 'buildagent-') != true
         uses: ./.github/actions/build
         with:
           PRODUCTION_BUILD: False
