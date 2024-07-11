@@ -202,6 +202,8 @@ dotnet_diagnostic.IDE0180.severity = error
 dotnet_diagnostic.IDE0200.severity = error
 # Use UTF-8 string literal
 dotnet_diagnostic.IDE0230.severity = error
+# Use Primary constructor
+dotnet_diagnostic.IDE0290.severity = none
 # Use collection expression for array
 dotnet_diagnostic.IDE0300.severity = error
 # Use collection expression for empty
