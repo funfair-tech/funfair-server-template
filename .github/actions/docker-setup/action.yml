@@ -42,7 +42,6 @@ runs:
         ecr: false
 
     - name: "Docker: Login to AWS ECR"
-      if: ${{ inputs.AWS-CONTAINER-REGISTRY }}
       uses: docker/login-action@v3.0.0
       with:
         registry: ${{inputs.AWS-CONTAINER-REGISTRY}}
