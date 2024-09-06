@@ -1,9 +1,12 @@
---- # Deploy to docker
-name: 'Deploy to docker'
-description: 'Builds a docker image and deploys it to AWS ECR'
+--- # Deploy docker image using cloudformation template to aws
+name: 'Deploy to Cloudformation template'
+description: 'Deploy docker image using cloudformation template to aws'
 inputs:
   CLOUD_FORMATION_STACK:
     description: 'The Cloud Formation stack to deploy as'
+    required: true
+  CLOUD_FORMATION_TEMPLATE_FILE:
+    description: 'The Cloud Formation file to deploy'
     required: true
   DOCKER_APP_OWNER:
     description: 'docker app owner'
@@ -34,11 +37,11 @@ runs:
     - name: "Build TemplateParameters file"
       shell: bash
       run: |
-        "${{github.workspace}}/build_scripts/build-template-parameters-wrapper" "deploy/${{inputs.APP_NAME}}.json" > "${{github.workspace}}/TemplateParameters.json"
+        "${{github.workspace}}/build_scripts/build-template-parameters-wrapper" "${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}" > "${{github.workspace}}/TemplateParameters.json"
       env:
-        ApplicationName: ${{env.CLOUD_FORMATION_STACK}}
+        ApplicationName: ${{inputs.CLOUD_FORMATION_STACK}}
         ApplicationContainer: ${{inputs.DOCKER_APP_OWNER}}
-        ApplicationVersion: ${{env.BUILD_VERSION}}
+        ApplicationVersion: ${{inputs.BUILD_VERSION}}
         ApiPrefix: /${{inputs.DOCKER_APP_NAME}}
         ApiHost: ${{inputs.API_HOST}}
         LoadBalancerHostName: ${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}
@@ -55,6 +58,6 @@ runs:
       run: |
         /usr/local/aws-cli/v2/current/bin/aws \
                   cloudformation deploy \
-                        --template-file "deploy/${{inputs.DOCKER_APP_NAME}}.json" \
+                        --template-file "${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}" \
                         --stack-name "${{inputs.CLOUD_FORMATION_STACK}}" \
                         --parameter-overrides file://TemplateParameters.json
