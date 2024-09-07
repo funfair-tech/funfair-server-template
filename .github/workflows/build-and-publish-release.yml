@@ -67,6 +67,7 @@ jobs:
           NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
           SLEET_CONFIG: ${{secrets.SLEET_CONFIG}}
           SLEET_FEED: "dotnet-release"
+          OCTOPUS_DEPLOY: ${{vars.OCTOPUS_DEPLOY}}
           OCTOPUS_SERVER: ${{vars.OCTOPUS_SERVER}}
           OCTOPUS_SPACE_NAME: ${{vars.OCTOPUS_SPACE}}
           OCTOPUS_PROJECT: ${{vars.OCTOPUS_PROJECT}}
@@ -77,6 +78,7 @@ jobs:
           OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{vars.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
           DOCKER_APP_OWNER: ${{vars.DOCKER_APP_OWNER}}
           DOCKER_APP_NAME: ${{vars.DOCKER_APP_NAME}}
+          CLOUD_FORMATION_DEPLOY: ${{vars.CLOUD_FORMATION_DEPLOY}}
           CLOUD_FORMATION_STACK: ${{vars.CLOUD_FORMATION_STACK}}
           GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
           REPO_VISIBILITY: ${{env.REPO_STATUS}}
@@ -109,6 +111,7 @@ jobs:
           NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
           SLEET_CONFIG: ${{secrets.SLEET_CONFIG}}
           SLEET_FEED: "dotnet-release"
+          OCTOPUS_DEPLOY: ${{vars.OCTOPUS_DEPLOY}}
           OCTOPUS_SERVER: ${{vars.OCTOPUS_SERVER}}
           OCTOPUS_SPACE_NAME: ${{vars.OCTOPUS_SPACE}}
           OCTOPUS_PROJECT: ${{vars.OCTOPUS_PROJECT}}
@@ -119,6 +122,7 @@ jobs:
           OCTOPUS_DEPLOY_PACKAGE_ZIP: ${{vars.OCTOPUS_DEPLOY_PACKAGE_ZIP}}
           DOCKER_APP_OWNER: ${{vars.DOCKER_APP_OWNER}}
           DOCKER_APP_NAME: ${{vars.DOCKER_APP_NAME}}
+          CLOUD_FORMATION_DEPLOY: ${{vars.CLOUD_FORMATION_DEPLOY}}
           CLOUD_FORMATION_STACK: ${{vars.CLOUD_FORMATION_STACK}}
           GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
           REPO_VISIBILITY: ${{env.REPO_STATUS}}
