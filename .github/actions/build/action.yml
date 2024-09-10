@@ -107,6 +107,12 @@ inputs:
   AWS_LOAD_BALANCER_PRIORITY:
     description: 'LoadBalancer Priority'
     required: true
+  API_HOST:
+    description: 'API Hostname'
+    required: true
+  API_PREFIX:
+    description: 'API prefix'
+    required: true
 
   # CLOUD FORMATION
   CLOUD_FORMATION_DEPLOY:
