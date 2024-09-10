@@ -101,6 +101,9 @@ inputs:
   AWS_CONTAINER_REGISTRY:
     description: 'AWS Elastic Container Registry'
     required: true
+  AWS_LOAD_BALANCER_PRIORITY:
+    description: 'LoadBalancer Priority'
+    required: true
 
   # CLOUD FORMATION
   CLOUD_FORMATION_DEPLOY:
@@ -350,16 +353,6 @@ runs:
     # DEPLOY TO DOCKER
     ############################################################################################################
 
-    - name: "Deploy Cloud Formation"
-      shell: bash
-      run: |
-        echo ">>>>>>>>>>>>>>>> HERE 1 <<<<<<<<<<<<<<<<"
-        echo "csproj: ${{steps.check_files.outputs.CSPROJ_EXIST}}"
-        echo "sln: ${{steps.check_files.outputs.SLN_EXIST}}"
-        echo "sql: ${{steps.check_files.outputs.SQL_EXIST}}"
-        echo "app: >>${{inputs.DOCKER_APP_NAME}}>>"
-        echo "deploy: >>${{env.DEPLOY}}>>"
-
     - name: "Copy docker files"
       if: |-
         steps.check_files.outputs.CSPROJ_EXIST == 'true' &&
@@ -385,6 +378,7 @@ runs:
         APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}
         APP_NAME: ${{inputs.DOCKER_APP_NAME}}
         AWS_CONTAINER_REGISTRY: ${{inputs.AWS_CONTAINER_REGISTRY}}
+        AWS_LOAD_BALANCER_PRIORITY: ${{inputs.AWS_LOAD_BALANCER_PRIORITY}}
         CONTAINER_SOURCE: ${{github.workspace}}/server-dist/linux-arm64
         CONTAINER_PLATFORM: linux/arm64
 
