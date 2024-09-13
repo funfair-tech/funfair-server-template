@@ -43,7 +43,7 @@ runs:
       id: priorities
       shell: bash
       run: |
-        if [ ${{inputs.AWS_LOAD_BALANCER_PRIORITY}" -gt 0 ]; then
+        if [ "${{inputs.AWS_LOAD_BALANCER_PRIORITY}" -gt 0 ]; then
           {
             MAIN=$((${{inputs.AWS_LOAD_BALANCER_PRIORITY}}))
             DIRECT1=$((${{inputs.AWS_LOAD_BALANCER_PRIORITY}}+1))
