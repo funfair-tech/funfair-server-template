@@ -48,7 +48,9 @@ runs:
             MAIN=$((${{inputs.AWS_LOAD_BALANCER_PRIORITY}}))
             DIRECT1=$((${{inputs.AWS_LOAD_BALANCER_PRIORITY}}+1))
             DIRECT2=$((${{inputs.AWS_LOAD_BALANCER_PRIORITY}}+1))
-            echo "MAIN=${{inputs.AWS_LOAD_BALANCER_PRIORITY}}" >>
+            echo "MAIN=$MAIN"
+            echo "MAIN=$DIRECT1"
+            echo "MAIN=$DIRECT1"
           } >> "$GITHUB_OUTPUT"
         else
           {
