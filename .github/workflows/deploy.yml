@@ -70,7 +70,7 @@ jobs:
         with:
           CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}
           CLOUDFORMATION_SNS_ARN: ${{inputs.CLOUDFORMATION_SNS_ARN}}
-          CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}
+          CLOUD_FORMATION_TEMPLATE_FILE: "${{github.workspace}}/${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}"
           DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}
           DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}
           BUILD_VERSION: ${{inputs.BUILD_VERSION}}
