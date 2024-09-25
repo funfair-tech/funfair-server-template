@@ -57,6 +57,20 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: "Log parameters"
+        shell: bash
+        run: |
+          echo "CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}"
+          echo "CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}"
+          echo "DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}"
+          echo "DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}"
+          echo "BUILD_VERSION: ${{inputs.BUILD_VERSION}}"
+          echo "API_HOST: ${{inputs.API_HOST}}"
+          echo "API_PREFIX: ${{inputs.API_PREFIX}}"
+          echo "AWS_LOAD_BALANCER_HOSTNAME: ${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}"
+          echo "AWS_CONTAINER_REGISTRY: ${{inputs.AWS_CONTAINER_REGISTRY}}"
+          echo "AWS_LOAD_BALANCER_PRIORITY: ${{inputs.AWS_LOAD_BALANCER_PRIORITY}}"
+
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
@@ -64,7 +78,6 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_DOCKER_CONTAINER_REGISTRY_SECRET_ACCESS_KEY}}
           aws-region: ${{vars.AWS_REGION}}
 
-      ## AWS_CONTAINER_REGISTRY: ${{vars.AWS_CONTAINER_REGISTRY}}
       - name: "Cloudformation Deploy"
         uses: ./.github/actions/cloudformation-deploy
         with:
