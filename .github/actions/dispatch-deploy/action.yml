@@ -47,16 +47,16 @@ runs:
     - name: "Log parameters"
       shell: bash
       run: |
-        echo "CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}",
-        echo "CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}",
-        echo "DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}",
-        echo "DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}",
-        echo "BUILD_VERSION: ${{inputs.BUILD_VERSION}}",
-        echo "API_HOST: ${{inputs.API_HOST}},
-        echo "API_PREFIX: ${{inputs.API_PREFIX}}",
-        echo "AWS_LOAD_BALANCER_HOSTNAME: ${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}",
-        echo "AWS_CONTAINER_REGISTRY: ${{inputs.AWS_CONTAINER_REGISTRY}}",
-        echo "AWS_LOAD_BALANCER_PRIORITY: ${{inputs.AWS_LOAD_BALANCER_PRIORITY}}",
+        echo "CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}"
+        echo "CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}"
+        echo "DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}"
+        echo "DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}"
+        echo "BUILD_VERSION: ${{inputs.BUILD_VERSION}}"
+        echo "API_HOST: ${{inputs.API_HOST}}
+        echo "API_PREFIX: ${{inputs.API_PREFIX}}"
+        echo "AWS_LOAD_BALANCER_HOSTNAME: ${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}"
+        echo "AWS_CONTAINER_REGISTRY: ${{inputs.AWS_CONTAINER_REGISTRY}}"
+        echo "AWS_LOAD_BALANCER_PRIORITY: ${{inputs.AWS_LOAD_BALANCER_PRIORITY}}"
 
     - name: "Trigger Deployment Workflow"
       uses: actions/github-script@v6
