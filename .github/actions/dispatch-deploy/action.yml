@@ -43,7 +43,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-
     - name: "Log parameters"
       shell: bash
       run: |
