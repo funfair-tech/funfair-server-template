@@ -48,10 +48,14 @@ jobs:
     runs-on: [self-hosted, linux, deploy]
 
     steps:
-      - name: "Hello World"
-        shell: bash
-        run: |
-          echo "Hello World: ${{inputs.CLOUD_FORMATION_STACK}}"
+      - name: "Correct ownership"
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+
+      - name: "Checkout"
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v4.0.2
