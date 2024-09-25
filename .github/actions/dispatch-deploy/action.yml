@@ -29,6 +29,9 @@ inputs:
   AWS_LOAD_BALANCER_PRIORITY:
     description: "AWS Load Balancer match priority"
     required: true
+  AWS_CONTAINER_REGISTRY:
+    description: "AWS container registry to retrieve package from"
+    required: true
   BUILD_VERSION:
     description: "Build Version"
     required: true
