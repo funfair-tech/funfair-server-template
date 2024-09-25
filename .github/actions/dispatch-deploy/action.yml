@@ -74,7 +74,7 @@ runs:
                 DOCKER_APP_OWNER: "${{inputs.DOCKER_APP_OWNER}}",
                 DOCKER_APP_NAME: "${{inputs.DOCKER_APP_NAME}}",
                 BUILD_VERSION: "${{inputs.BUILD_VERSION}}",
-                API_HOST: "${{inputs.API_HOST}},
+                API_HOST: "${{inputs.API_HOST}}",
                 API_PREFIX: "${{inputs.API_PREFIX}}",
                 AWS_LOAD_BALANCER_HOSTNAME: "${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}",
                 AWS_CONTAINER_REGISTRY: "${{inputs.AWS_CONTAINER_REGISTRY}}",
