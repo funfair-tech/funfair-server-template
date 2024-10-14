@@ -374,3 +374,6 @@ server-dist/
 
 # Nuget
 .nuget/
+
+# Dotnet tool config
+.config/
