@@ -36,7 +36,7 @@ runs:
     shell: bash
     working-directory: ${{ github.workspace }}
     run: |
-      [ -d "$HOME:/.dotnet" ] && rm -fr "$HOME/.dotnet"
+      [ -d "$HOME/.dotnet" ] && rm -fr "$HOME/.dotnet"
       mkdir "$HOME/.dotnet"
 
     # Workaround for https://github.com/dotnet/sdk/issues/11432
