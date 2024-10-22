@@ -201,7 +201,7 @@ runs:
       inputs.NUGET_PACK == 'true' &&
       (inputs.NUGET_SYMBOL_FEED == '' || inputs.NUGET_SYMBOL_FEED == ' ')
     shell: bash
-    run: dotnet pushpackages --folder dist --api-key "${{inputs.NUGET_API_KEY}}" --source ${{inputs.NUGET_FEED}}
+    run: dotnet tool run pushpackages --folder dist --api-key "${{inputs.NUGET_API_KEY}}" --source ${{inputs.NUGET_FEED}}
     env:
       DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
       DOTNET_INSTALL_DIR: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
@@ -223,7 +223,7 @@ runs:
       inputs.NUGET_PACK == 'true' &&
       !(inputs.NUGET_SYMBOL_FEED == '' || inputs.NUGET_SYMBOL_FEED == ' ')
     shell: bash
-    run: dotnet pushpackages --folder dist --api-key "${{inputs.NUGET_API_KEY}}" --source ${{inputs.NUGET_FEED}} --symbol-source ${{inputs.NUGET_SYMBOL_FEED}}
+    run: dotnet tool run pushpackages --folder dist --api-key "${{inputs.NUGET_API_KEY}}" --source ${{inputs.NUGET_FEED}} --symbol-source ${{inputs.NUGET_SYMBOL_FEED}}
     env:
       DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
       DOTNET_INSTALL_DIR: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
