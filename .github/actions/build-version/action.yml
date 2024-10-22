@@ -24,8 +24,9 @@ runs:
         echo "Github Run ID: ${{github.run_id}}"
         echo "Github Run Number: ${{github.run_number}}"
         echo "Github Run Attempt: ${{github.run_attempt}}"
-        echo "Commit Count: $(git rev-list --count origin/main)"
-        echo "Commit Count/Nr/Attempt: $(git rev-list --count origin/main)"
+        echo "Commit Count: "
+        git rev-list --count "${{github.ref}}"
+
 
 
     - name: "Set Define Build Version"
