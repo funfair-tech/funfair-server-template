@@ -31,6 +31,7 @@ runs:
   using: "composite"
   steps:
 
+    # Workaround for https://github.com/dotnet/sdk/issues/11432
   - name: "Explicitly kill any existing dotnet"
     shell: bash
     working-directory: ${{ github.workspace }}
