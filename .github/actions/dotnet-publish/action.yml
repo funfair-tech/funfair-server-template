@@ -42,14 +42,14 @@ runs:
                 "-r:${{inputs.PLATFORM}}" \
                 --self-contained \
                 -nodeReuse:False \
-                "-p:DisableSwagger=False" \
+                "-p:DisableSwagger=${{env.RELEASE}}" \
                 "-p:FFPublishing=True" \
                 "-p:IncludeNativeLibrariesForSelfExtract=false" \
                 "-p:IsProduction=${{inputs.PRODUCTION_BUILD}}" \
                 "-p:NoWarn=NETSDK1179" \
                 "-p:Optimize=true" \
                 "-p:PublishAot=false" \
-                "-p:PublishReadyToRun=False" \
+                "-p:PublishReadyToRun=True" \
                 "-p:PublishReadyToRunShowWarnings=True" \
                 "-p:PublishSingleFile=true" \
                 "-p:SolutionDir=..\\" \
