@@ -139,6 +139,12 @@ inputs:
   SQL_PASSWORD:
     description: 'Password for SQL_USER'
     required: false
+  REDGATE_EMAIL:
+    description: 'Redgate authentication email'
+    required: true
+  REDGATE_PAT:
+    description: 'Redgate authentication Personal Access Token'
+    required: true
 
 runs:
   using: "composite"
@@ -326,6 +332,8 @@ runs:
         BUILD_VERSION: ${{env.BUILD_VERSION}}
         BUILD_SQL: ${{steps.check_files.outputs.SQL_EXIST}}
         DB_FOLDER: ${{github.workspace}}/db
+        REDGATE_EMAIL: ${{inputs.REDGATE_EMAIL}}
+        REDGATE_PAT: ${{inputs.REDGATE_EMAIL}}
         NUGET_PACK: ${{inputs.NUGET_PACK}}
         NUGET_FEED: ${{inputs.NUGET_FEED}}
         NUGET_SYMBOL_FEED: ${{inputs.NUGET_SYMBOL_FEED}}
@@ -410,6 +418,8 @@ runs:
         SQL_USER: ${{inputs.SQL_USER}}
         SQL_PASSWORD: ${{inputs.SQL_PASSWORD}}
         DB_FOLDER: ${{github.workspace}}/db
+        REDGATE_EMAIL: ${{inputs.REDGATE_EMAIL}}
+        REDGATE_PAT: ${{inputs.REDGATE_EMAIL}}
 
     - name: "Dotnet: Cloudformation Deploy"
       if: |-

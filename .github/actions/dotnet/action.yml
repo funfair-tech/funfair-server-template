@@ -42,6 +42,12 @@ inputs:
   DB_FOLDER:
     description: 'Folder where SQL Files live'
     required: false
+  REDGATE_EMAIL:
+    description: 'Redgate authentication email'
+    required: true
+  REDGATE_PAT:
+    description: 'Redgate authentication Personal Access Token'
+    required: true
 
   # GENERAL
   GITHUB_TOKEN:
@@ -148,6 +154,8 @@ runs:
     with:
       BUILD_VERSION: ${{inputs.BUILD_VERSION}}
       DB_FOLDER: ${{inputs.DB_FOLDER}}
+      REDGATE_EMAIL: ${{inputs.REDGATE_EMAIL}}
+      REDGATE_PAT: ${{inputs.REDGATE_EMAIL}}
 
   ############################################################################################################
   # Publish ready for deploy

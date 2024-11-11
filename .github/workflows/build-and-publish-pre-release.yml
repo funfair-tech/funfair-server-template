@@ -104,6 +104,8 @@ jobs:
           SQL_DB: ${{vars.SQL_DB}}
           SQL_USER: ${{vars.SQL_USER}}
           SQL_PASSWORD: ${{secrets.SQL_PASSWORD}}
+          REDGATE_EMAIL: ${{secrets.REDGATE_EMAIL}}
+          REDGATE_PAT: ${{secrets.REDGATE_PAT}}
           CREATE_RELEASE: false
 
       - name: "Build and deploy"
@@ -149,6 +151,8 @@ jobs:
           SQL_DB: ${{vars.SQL_DB}}
           SQL_USER: ${{vars.SQL_USER}}
           SQL_PASSWORD: ${{secrets.SQL_PASSWORD}}
+          REDGATE_EMAIL: ${{secrets.REDGATE_EMAIL}}
+          REDGATE_PAT: ${{secrets.REDGATE_PAT}}
           CREATE_RELEASE: false
 
       - name: "Build Version"
