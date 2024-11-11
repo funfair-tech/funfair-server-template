@@ -11,6 +11,13 @@ inputs:
     description: 'Folder where SQL Files live'
     required: true
 
+  REDGATE_EMAIL:
+    description: 'Redgate authentication email'
+    required: true
+  REDGATE_PAT:
+    description: 'Redgate authentication Personal Access Token'
+    required: true
+
 runs:
   using: "composite"
   steps:
@@ -50,6 +57,8 @@ runs:
              "-v$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
              --net=host \
              --rm redgate/sqlcompare:15.3.0 \
+            --email="${{inputs.REDGATE_EMAIL}}" \
+            --token="${{inputs.REDGATE_PAT}}" \
              /IAgreeToTheEULA \
              /filter:"$DB_FILTER" \
              /options:CaseSensitiveObjectDefinition,ConsiderNextFilegroupInPartitionSchemes,DecryptPost2kEncryptedObjects,DoNotOutputCommentHeader,ForceColumnOrder,IgnoreCertificatesAndCryptoKeys,IgnoreDatabaseAndServerName,IgnoreUserProperties,IgnoreUsersPermissionsAndRoleMemberships,IgnoreWhiteSpace,IgnoreWithElementOrder,IncludeDependencies,NoDeploymentLogging,ThrowOnFileParseFailed,UseCompatibilityLevel \
