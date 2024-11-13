@@ -22,6 +22,7 @@ jobs:
 
     env:
       REPO_STATUS: ${{vars.REPO_VISIBILITY}}
+      SQLCOMPARE_VERSION: 15.3.13
 
     steps:
       - name: "Initialise Workspace"
@@ -97,6 +98,7 @@ jobs:
           SQL_PASSWORD: ${{secrets.SQL_PASSWORD}}
           REDGATE_EMAIL: ${{secrets.REDGATE_EMAIL}}
           REDGATE_PAT: ${{secrets.REDGATE_PAT}}
+          SQLCOMPARE_VERSION: ${{env.SQLCOMPARE_VERSION}}
           CREATE_RELEASE: true
 
       - name: "Build and deploy"
@@ -144,6 +146,7 @@ jobs:
           SQL_PASSWORD: ${{secrets.SQL_PASSWORD}}
           REDGATE_EMAIL: ${{secrets.REDGATE_EMAIL}}
           REDGATE_PAT: ${{secrets.REDGATE_PAT}}
+          SQLCOMPARE_VERSION: ${{env.SQLCOMPARE_VERSION}}
           CREATE_RELEASE: true
 
       - name: "Build Version"
