@@ -31,7 +31,7 @@ jobs:
 
     env:
       REPO_STATUS: ${{vars.REPO_VISIBILITY}}
-      SQLCOMPARE_VERSION: 15.3.13
+      SQLCOMPARE_VERSION: latest
 
     steps:
       - name: "Initialise Workspace"
