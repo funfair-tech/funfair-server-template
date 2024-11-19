@@ -8,9 +8,6 @@ inputs:
   CLOUD_FORMATION_TEMPLATE_FILE:
     description: 'The Cloud Formation file to deploy'
     required: true
-  CLOUDFORMATION_SNS_ARN:
-    description: 'SSN Notification ARN'
-    required: false
   DOCKER_APP_OWNER:
     description: 'docker app owner'
     required: true
@@ -47,7 +44,6 @@ runs:
       shell: bash
       run: |
         echo "CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}"
-        echo "CLOUDFORMATION_SNS_ARN: ${{inputs.CLOUD_FORMATION_STACK}}"
         echo "CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}"
         echo "DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}"
         echo "DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}"
@@ -70,7 +66,6 @@ runs:
             ref: 'main',
             inputs: {
                 CLOUD_FORMATION_STACK: "${{inputs.CLOUD_FORMATION_STACK}}",
-                CLOUDFORMATION_SNS_ARN: "${{inputs.CLOUD_FORMATION_STACK}}",
                 CLOUD_FORMATION_TEMPLATE_FILE: "${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}",
                 DOCKER_APP_OWNER: "${{inputs.DOCKER_APP_OWNER}}",
                 DOCKER_APP_NAME: "${{inputs.DOCKER_APP_NAME}}",
