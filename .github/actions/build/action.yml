@@ -397,7 +397,7 @@ runs:
         inputs.DOCKER_APP_NAME != '' &&
         env.DEPLOY == 'true'
       shell: bash
-      run: cp "${{github.workspace}}/Dockerfile" "${{github.workspace}}/server-dist/linux-arm64"
+      run: cp "${{github.workspace}}/Dockerfile" "${{github.workspace}}/server-dist/${{inputs.DOTNET_DOCKER_PLATFORM}}"
 
     - name: "Copy docker: healthcheck"
       if: |-
@@ -407,7 +407,7 @@ runs:
         inputs.DOCKER_APP_NAME != '' &&
         env.DEPLOY == 'true'
       shell: bash
-      run: cp "${{github.workspace}}/healthcheck" "${{github.workspace}}/server-dist/linux-arm64"
+      run: cp "${{github.workspace}}/healthcheck" "${{github.workspace}}/server-dist/${{inputs.DOTNET_DOCKER_PLATFORM}}"
 
     - name: "Dotnet: Build Docker Container"
       if: |-
@@ -424,7 +424,7 @@ runs:
         APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}
         APP_NAME: ${{inputs.DOCKER_APP_NAME}}
         AWS_CONTAINER_REGISTRY: ${{inputs.AWS_CONTAINER_REGISTRY}}
-        CONTAINER_SOURCE: ${{github.workspace}}/server-dist/linux-arm64
+        CONTAINER_SOURCE: ${{github.workspace}}/server-dist/${{inputs.DOTNET_DOCKER_PLATFORM}}
         CONTAINER_PLATFORM: ${{inputs.DOTNET_CONTAINER_PLATFORM}}
 
     - name: "Dotnet: SQL Deploy"
