@@ -377,6 +377,18 @@ runs:
     # DEPLOY TO DOCKER
     ############################################################################################################
 
+    - name: "Docker"
+      shell: bash
+      run: |
+        echo "CSPROJ_EXIST: ${{steps.check_files.outputs.CSPROJ_EXIST}}"
+        echo "SLN_EXIST: ${{steps.check_files.outputs.SLN_EXIST}}"
+        echo "DOCKERFILE_EXIST: ${{steps.check_files.outputs.DOCKERFILE_EXIST}}"
+        echo "HEALTHCHECK_EXIST: ${{steps.check_files.outputs.HEALTHCHECK_EXIST}}"
+        echo "DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}"
+        echo "DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}"
+        echo "DEPLOY: ${{env.DEPLOY}}"
+        ecjo "Registry: ${{inputs.AWS_CONTAINER_REGISTRY}}
+
     - name: "Copy docker: Dockerfile"
       if: |-
         steps.check_files.outputs.CSPROJ_EXIST == 'true' &&
