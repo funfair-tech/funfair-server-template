@@ -17,7 +17,7 @@ runs:
   using: "composite"
   steps:
     - name: "Create SBOM"
-      uses: anchore/sbom-action@v0.15.10
+      uses: anchore/sbom-action@v0.18.0
       with:
         github-token: ${{inputs.GITHUB_TOKEN}}
         format: spdx-json
@@ -25,7 +25,7 @@ runs:
         config: "${{ github.workspace }}.github/linters/syft.yml"
 
     - name: "Scan SBOM"
-      uses: anchore/scan-action@v3.6.4
+      uses: anchore/scan-action@v6.1.0
       with:
         sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
         fail-build: false
@@ -37,7 +37,7 @@ runs:
 
     - name: "Run Grype vulnerability scanner"
       if: always()
-      uses: anchore/scan-action@v3.6.4
+      uses: anchore/scan-action@v6.1.0
       with:
         image: "${{inputs.APP_OWNER}}/${{inputs.APP_NAME}}:test"
         fail-build: true
