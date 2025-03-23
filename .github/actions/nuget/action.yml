@@ -226,8 +226,8 @@ runs:
     ####################################################################################################################
     #  ADD NON-CACHED/DIRECT FEEDS
     ####################################################################################################################
-    ## TODO: Find out why this can't find sleet!
     - name: "Dotnet: Add nuget feed (nuget.org)"
+      if: inputs.NUGET_PUBLIC_RESTORE_FEED_CACHE == ''
       shell: bash
       run: |
         echo "Adding nuget.org NuGet feed..."
