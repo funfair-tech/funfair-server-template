@@ -82,7 +82,7 @@ jobs:
             [[ -n "${{vars.NPM_CACHE}}" ]] \
                         && echo "NPM_REGISTRY=${{vars.NPM_CACHE}}"
             [[ -n "${{vars.NPM_CACHE}}" ]] \
-              [[ -n "${{vars.NPM_CACHE_CERT}}" ]] \\
+                  && [[ -n "${{vars.NPM_CACHE_CERT}}" ]] \\
                         && echo "NPM_CACHE_CERT=${{vars.NPM_CACHE_CERT}}"
           }>> "$GITHUB_ENV"
 
