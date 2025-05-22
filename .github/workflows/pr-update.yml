@@ -15,12 +15,13 @@ concurrency:
 env:
   HEAD_REF: ${{github.head_ref}}
   BASE_REF: ${{github.base_ref}}
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
 jobs:
   info:
     if: endsWith(github.repository , '-template')
     runs-on: [self-hosted, linux, build]
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
     steps:
       - name: "Initialise Workspace"
         if: startsWith(runner.name, 'buildagent-')
@@ -45,6 +46,8 @@ jobs:
   add-pr-label:
     if: ${{github.actor != 'dependabot[bot]'}}
     runs-on: [self-hosted, linux, build]
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
     steps:
       - name: "Initialise Workspace"
         if: startsWith(runner.name, 'buildagent-')
@@ -65,6 +68,8 @@ jobs:
       && ( github.event.action == 'opened' || github.event.action == 'reopened')
       && github.actor != 'dependabot[bot]'}}
     runs-on: [self-hosted, linux, build]
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
     steps:
       - name: "Initialise Workspace"
         if: startsWith(runner.name, 'buildagent-')

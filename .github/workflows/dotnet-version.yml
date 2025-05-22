@@ -16,13 +16,14 @@ concurrency:
 permissions:
   contents: write
 
-env:
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
 jobs:
   bump-dotnet-sdk-version:
     if: endsWith(github.repository, 'funfair-server-template')
     runs-on: [self-hosted, linux, build]
+
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     steps:
       - name: "Initialise Workspace"

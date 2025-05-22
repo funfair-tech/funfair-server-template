@@ -16,13 +16,13 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
 jobs:
   build-matrix:
     runs-on: [self-hosted, linux, build]
 
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     steps:
       - name: "Initialise Workspace"
@@ -71,6 +71,7 @@ jobs:
       BRANCH: ${{matrix.branch}}
       CREATE_DRAFT: true
       REPO_STATUS: private
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     steps:
       - name: "Initialise Workspace"

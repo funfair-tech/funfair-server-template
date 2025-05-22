@@ -17,8 +17,6 @@ on:
 permissions:
   contents: read
 
-env:
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
 jobs:
   enable-auto-merge-github-actions:
@@ -26,6 +24,9 @@ jobs:
       vars.DEPENDABOT_AUTOMERGE == 'true' &&
       startsWith(github.head_ref, 'dependabot/github_actions/')
     runs-on: [self-hosted, linux, build]
+
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     permissions:
       contents: write
@@ -59,6 +60,9 @@ jobs:
       startsWith(github.head_ref, 'dependabot/npm_and_yarn/')
     runs-on: [self-hosted, linux, build]
 
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
     permissions:
       contents: write
       pull-requests: write
@@ -89,6 +93,9 @@ jobs:
       startsWith(github.head_ref, 'dependabot/github_actions/')
     runs-on: [self-hosted, linux, build]
 
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
     permissions:
       contents: write
       pull-requests: write
@@ -115,6 +122,9 @@ jobs:
       vars.DEPENDABOT_AUTOMERGE == 'true' &&
       startsWith(github.head_ref, 'dependabot/npm_and_yarn/')
     runs-on: [self-hosted, linux, build]
+
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     permissions:
       contents: write

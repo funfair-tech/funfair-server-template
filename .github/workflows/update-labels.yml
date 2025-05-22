@@ -15,16 +15,18 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
 jobs:
+
   update-labels-config:
 
     runs-on: [self-hosted, linux, build]
 
     permissions:
       issues: write  # for crazy-max/ghaction-github-labeler to create, rename, update
+
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     steps:
       - name: "Initialise Workspace"

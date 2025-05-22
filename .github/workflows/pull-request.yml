@@ -21,11 +21,12 @@ env:
   BASE_REF: ${{github.base_ref}}
   REPO: ${{github.repository}}
   REPO_OWNER: ${{github.repository_owner}}
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
 jobs:
   info:
     runs-on: [self-hosted, linux, build]
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
     steps:
       - name: "Initialise Workspace"
         if: startsWith(runner.name, 'buildagent-')
@@ -47,6 +48,7 @@ jobs:
     env:
       CREATE_DRAFT: true
       REPO_STATUS: private
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     steps:
       - name: "Initialise Workspace"

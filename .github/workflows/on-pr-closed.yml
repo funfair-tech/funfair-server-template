@@ -5,12 +5,11 @@ on:
     types:
       - closed
 
-env:
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
-
 jobs:
   cleanup-cache:
     runs-on: [self-hosted, linux, build]
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
     steps:
       - name: "Initialise Workspace"
         if: startsWith(runner.name, 'buildagent-')

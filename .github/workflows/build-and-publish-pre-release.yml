@@ -24,9 +24,6 @@ permissions:
   contents: write
   security-events: write
 
-env:
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
-
 jobs:
   build-pre-release:
 
@@ -45,6 +42,7 @@ jobs:
       NUGET_BAGET_CACHE: ''
       PRERELEASE_BAGET_CACHE: ''
       RELEASE_BAGET_CACHE: ''
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     steps:
       - name: "Initialise Workspace"

@@ -17,9 +17,6 @@ concurrency:
 permissions:
   contents: write
 
-env:
-  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
-
 jobs:
   standardise-tsql-files:
 
@@ -29,6 +26,8 @@ jobs:
         && !startsWith(github.head_ref, 'hotfix/') )
         && github.actor != 'dependabot[bot]'
     runs-on: [self-hosted, linux, build]
+    env:
+      ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
     steps:
       - name: "Initialise Workspace"
