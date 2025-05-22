@@ -17,6 +17,8 @@ env:
   HEAD_REF: ${{github.head_ref}}
   BASE_REF: ${{github.base_ref}}
   REPO_STATUS: private
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
 jobs:
   info:
     if: endsWith(github.repository, '-template')

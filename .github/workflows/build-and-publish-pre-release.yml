@@ -24,6 +24,9 @@ permissions:
   contents: write
   security-events: write
 
+env:
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
 jobs:
   build-pre-release:
 

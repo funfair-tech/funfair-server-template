@@ -43,9 +43,13 @@ permissions:
   contents: write
   security-events: write
 
+env:
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
 jobs:
   deploy:
     runs-on: [self-hosted, linux, deploy]
+
 
     steps:
       - name: "Correct ownership"

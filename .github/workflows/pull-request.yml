@@ -21,6 +21,7 @@ env:
   BASE_REF: ${{github.base_ref}}
   REPO: ${{github.repository}}
   REPO_OWNER: ${{github.repository_owner}}
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
 
 jobs:
   info:

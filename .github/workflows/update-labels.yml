@@ -15,6 +15,9 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
 jobs:
   update-labels-config:
 

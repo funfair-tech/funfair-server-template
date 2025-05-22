@@ -17,6 +17,9 @@ concurrency:
 permissions:
   contents: write
 
+env:
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
 jobs:
   missing-releases:
     runs-on: [self-hosted, linux, build]

@@ -10,9 +10,13 @@ concurrency:
   group: ${{github.workflow}}-${{github.ref}}
   cancel-in-progress: true
 
+env:
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
 jobs:
   auto-rebase:
     runs-on: [self-hosted, linux, build]
+
 
     if: github.ref == 'refs/heads/main' || github.event_name == 'release'
     timeout-minutes: 5

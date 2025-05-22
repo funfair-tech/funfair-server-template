@@ -17,6 +17,9 @@ on:
 permissions:
   contents: read
 
+env:
+  ACTIVE_GITHUB_RUNNER_NAME: ${{runner.name}}
+
 jobs:
   enable-auto-merge-github-actions:
     if: |-
@@ -27,6 +30,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+
 
     # Specifically check that dependabot (or another trusted party) created this pull-request, and that it has been labelled correctly.
 
