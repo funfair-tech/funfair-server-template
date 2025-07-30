@@ -164,11 +164,12 @@ runs:
             --source-path "$SOURCE_FOLDER" \
             --target-path "$OUTPUT_FOLDER" \
             --version "${{inputs.BUILD_VERSION}}" \
-            --wallet "${{github.workspace}}/Wallet.json" \
+            --wallet "$WALLET_FILE" \
             --wallet-password "${{ secrets.NPM_CONTENT_PACKAGE_WALLET_PASSWORD }}"
     env:
       SOURCE_FOLDER: "${{github.workspace}}/src/dist"
       OUTPUT_FOLDER: "${{github.workspace}}/dist"
+      WALLET_FILE: ${{github.workspace}}/Wallet.json
       TMP: ${{runner.temp}}
       DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
       DOTNET_INSTALL_DIR: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
@@ -209,12 +210,10 @@ runs:
     shell: bash
     working-directory: ${{ github.workspace }}
     run: |
-      dotnet tool run signcontentpackage \
-          -Package "${{github.workspace}}/dist/${{inputs.PROJECT_TO_PUBLISH}}-${{inputs.BUILD_VERSION}}.nupkg" \
-          -WarningAsErrors true \
-          -Wallet false \
-          -Wallet "${{steps.store-signing-wallet.outputs.file}}" \
-          -WalletPassword "${{inputs.NPM_PACKAGE_STORE_SIGNING_WALLET_PASSWORD}}"
+      dotnet tool run signcontentpackage sign \
+          --package "$PACKAGE_FILENAME" \
+          -wallet "$WALLET_FILE" \
+          -wallet-password "${{inputs.NPM_PACKAGE_STORE_SIGNING_WALLET_PASSWORD}}"
     env:
       DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
       DOTNET_INSTALL_DIR: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
@@ -228,3 +227,5 @@ runs:
       DOTNET_TieredPGO: "1"
       MSBUILDTERMINALLOGGER: "auto"
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+      PACKAGE_FILENAME: ${{github.workspace}}/dist/${{inputs.PROJECT_TO_PUBLISH}}-${{inputs.BUILD_VERSION}}.nupkg
+      WALLET_FILE: ${{steps.store-signing-wallet.outputs.file}}
