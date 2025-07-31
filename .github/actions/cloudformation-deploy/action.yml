@@ -40,7 +40,7 @@ runs:
   using: "composite"
   steps:
 
-    - name: "Add offsets for the direct "
+    - name: "Add offsets for direct connections"
       id: priorities
       shell: bash
       run: |
