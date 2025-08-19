@@ -1,0 +1,8 @@
+[
+  {
+    "ruleSet": "SonarAnalyzer.CSharp",
+    "rule": "S125",
+    "state": "Error",
+    "description": "No commented out code."
+  }
+]
