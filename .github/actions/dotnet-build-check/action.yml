@@ -1,6 +1,6 @@
---- # Define build version properties
-name: 'Define Build Version'
-description: 'Defines the build version properties'
+--- # Dotnet Build Check
+name: 'Dotnet Build Check'
+description: 'Dotnet Build Check'
 inputs:
   # GENERAL
   GITHUB_TOKEN:
