@@ -9,7 +9,7 @@
     "ruleSet": "FunFair.CodeAnalysis",
     "rule": "FFS0008",
     "state": "Error",
-    "description": "Use of non-whitelisted #pragma warning\" -newState \"Error"
+    "description": "Use of non-whitelisted #pragma warning"
   },
   {
     "ruleSet": "FunFair.CodeAnalysis",
