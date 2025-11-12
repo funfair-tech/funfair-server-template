@@ -85,7 +85,7 @@ jobs:
       - name: "Check if Latest is newer than the current defined"
         id: upgrade_check
         run: |
-          VER=echo "${{env.DOTNET_VERSION}} ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}" | tr ' ' '\n' | uniq | sort --version-sort | tail -1
+          VER=$(echo "${{env.DOTNET_VERSION}} ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}" | tr ' ' '\n' | uniq | sort --version-sort | tail -1)
           echo "Latest Version: $VER"
           [[ "$VER" == "${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}" ]] && echo "NEW_VERSION=true" >> "$GITHUB_OUTPUT" || echo "NEW_VERSION=false" >> "$GITHUB_OUTPUT"
 
