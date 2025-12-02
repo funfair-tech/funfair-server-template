@@ -197,7 +197,9 @@ roslynator_object_creation_type_style=implicit_when_type_is_obvious
 #roslynator_use_var_instead_of_implicit_object_creation = true|false
 roslynator_use_var_instead_of_implicit_object_creation=false
 
-
+########################################################################################################################
+# VS IDE Checks
+########################################################################################################################
 #Simplify name (IDE0001)
 dotnet_diagnostic.IDE0001.severity = error
 #Simplify member access (IDE0002)
@@ -349,6 +351,345 @@ dotnet_diagnostic.IDE0303.severity = error
 dotnet_diagnostic.IDE0304.severity = error
 # Use collection expression for fluent
 dotnet_diagnostic.IDE0305.severity = error
+
+########################################################################################################################
+# Managed Code analysis
+########################################################################################################################
+
+# CA1001 - ?? 
+dotnet_diagnostic.CA1001.severity = None
+# CA1002 - ?? 
+dotnet_diagnostic.CA1002.severity = None
+# CA1003 - ?? 
+dotnet_diagnostic.CA1003.severity = Error
+# CA1005 - ?? 
+dotnet_diagnostic.CA1005.severity = None
+# C1A008 - Flags Enum should have an enum called 'None' with a value 0 
+dotnet_diagnostic.CA1008.severity = None
+# CA1009 - ?? 
+dotnet_diagnostic.CA1009.severity = Error
+# CA1012 - ?? 
+dotnet_diagnostic.CA1012.severity = Error
+# CA1014 - ?? 
+dotnet_diagnostic.CA1014.severity = None
+# CA1016 - ?? 
+dotnet_diagnostic.CA1016.severity = Error
+# CA1018 - ?? 
+dotnet_diagnostic.CA1018.severity = Error
+# CA1019 - ?? 
+dotnet_diagnostic.CA1019.severity = None
+# CA1025 - ?? 
+dotnet_diagnostic.CA1025.severity = Error
+# CA1027 - ?? 
+dotnet_diagnostic.CA1027.severity = None
+# CA1028 - ?? 
+dotnet_diagnostic.CA1028.severity = Error
+# CA1030 - ?? 
+dotnet_diagnostic.CA1030.severity = None
+# CA1031 - ?? 
+dotnet_diagnostic.CA1031.severity = None
+# CA1033 - ?? 
+dotnet_diagnostic.CA1033.severity = None
+# CA1034 - ?? 
+dotnet_diagnostic.CA1034.severity = Error
+# CA1036 - ?? 
+dotnet_diagnostic.CA1036.severity = Error
+# CA1040 - ?? 
+dotnet_diagnostic.CA1040.severity = None
+# CA1041 - ?? 
+dotnet_diagnostic.CA1041.severity = Error
+# CA1043 - ?? 
+dotnet_diagnostic.CA1043.severity = Error
+# CA1044 - ?? 
+dotnet_diagnostic.CA1044.severity = Error
+# CA1047 - ?? 
+dotnet_diagnostic.CA1047.severity = Error
+# CA1048 - ?? 
+dotnet_diagnostic.CA1048.severity = Error
+# CA1049 - ?? 
+dotnet_diagnostic.CA1049.severity = Error
+# CA1050 - ?? 
+dotnet_diagnostic.CA1050.severity = Error
+# CA1051 - ?? 
+dotnet_diagnostic.CA1051.severity = Error
+# CA1052 - ?? 
+dotnet_diagnostic.CA1052.severity = Error
+# CA1053 - ?? 
+dotnet_diagnostic.CA1053.severity = Error
+# CA1054 - ?? 
+dotnet_diagnostic.CA1054.severity = None
+# CA1055 - ?? 
+dotnet_diagnostic.CA1055.severity = Error
+# CA1056 - ?? 
+dotnet_diagnostic.CA1056.severity = Error
+# CA1057 - ?? 
+dotnet_diagnostic.CA1057.severity = Error
+# CA1058 - ?? 
+dotnet_diagnostic.CA1058.severity = Error
+# CA1059 - ?? 
+dotnet_diagnostic.CA1059.severity = Error
+# CA1060 - ?? 
+dotnet_diagnostic.CA1060.severity = Error
+# CA1061 - ?? 
+dotnet_diagnostic.CA1061.severity = Error
+# CA1062 - ?? 
+dotnet_diagnostic.CA1062.severity = None
+# CA1063 - ?? 
+dotnet_diagnostic.CA1063.severity = Error
+# CA1064 - ?? 
+dotnet_diagnostic.CA1064.severity = Error
+# CA1065 - ?? 
+dotnet_diagnostic.CA1065.severity = Error
+# CA1301 - ?? 
+dotnet_diagnostic.CA1301.severity = Error
+# CA1303 - ?? 
+dotnet_diagnostic.CA1303.severity = None
+# CA1305 - ?? 
+dotnet_diagnostic.CA1305.severity = None
+# CA1306 - ?? 
+dotnet_diagnostic.CA1306.severity = Error
+# CA1307 - ?? 
+dotnet_diagnostic.CA1307.severity = None
+# CA1308 - ?? 
+dotnet_diagnostic.CA1308.severity = None
+# CA1309 - ?? 
+dotnet_diagnostic.CA1309.severity = Error
+# CA1400 - ?? 
+dotnet_diagnostic.CA1400.severity = Error
+# CA1401 - ?? 
+dotnet_diagnostic.CA1401.severity = Error
+# CA1403 - ?? 
+dotnet_diagnostic.CA1403.severity = Error
+# CA1403 - ?? 
+dotnet_diagnostic.CA1404.severity = Error
+# CA1405 - ?? 
+dotnet_diagnostic.CA1405.severity = Error
+# CA1410 - ?? 
+dotnet_diagnostic.CA1410.severity = Error
+# CA1415 - ?? 
+dotnet_diagnostic.CA1415.severity = Error
+# CA1501 - ?? 
+dotnet_diagnostic.CA1501.severity = None
+# CA1502 - ?? 
+dotnet_diagnostic.CA1502.severity = Error
+# CA1504 - ?? 
+dotnet_diagnostic.CA1504.severity = Error
+# CA1505 - ?? 
+dotnet_diagnostic.CA1505.severity = Error
+# CA1506 - ?? 
+dotnet_diagnostic.CA1506.severity = None
+# CA1515 - Because an application's API isn't typically referenced from outside the assembly, types can be made internal 
+dotnet_diagnostic.CA1515.severity = Info
+# CA1600 - ?? 
+dotnet_diagnostic.CA1600.severity = Error
+# CA1601 - ?? 
+dotnet_diagnostic.CA1601.severity = Error
+# CA1700 - ?? 
+dotnet_diagnostic.CA1700.severity = Error
+# CA1707 - ?? 
+dotnet_diagnostic.CA1707.severity = None
+# CA1710 - ?? 
+dotnet_diagnostic.CA1710.severity = None
+# CA1712 - ?? 
+dotnet_diagnostic.CA1712.severity = None
+# CA1716 - ?? 
+dotnet_diagnostic.CA1716.severity = None
+# CA1717 - ?? 
+dotnet_diagnostic.CA1717.severity = None
+# CA1724 - ?? 
+dotnet_diagnostic.CA1724.severity = None
+# CA1800 - ?? 
+dotnet_diagnostic.CA1800.severity = Error
+# CA1801 - ?? 
+dotnet_diagnostic.CA1801.severity = Error
+# CA1802 - ?? 
+dotnet_diagnostic.CA1802.severity = Error
+# CA1803 - ?? 
+dotnet_diagnostic.CA1803.severity = Error
+# CA1804 - ?? 
+dotnet_diagnostic.CA1804.severity = Error
+# CA1805 - ?? 
+dotnet_diagnostic.CA1805.severity = Error
+# CA1806 - ?? 
+dotnet_diagnostic.CA1806.severity = Error
+# CA1807 - ?? 
+dotnet_diagnostic.CA1807.severity = Error
+# CA1808 - ?? 
+dotnet_diagnostic.CA1808.severity = Error
+# CA1809 - ?? 
+dotnet_diagnostic.CA1809.severity = Error
+# CA1810 - ?? 
+dotnet_diagnostic.CA1810.severity = Error
+# CA1811 - ?? 
+dotnet_diagnostic.CA1811.severity = Error
+# CA1812 - ?? 
+dotnet_diagnostic.CA1812.severity = Error
+# CA1813 - ?? 
+dotnet_diagnostic.CA1813.severity = Error
+# CA1814 - ?? 
+dotnet_diagnostic.CA1814.severity = Error
+# CA1815 - ?? 
+dotnet_diagnostic.CA1815.severity = Error
+# CA1816 - ?? 
+dotnet_diagnostic.CA1816.severity = Error
+# CA1819 - ?? 
+dotnet_diagnostic.CA1819.severity = None
+# CA1820 - ?? 
+dotnet_diagnostic.CA1820.severity = Error
+# CA1821 - ?? 
+dotnet_diagnostic.CA1821.severity = Error
+# CA1822 - ?? 
+dotnet_diagnostic.CA1822.severity = Error
+# CA1823 - ?? 
+dotnet_diagnostic.CA1823.severity = Error
+# CA1826 - ?? 
+dotnet_diagnostic.CA1826.severity = None
+# CA1848 - For improved performance, use the LoggerMessage delegates instead of calling 'LoggerExtensions.LogXXX(ILogger, string?, params object?[])' 
+#TODO: Review whether there's a better way of doing this that keeps the code readable 
+dotnet_diagnostic.CA1848.severity = None
+# CA1859 - For improved performance, use the concrete type X instead of base class or interface' 
+dotnet_diagnostic.CA1859.severity = None
+# CA1900 - ?? 
+dotnet_diagnostic.CA1900.severity = Error
+# CA1901 - ?? 
+dotnet_diagnostic.CA1901.severity = Error
+# CA2000 - ?? 
+dotnet_diagnostic.CA2000.severity = Error
+# CA2001 - ?? 
+dotnet_diagnostic.CA2001.severity = Error
+# CA2002 - ?? 
+dotnet_diagnostic.CA2002.severity = Error
+# CA2003 - ?? 
+dotnet_diagnostic.CA2003.severity = Error
+# CA2004 - ?? 
+dotnet_diagnostic.CA2004.severity = Error
+# CA2006 - ?? 
+dotnet_diagnostic.CA2006.severity = Error
+# CA2007 - ?? 
+dotnet_diagnostic.CA2007.severity = None
+# CA2008 - ?? 
+dotnet_diagnostic.CA2008.severity = None
+# CA2100 - ?? 
+dotnet_diagnostic.CA2100.severity = Error
+# CA2101 - ?? 
+dotnet_diagnostic.CA2101.severity = Error
+# CA2108 - ?? 
+dotnet_diagnostic.CA2108.severity = Error
+# CA2111 - ?? 
+dotnet_diagnostic.CA2111.severity = Error
+# CA2112 - ?? 
+dotnet_diagnostic.CA2112.severity = Error
+# CA2114 - ?? 
+dotnet_diagnostic.CA2114.severity = Error
+# CA2116 - ?? 
+dotnet_diagnostic.CA2116.severity = Error
+# CA2117 - ?? 
+dotnet_diagnostic.CA2117.severity = Error
+# CA2119 - ?? 
+dotnet_diagnostic.CA2119.severity = Error
+# CA2121 - ?? 
+dotnet_diagnostic.CA2121.severity = Error
+# CA2122 - ?? 
+dotnet_diagnostic.CA2122.severity = Error
+# CA2123 - ?? 
+dotnet_diagnostic.CA2123.severity = Error
+# CA2124 - ?? 
+dotnet_diagnostic.CA2124.severity = Error
+# CA2126 - ?? 
+dotnet_diagnostic.CA2126.severity = Error
+# CA2131 - ?? 
+dotnet_diagnostic.CA2131.severity = Error
+# CA2132 - ?? 
+dotnet_diagnostic.CA2132.severity = Error
+# CA2133 - ?? 
+dotnet_diagnostic.CA2133.severity = Error
+# CA2134 - ?? 
+dotnet_diagnostic.CA2134.severity = Error
+# CA2137- ?? 
+dotnet_diagnostic.CA2137.severity = Error
+# CA2138 - ?? 
+dotnet_diagnostic.CA2138.severity = Error
+# CA2140 - ?? 
+dotnet_diagnostic.CA2140.severity = Error
+# CA2141 - ?? 
+dotnet_diagnostic.CA2141.severity = Error
+# CA2146 - ?? 
+dotnet_diagnostic.CA2146.severity = Error
+# CA2147 - ?? 
+dotnet_diagnostic.CA2147.severity = Error
+# CA2149 - ?? 
+dotnet_diagnostic.CA2149.severity = Error
+# CA2200 - ?? 
+dotnet_diagnostic.CA2200.severity = Error
+# CA2201 - ?? 
+dotnet_diagnostic.CA2201.severity = Error
+# CA2202 - ?? 
+dotnet_diagnostic.CA2202.severity = Error
+# CA2205 - ?? 
+dotnet_diagnostic.CA2205.severity = Error
+# CA2207 - ?? 
+dotnet_diagnostic.CA2207.severity = Error
+# CA2208 - ?? 
+dotnet_diagnostic.CA2208.severity = Error
+# CA2211 - ?? 
+dotnet_diagnostic.CA2211.severity = Error
+# CA2212 - ?? 
+dotnet_diagnostic.CA2212.severity = Error
+# CA2213 - ?? 
+dotnet_diagnostic.CA2213.severity = Error
+# CA2214 - ?? 
+dotnet_diagnostic.CA2214.severity = Error
+# CA2215 - ?? 
+dotnet_diagnostic.CA2215.severity = Error
+# CA2216 - ?? 
+dotnet_diagnostic.CA2216.severity = Error
+# CA2217 - ?? 
+dotnet_diagnostic.CA2217.severity = None
+# CA2218 - ?? 
+dotnet_diagnostic.CA2218.severity = Error
+# CA2219 - ?? 
+dotnet_diagnostic.CA2219.severity = Error
+# CA2220 - ?? 
+dotnet_diagnostic.CA2220.severity = Error
+# CA2221 - ?? 
+dotnet_diagnostic.CA2221.severity = Error
+# CA2224 - ?? 
+dotnet_diagnostic.CA2224.severity = Error
+# CA2225 - ?? 
+dotnet_diagnostic.CA2225.severity = None
+# CA2226 - ?? 
+dotnet_diagnostic.CA2226.severity = Error
+# CA2227 - ?? 
+dotnet_diagnostic.CA2227.severity = None
+# CA2229 - ?? 
+dotnet_diagnostic.CA2229.severity = Error
+# CA2230 - ?? 
+dotnet_diagnostic.CA2230.severity = Error
+# CA2231 - ?? 
+dotnet_diagnostic.CA2231.severity = Error
+# CA2232 - ?? 
+dotnet_diagnostic.CA2232.severity = Error
+# CA2233 - ?? 
+dotnet_diagnostic.CA2233.severity = Error
+# CA2234 - ?? 
+dotnet_diagnostic.CA2234.severity = Error
+# CA2235 - ?? 
+dotnet_diagnostic.CA2235.severity = Error
+# CA2236 - ?? 
+dotnet_diagnostic.CA2236.severity = Error
+# CA2237 - ?? 
+dotnet_diagnostic.CA2237.severity = Error
+# CA2238 - ?? 
+dotnet_diagnostic.CA2238.severity = Error
+# CA2240 - ?? 
+dotnet_diagnostic.CA2240.severity = Error
+# CA2241 - ?? 
+dotnet_diagnostic.CA2241.severity = Error
+# CA2242 - ?? 
+dotnet_diagnostic.CA2242.severity = Error
+# CA2254 The logging message template should not vary between calls to 'LoggerExtensions.LogXXX(ILogger, string?, params object?[]) 
+#TODO: Review whethere there's a better way of doing this that keeps the code readable 
+dotnet_diagnostic.CA2254.severity = None
 
 [*.{appxmanifest,asax,ascx,aspx,build,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
 indent_style=space
