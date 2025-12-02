@@ -22,7 +22,7 @@
     - "src/**/*.json"
 
 "Static Code Analysis Rules":
-    - "src/CodeAnalysis.ruleset"
+    - ".editorconfig"
 
 "Migration Script":
     - "tools/MigrationScripts/**/*"
