@@ -72,3 +72,7 @@ title = "gitleaks config"
     regexes = [
         '''(.*?)gitleaks:allow'''
     ]
+    paths = [
+        '''gitleaks\.toml''',
+        '''(.*?)(package\-lock\.json)'''
+]
