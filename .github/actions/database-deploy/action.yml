@@ -20,15 +20,6 @@ inputs:
   DB_FOLDER:
     description: 'Folder where SQL Files live'
     required: true
-  REDGATE_EMAIL:
-    description: 'Redgate authentication email'
-    required: true
-  REDGATE_PAT:
-    description: 'Redgate authentication Personal Access Token'
-    required: true
-  SQLCOMPARE_VERSION:
-    description: 'Version of SQL Compare to use'
-    required: true
 
 runs:
   using: "composite"
