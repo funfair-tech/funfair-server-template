@@ -1,32 +1,25 @@
---- # Build and deploy packages
-name: 'Publish to Sleet'
-description: 'Publishes Nuget packages with sleet'
+--- # Run dotnet tool
+name: 'Run dotnet tool'
+description: 'Run dotnet tool'
 inputs:
-  SLEET_CONFIG:
-    description: 'Sleet config file'
+  TOOL_NAME:
+    description: 'Tool to run'
+    required: true
+  TOOL_ARGUMENTS:
+    description: 'Tool arguments'
     required: false
-  SLEET_FEED:
-    description: 'Sleet feed to push packages to'
-    required: false
+    default: 'latest'
 
 runs:
   using: "composite"
   steps:
 
-    - name: "Sleet: Generate Sleet Config"
+    - name: "Run dotnet tool (Latest)"
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: |
-        echo "$VALUE" > "${FILE}"
-      env:
-        FILE: "sleet.json"
-        VALUE: "${{ inputs.SLEET_CONFIG }}"
-
-    - name: "Sleet: Publish Packages to Nuget (Using Sleet)"
-      if: always()
-      shell: bash
-      working-directory: ${{ github.workspace }}
-      run: dotnet tool run --allow-roll-forward sleet push "${{github.workspace}}/dist" --config sleet.json --source ${{inputs.SLEET_FEED}}
+      run: dotnet tool run --allow-roll-forward \
+              ${{inputs.TOOL_NAME}} \
+              ${{inputs.TOOL_ARGUMENTS}}
       env:
         DOTNET_ROOT: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
         DOTNET_INSTALL_DIR: "${{github.workspace}}/.dotnet/${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
@@ -40,3 +33,4 @@ runs:
         DOTNET_TieredPGO: "1"
         MSBUILDTERMINALLOGGER: "auto"
         NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
