@@ -381,3 +381,4 @@ dotnet-tools.json
 
 /build/
 /coverage/
+node-modules
