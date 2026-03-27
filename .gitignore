@@ -378,3 +378,6 @@ dotnet-tools.json
 
 # Test output
 /test-output
+
+/build/
+/coverage/
