@@ -48,7 +48,7 @@ jobs:
     steps:
 
     - name: "Initialise Workspace"
-      if: startsWith(runner.name, 'buildagent-')
+      if: runner.environment == 'self-hosted'
       shell: bash
       run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -88,7 +88,7 @@ jobs:
 
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -126,7 +126,7 @@ jobs:
 
     steps:
     - name: "Initialise Workspace"
-      if: startsWith(runner.name, 'buildagent-')
+      if: runner.environment == 'self-hosted'
       shell: bash
       run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -163,7 +163,7 @@ jobs:
 
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 

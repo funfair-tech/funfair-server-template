@@ -32,7 +32,7 @@ jobs:
           fi
 
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -54,7 +54,7 @@ jobs:
           token: ${{secrets.SOURCE_PUSH_TOKEN}}
 
       - name: "Install Build tools"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         uses: ./.github/actions/build-tools
         with:
           GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
@@ -66,7 +66,7 @@ jobs:
           NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE: ${{vars.NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE}}
 
       - name: "Install Build tools"
-        if: startsWith(runner.name, 'buildagent-') != true
+        if: runner.environment != 'self-hosted'
         uses: ./.github/actions/build-tools
         with:
           GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}

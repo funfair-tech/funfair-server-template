@@ -24,7 +24,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -51,7 +51,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -90,7 +90,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -160,7 +160,7 @@ jobs:
             core.info('OS: ${{runner.os}}');
 
       - name: "Enable Local nuget feeds if caching"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         id: nuget-local-cache
         shell: bash
         run: |
@@ -220,7 +220,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -256,7 +256,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -284,7 +284,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -312,7 +312,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -341,7 +341,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -382,7 +382,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
@@ -412,7 +412,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
-        if: startsWith(runner.name, 'buildagent-')
+        if: runner.environment == 'self-hosted'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
