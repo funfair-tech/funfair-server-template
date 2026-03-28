@@ -26,16 +26,16 @@ jobs:
         shell: bash
         run: |
           {
-          echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-          echo "ACTIVE_HOSTNAME=$HOSTNAME"
-          echo "ACTIVE_USER=$USER"
+            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_HOSTNAME=$HOSTNAME"
+            echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
 
       - name: "Install extensions"
         shell: bash
         run: gh extension install actions/gh-actions-cache
         env:
-          GH_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
+          GH_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
 
       - name: "Cleanup"
         shell: bash
@@ -53,6 +53,6 @@ jobs:
           done
           echo "Done"
         env:
-          GH_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
-          REPO: ${{ github.repository }}
-          BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
+          GH_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+          REPO: ${{github.repository}}
+          BRANCH: refs/pull/${{github.event.pull_request.number}}/merge

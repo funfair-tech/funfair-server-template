@@ -31,9 +31,9 @@ jobs:
         shell: bash
         run: |
           {
-          echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-          echo "ACTIVE_HOSTNAME=$HOSTNAME"
-          echo "ACTIVE_USER=$USER"
+            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_HOSTNAME=$HOSTNAME"
+            echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
 
       - name: "Info"
@@ -89,9 +89,9 @@ jobs:
         shell: bash
         run: |
           {
-          echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-          echo "ACTIVE_HOSTNAME=$HOSTNAME"
-          echo "ACTIVE_USER=$USER"
+            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_HOSTNAME=$HOSTNAME"
+            echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
 
       - name: "Checkout Source"

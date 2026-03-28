@@ -50,11 +50,11 @@ jobs:
         shell: bash
         run: |
           {
-          echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-          echo "ACTIVE_HOSTNAME=$HOSTNAME"
-          echo "ACTIVE_USER=$USER"
-          echo "TEMP=${{runner.temp}}"
-          echo "TMP=${{runner.temp}}"
+            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_HOSTNAME=$HOSTNAME"
+            echo "ACTIVE_USER=$USER"
+            echo "TEMP=${{runner.temp}}"
+            echo "TMP=${{runner.temp}}"
           } >> "$GITHUB_ENV"
 
       - name: "Checkout Source"
