@@ -1,43 +1,69 @@
 "C#":
-    - "src/**/*.cs"
-    - "src/**/*.csproj"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "src/**/*.cs"
+      - "src/**/*.csproj"
 
 "SQL":
-    - "db/**/*"
-    - "tools/**/*.sql"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "db/**/*"
+      - "tools/**/*.sql"
 
 "Solidity":
-    - "src/**/*.sol"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "src/**/*.sol"
 
 "unit-tests":
-    - "src/*.Tests.*/**/*"
-    - "src/*.Tests.Integration.*/**/*"
-    - "src/*.Tests/**/*"
-    - "src/*.Tests.Integration/**/*"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "src/*.Tests.*/**/*"
+      - "src/*.Tests.Integration.*/**/*"
+      - "src/*.Tests/**/*"
+      - "src/*.Tests.Integration/**/*"
 
 ".NET update":
-    - "src/global.json"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "src/global.json"
 
 "Config Change":
-    - "src/**/*.json"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "src/**/*.json"
 
 "Static Code Analysis Rules":
-    - ".editorconfig"
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".editorconfig"
 
 "Migration Script":
-    - "tools/MigrationScripts/**/*"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "tools/MigrationScripts/**/*"
 
 "Legal Text":
-    - "tools/LegalText/**/*"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "tools/LegalText/**/*"
 
 "Change Log":
-    - "CHANGELOG.md"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "CHANGELOG.md"
 
 "Read Me":
-    - "README.md"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "README.md"
 
 "Setup":
-    - "SETUP.md"
+  - changed-files:
+    - any-glob-to-any-file:
+      - "SETUP.md"
 
 "github-actions":
-    - ".github/workflows/*.yml"
+  - changed-files:
+    - any-glob-to-any-file:
+      - ".github/workflows/*.yml"
