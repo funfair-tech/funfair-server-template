@@ -102,7 +102,9 @@ jobs:
       - name: "Get last commit info"
         if: steps.findPr.outputs.number == ''
         shell: bash
-        run: echo "COMMIT_MSG=$(git log -1 --pretty=%B)" >> "$GITHUB_ENV"
+        run: |
+          title="$(git log -1 --pretty=%s)"
+          echo "COMMIT_TITLE=$title" >> "$GITHUB_ENV"
 
       - name: "Check Repo Visibility"
         if: env.REPO_STATUS == '' &&steps.findPr.outputs.number == ''
@@ -141,7 +143,7 @@ jobs:
           pr_assignee: ${{github.actor}}      # Comma-separated list (no spaces)
           pr_label: "auto-pr"                   # Comma-separated list (no spaces)
           pr_draft: ${{env.CREATE_DRAFT}}                        # Creates pull request as draft
-          pr_title: ${{env.COMMIT_MSG}}
+          pr_title: ${{env.COMMIT_TITLE}}
           pr_body: ${{steps.pr-template.outputs.content}}
           github_token: ${{github.token}}
 
