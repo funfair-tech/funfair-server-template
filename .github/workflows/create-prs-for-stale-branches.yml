@@ -104,6 +104,15 @@ jobs:
           repository: ${{github.repository}}
 
       - if: env.REPO_STATUS == '' && github.repository_owner != 'funfair-tech'
+        name: "Check Required Secrets"
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
+
+      - if: env.REPO_STATUS == '' && github.repository_owner != 'funfair-tech'
         name: "Check Repo Visibility"
         uses: credfeto/action-repo-visibility@v1.2.0
         id: visibility
@@ -227,6 +236,15 @@ jobs:
             core.info('PR: ${{steps.open-pr.outputs.pr_number}}');
             core.info('CF: ${{steps.open-pr.outputs.has_changed_files}}');
 
+      - name: "Check Required Secrets"
+        if: steps.open-pr.outputs.pr_number != ''
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
+
       - name: "Update PR Labels"
         if: steps.open-pr.outputs.pr_number != ''
         uses: actions/labeler@v6
@@ -247,6 +265,19 @@ jobs:
         with:
           script: |
             core.info('Rebase?');
+
+      - name: "Check Required Secrets"
+        if: |-
+          steps.detection.outputs.defaultbranch != matrix.branch
+          && steps.find-pull-request.outputs.number == ''
+          && steps.aheadbehind.outputs.ahead == '0'
+          && steps.aheadbehind.outputs.dayssinceupdate > 60
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
 
       - name: "Delete Branch"
         if: |-

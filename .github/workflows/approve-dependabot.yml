@@ -19,7 +19,20 @@ permissions:
 
 
 jobs:
+  requirements:
+    if: vars.DEPENDABOT_AUTOMERGE == 'true'
+    runs-on: [self-hosted, linux, build]
+    steps:
+      - name: "Check Required Secrets"
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
+
   enable-auto-merge-github-actions:
+    needs: [requirements]
     if: |-
       vars.DEPENDABOT_AUTOMERGE == 'true' &&
       startsWith(github.head_ref, 'dependabot/github_actions/')
@@ -61,6 +74,7 @@ jobs:
         merge-method: "MERGE"
 
   enable-auto-merge-npm:
+    needs: [requirements]
     if: |-
       vars.DEPENDABOT_AUTOMERGE == 'true' &&
       startsWith(github.head_ref, 'dependabot/npm_and_yarn/')
@@ -100,6 +114,7 @@ jobs:
           merge-method: "MERGE"
 
   auto-approve-dependabot-gitub-actions:
+    needs: [requirements]
     if: |-
       vars.DEPENDABOT_AUTOMERGE == 'true' &&
       startsWith(github.head_ref, 'dependabot/github_actions/')
@@ -136,6 +151,7 @@ jobs:
         github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
 
   auto-approve-dependabot-npm:
+    needs: [requirements]
     if: |-
       vars.DEPENDABOT_AUTOMERGE == 'true' &&
       startsWith(github.head_ref, 'dependabot/npm_and_yarn/')

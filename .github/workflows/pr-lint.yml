@@ -117,6 +117,15 @@ jobs:
           file: src/global.json
           fallback: 8.0.*
 
+      - name: "Check Required Secrets"
+        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
+
       - name: "Install dotnet"
         if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
         uses: actions/setup-dotnet@v5.2.0
@@ -363,7 +372,7 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: 'Dependency Review'
+      - name: "Dependency Review"
         if: steps.visibility.outputs.is_public == 'true'
         uses: actions/dependency-review-action@v4.9.0
 
@@ -422,6 +431,14 @@ jobs:
           clean: true
           fetch-depth: 0
           fetch-tags: true
+
+      - name: "Check Required Secrets"
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
 
       - name: "Run Linter"
         uses: super-linter/super-linter@v8.5.0

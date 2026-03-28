@@ -17,6 +17,18 @@ env:
   BASE_REF: ${{github.base_ref}}
 
 jobs:
+  requirements:
+    if: github.actor != 'dependabot[bot]'
+    runs-on: [self-hosted, linux, build]
+    steps:
+      - name: "Check Required Secrets"
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
+
   info:
     if: endsWith(github.repository , '-template')
     runs-on: [self-hosted, linux, build]
@@ -51,6 +63,7 @@ jobs:
             core.info('Actor: ${{github.actor}}');
 
   add-pr-label:
+    needs: [requirements]
     if: ${{github.actor != 'dependabot[bot]'}}
     runs-on: [self-hosted, linux, build]
     steps:
@@ -76,6 +89,7 @@ jobs:
           sync-labels: true
 
   assign-to-creator:
+    needs: [requirements]
     if: |-
       ${{!github.event.pull_request.assignee.login
       && github.event_name == 'pull_request'

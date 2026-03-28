@@ -60,6 +60,15 @@ jobs:
           script: |
             core.info('Owner: ${{github.repository_owner}}');
 
+      - name: "Check Required Secrets"
+        if: github.repository_owner == 'funfair-tech'
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
+
       - name: "Auto-Merge"
         if: github.repository_owner == 'funfair-tech'
         uses: pascalgn/automerge-action@v0.16.4

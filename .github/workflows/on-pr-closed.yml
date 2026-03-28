@@ -9,6 +9,14 @@ jobs:
   cleanup-cache:
     runs-on: [self-hosted, linux, build]
     steps:
+      - name: "Check Required Secrets"
+        shell: bash
+        run: |
+          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
+            exit 1
+          fi
+
       - name: "Initialise Workspace"
         if: startsWith(runner.name, 'buildagent-')
         shell: bash
@@ -24,11 +32,13 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: "Install extensions"
+        shell: bash
         run: gh extension install actions/gh-actions-cache
         env:
           GH_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
       - name: "Cleanup"
+        shell: bash
         run: |
           echo "Fetching list of cache key"
           cacheKeysForPR=$(gh actions-cache list -R "$REPO" -B "$BRANCH" -L 100 | cut -f 1 )

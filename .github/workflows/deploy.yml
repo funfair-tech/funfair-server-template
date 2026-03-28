@@ -49,6 +49,7 @@ jobs:
 
     steps:
       - name: "Correct ownership"
+        shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
       - name: "Set Active Environment"
