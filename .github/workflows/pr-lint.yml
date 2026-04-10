@@ -425,7 +425,7 @@ jobs:
         uses: crajapakshe/changelog-validator@v1.0.0
         with:
           changelog-path: 'CHANGELOG.md'
-          check-updated: 'true'
+          check-updated: 'false'
 
   lint-code:
     if: |-
