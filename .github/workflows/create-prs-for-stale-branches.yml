@@ -150,10 +150,21 @@ jobs:
 
       - name: "Find Existing PR"
         if: steps.detection.outputs.defaultbranch != matrix.branch
-        uses: juliangruber/find-pull-request-action@v1.11.0
         id: find-pull-request
+        uses: actions/github-script@v9.0.0
+        env:
+          BRANCH: ${{env.BRANCH}}
         with:
-          branch: "${{env.BRANCH}}"
+          script: |
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${process.env.BRANCH}`,
+              state: 'open'
+            });
+            const pr = prs.data[0];
+            core.setOutput('number', pr ? String(pr.number) : '');
+            core.setOutput('head-sha', pr ? pr.head.sha : '');
 
       - name: "Display Found PR"
         if: steps.detection.outputs.defaultbranch != matrix.branch
@@ -201,9 +212,12 @@ jobs:
           && steps.aheadbehind.outputs.ahead != 0
           && steps.aheadbehind.outputs.dayssinceupdate > 7
         id: pr-template
-        uses: juliangruber/read-file-action@v1.1.8
-        with:
-          path: ./.github/PULL_REQUEST_TEMPLATE.md
+        shell: bash
+        run: |
+          content=$(cat ./.github/PULL_REQUEST_TEMPLATE.md)
+          echo "content<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$content" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: "Create PR"
         if: |-
@@ -212,16 +226,29 @@ jobs:
           && steps.aheadbehind.outputs.ahead != 0
           && steps.aheadbehind.outputs.dayssinceupdate > 7
         id: open-pr
-        uses: repo-sync/pull-request@v2.12
-        with:
-          source_branch: ${{matrix.branch}}       # If blank, default: triggered branch
-          destination_branch: ${{steps.detection.outputs.defaultbranch}}            # If blank, default: master
-          pr_assignee: "${{github.actor}}"    # Comma-separated list (no spaces)
-          pr_label: "auto-pr,stale"             # Comma-separated list (no spaces)
-          pr_draft: ${{env.CREATE_DRAFT}}                        # Creates pull request as draft
-          pr_title: "${{steps.aheadbehind.outputs.COMMIT_MSG}} [No commits for ${{steps.aheadbehind.outputs.dayssinceupdate}} days]"
-          pr_body: "${{steps.pr-template.outputs.content}}"
-          github_token: ${{github.token}}
+        env:
+          GH_TOKEN: ${{github.token}}
+          PR_TITLE: "${{steps.aheadbehind.outputs.COMMIT_MSG}} [No commits for ${{steps.aheadbehind.outputs.dayssinceupdate}} days]"
+          PR_BODY: ${{steps.pr-template.outputs.content}}
+        shell: bash
+        run: |
+          draft_flag=""
+          if [ "${{env.CREATE_DRAFT}}" == "true" ]; then
+            draft_flag="--draft"
+          fi
+          url=$(gh pr create \
+            --repo "${{github.repository}}" \
+            --base "${{steps.detection.outputs.defaultbranch}}" \
+            --head "${{matrix.branch}}" \
+            --title "$PR_TITLE" \
+            --body "$PR_BODY" \
+            --assignee "${{github.actor}}" \
+            --label "auto-pr,stale" \
+            $draft_flag)
+          pr_number=$(gh pr view "$url" --json number --jq '.number')
+          echo "pr_url=$url" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+          echo "has_changed_files=true" >> "$GITHUB_OUTPUT"
 
       - name: "New PR Details"
         if: |-
@@ -285,10 +312,10 @@ jobs:
           && steps.find-pull-request.outputs.number == ''
           && steps.aheadbehind.outputs.ahead == '0'
           && steps.aheadbehind.outputs.dayssinceupdate > 60
-        uses: dawidd6/action-delete-branch@v3.1.0
-        with:
-          github_token: ${{secrets.SOURCE_PUSH_TOKEN}}
-          branches: ${{matrix.branch}}
+        env:
+          GH_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        shell: bash
+        run: gh api repos/${{github.repository}}/git/refs/heads/${{matrix.branch}} -X DELETE
 
       - name: "Statistics"
         if: |-

@@ -320,9 +320,12 @@ runs:
     - name: "Read Release Notes"
       if: steps.build_tools.outputs.BUILD_ENV == 'true'
       id: release-notes
-      uses: juliangruber/read-file-action@v1.1.8
-      with:
-        path: RELEASE_NOTES.md
+      shell: bash
+      run: |
+        content=$(cat RELEASE_NOTES.md)
+        echo "content<<EOF" >> "$GITHUB_OUTPUT"
+        echo "$content" >> "$GITHUB_OUTPUT"
+        echo "EOF" >> "$GITHUB_OUTPUT"
 
     ############################################################################################################
     # DOTNET BUILD
@@ -489,16 +492,18 @@ runs:
     - name: "Create Release"
       if: steps.build_tools.outputs.BUILD_ENV == 'true' && inputs.CREATE_RELEASE == 'true'
       id: create_release
-      uses: ncipollo/release-action@v1.20.0
-      with:
-        tag: v${{env.BUILD_VERSION}}
-        name:  Release ${{env.BUILD_VERSION}}
-        bodyFile: "RELEASE_NOTES.md"
-        draft: false
-        prerelease: false
-        immutableCreate: true
-        generateReleaseNotes: true
-        token: ${{inputs.GITHUB_TOKEN}}
+      env:
+        GH_TOKEN: ${{inputs.GITHUB_TOKEN}}
+      shell: bash
+      run: |
+        if gh release view "v${{env.BUILD_VERSION}}" &>/dev/null; then
+          echo "Release v${{env.BUILD_VERSION}} already exists, skipping"
+        else
+          gh release create "v${{env.BUILD_VERSION}}" \
+            --title "Release ${{env.BUILD_VERSION}}" \
+            --notes-file "RELEASE_NOTES.md" \
+            --generate-notes
+        fi
 
     ############################################################################################################
     # Software Bill of materials

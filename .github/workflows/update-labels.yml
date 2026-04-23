@@ -23,7 +23,7 @@ jobs:
     runs-on: [self-hosted, linux, build]
 
     permissions:
-      issues: write  # for crazy-max/ghaction-github-labeler to create, rename, update
+      issues: write  # required to create, rename, update and delete labels
 
     steps:
       - name: "Check Required Secrets"
@@ -58,12 +58,74 @@ jobs:
 
       - name: "Update Github label config"
         if: success()
-        uses: crazy-max/ghaction-github-labeler@v6.0.0
+        uses: actions/github-script@v9.0.0
         with:
           github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
-          yaml-file: .github/labels.yml
-          skip-delete: false
-          dry-run: false
-          exclude: |
-            help*
-            *issue
+          script: |
+            const fs = require('fs');
+            const content = fs.readFileSync('.github/labels.yml', 'utf8');
+
+            // Parse simple YAML list
+            const labels = [];
+            let current = null;
+            for (const line of content.split('\n')) {
+              if (line.match(/^\s*-\s*name:/)) {
+                if (current) labels.push(current);
+                current = { name: line.replace(/^\s*-\s*name:\s*["']?/, '').replace(/["']?\s*$/, '') };
+              } else if (current && line.match(/^\s+color:/)) {
+                current.color = line.replace(/^\s+color:\s*["']?/, '').replace(/["']?\s*$/, '');
+              } else if (current && line.match(/^\s+description:/)) {
+                current.description = line.replace(/^\s+description:\s*["']?/, '').replace(/["']?\s*$/, '');
+              }
+            }
+            if (current) labels.push(current);
+
+            const excludePatterns = ['help*', '*issue'];
+            const matchesExclude = (name) => excludePatterns.some(p => {
+              if (p.startsWith('*')) return name.toLowerCase().endsWith(p.slice(1).toLowerCase());
+              if (p.endsWith('*')) return name.toLowerCase().startsWith(p.slice(0, -1).toLowerCase());
+              return name.toLowerCase() === p.toLowerCase();
+            });
+
+            // Get existing labels
+            const existing = await github.paginate(github.rest.issues.listLabelsForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const existingMap = Object.fromEntries(existing.map(l => [l.name, l]));
+
+            for (const label of labels) {
+              if (!label.name || matchesExclude(label.name)) continue;
+              const color = (label.color || '000000').replace('#', '');
+              const description = label.description || '';
+              if (label.name in existingMap) {
+                await github.rest.issues.updateLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color,
+                  description,
+                });
+              } else {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color,
+                  description,
+                });
+              }
+            }
+
+            // Delete labels not in config
+            const configNames = new Set(labels.map(l => l.name));
+            for (const label of existing) {
+              if (matchesExclude(label.name)) continue;
+              if (!configNames.has(label.name)) {
+                await github.rest.issues.deleteLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                });
+              }
+            }

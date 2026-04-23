@@ -81,10 +81,19 @@ jobs:
           fetch-tags: true
 
       - name: "Find PR For branch"
-        uses: juliangruber/find-pull-request-action@v1.11.0
         id: findPr
+        uses: actions/github-script@v9.0.0
         with:
-          branch: ${{github.ref_name}}
+          script: |
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${context.ref.replace('refs/heads/', '')}`,
+              state: 'open'
+            });
+            const pr = prs.data[0];
+            core.setOutput('number', pr ? String(pr.number) : '');
+            core.setOutput('head-sha', pr ? pr.head.sha : '');
 
       - name: "Existing PR Information"
         if: steps.findPr.outputs.number != ''
@@ -97,9 +106,12 @@ jobs:
       - name: "Read PR Template"
         if: steps.findPr.outputs.number == ''
         id: pr-template
-        uses: juliangruber/read-file-action@v1.1.8
-        with:
-          path: ./.github/PULL_REQUEST_TEMPLATE.md
+        shell: bash
+        run: |
+          content=$(cat ./.github/PULL_REQUEST_TEMPLATE.md)
+          echo "content<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$content" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: "Get last commit info"
         if: steps.findPr.outputs.number == ''
@@ -149,16 +161,29 @@ jobs:
       - name: "Create Pull Request"
         if: steps.findPr.outputs.number == ''
         id: open-pr
-        uses: repo-sync/pull-request@v2.12
-        with:
-          source_branch: ""                     # If blank, default: triggered branch
-          destination_branch: "main"            # If blank, default: master
-          pr_assignee: ${{github.actor}}      # Comma-separated list (no spaces)
-          pr_label: "auto-pr"                   # Comma-separated list (no spaces)
-          pr_draft: ${{steps.draft-flag.outputs.create-draft || env.CREATE_DRAFT}}                        # Creates pull request as draft
-          pr_title: ${{steps.commit-info.outputs.commit-title}}
-          pr_body: ${{steps.pr-template.outputs.content}}
-          github_token: ${{github.token}}
+        env:
+          GH_TOKEN: ${{github.token}}
+          PR_TITLE: ${{steps.commit-info.outputs.commit-title}}
+          PR_BODY: ${{steps.pr-template.outputs.content}}
+          PR_DRAFT: ${{steps.draft-flag.outputs.create-draft || env.CREATE_DRAFT}}
+        shell: bash
+        run: |
+          draft_flag=""
+          if [ "$PR_DRAFT" == "true" ]; then
+            draft_flag="--draft"
+          fi
+          url=$(gh pr create \
+            --repo "${{github.repository}}" \
+            --base "main" \
+            --title "$PR_TITLE" \
+            --body "$PR_BODY" \
+            --assignee "${{github.actor}}" \
+            --label "auto-pr" \
+            $draft_flag)
+          pr_number=$(gh pr view "$url" --json number --jq '.number')
+          echo "pr_url=$url" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+          echo "has_changed_files=true" >> "$GITHUB_OUTPUT"
 
       - name: "New PR Details"
         if: steps.findPr.outputs.number == ''

@@ -123,12 +123,12 @@ jobs:
 
       - name: "Commit changes to new branch"
         if: steps.upgrade_check.outputs.NEW_VERSION == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v7.1.0
-        with:
-          commit_message: "SDK - Update DotNet SDK to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
-          branch: "depends/dotnet/${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
-          file_pattern: src/global.json
-          commit_user_name: "fun-version[bot]"
-          commit_user_email: "credfeto@users.noreply.github.com"
-          commit_author: "fun-version[bot] <credfeto@users.noreply.github.com>"
-          skip_dirty_check: false
+        shell: bash
+        run: |
+          git config user.name "fun-version[bot]"
+          git config user.email "credfeto@users.noreply.github.com"
+          git add src/global.json
+          git diff --cached --quiet || git commit \
+            --author="fun-version[bot] <credfeto@users.noreply.github.com>" \
+            -m "SDK - Update DotNet SDK to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+          git push origin "depends/dotnet/${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"

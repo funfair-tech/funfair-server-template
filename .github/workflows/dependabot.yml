@@ -41,6 +41,9 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: "Rebase"
-        uses: bbeesley/gha-auto-dependabot-rebase@v1.5.225
         env:
-          GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+          GH_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        shell: bash
+        run: |
+          gh pr list --author "app/dependabot" --state open --json number --jq '.[].number' | \
+            xargs -I{} gh pr comment {} --body "@dependabot rebase"

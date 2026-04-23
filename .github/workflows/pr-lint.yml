@@ -210,7 +210,15 @@ jobs:
           fetch-tags: true
 
       - name: "Check for merge conflicts"
-        uses: olivernybroe/action-conflict-finder@v4.1
+        shell: bash
+        run: |
+          conflict_files=$(grep -rln "^<<<<<<< \|^=======\|^>>>>>>> " . \
+            --exclude-dir=.git 2>/dev/null || true)
+          if [ -n "$conflict_files" ]; then
+            echo "::error::Conflict markers found in the following files:"
+            echo "$conflict_files"
+            exit 1
+          fi
 
   has-no-file-or-folder-case-sensitivity-issues:
     if: github.event.pull_request.draft == false
@@ -336,7 +344,14 @@ jobs:
           fetch-tags: true
 
       - name: "Check for merge commits"
-        uses: greenled/no-merge-commits-check@v1.0.1
+        shell: bash
+        run: |
+          merge_commits=$(git log --merges --oneline "origin/${{github.base_ref}}"..HEAD)
+          if [ -n "$merge_commits" ]; then
+            echo "::error::Merge commits found in PR"
+            echo "$merge_commits"
+            exit 1
+          fi
 
   valid-changelog:
     runs-on: [self-hosted, linux, build]

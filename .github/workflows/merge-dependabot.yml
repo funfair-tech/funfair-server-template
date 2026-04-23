@@ -69,15 +69,31 @@ jobs:
             exit 1
           fi
 
-      - name: "Auto-Merge"
+      - name: "Check Labels"
         if: github.repository_owner == 'funfair-tech'
-        uses: pascalgn/automerge-action@v0.16.4
+        id: check-labels
+        uses: actions/github-script@v9.0.0
+        with:
+          script: |
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) {
+              core.setOutput('has-label', 'false');
+              return;
+            }
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            const labels = pr.data.labels.map(l => l.name);
+            core.setOutput('has-label', labels.includes('github-actions') ? 'true' : 'false');
+
+      - name: "Auto-Merge"
+        if: github.repository_owner == 'funfair-tech' && steps.check-labels.outputs.has-label == 'true'
         env:
-          GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
-          MERGE_METHOD: merge
-          MERGE_COMMIT_MESSAGE: pull-request-title-and-description
-          MERGE_REQUIRED_APPROVALS: 1
-          MERGE_DELETE_BRANCH: true
-          MERGE_FORKS: false
-          MERGE_LABELS: github-actions
-          UPDATE_RETRIES: 10
+          GH_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        shell: bash
+        run: |
+          gh pr merge "${{github.event.pull_request.number}}" \
+            --merge \
+            --delete-branch
