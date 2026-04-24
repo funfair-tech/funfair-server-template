@@ -41,10 +41,10 @@ jobs:
         uses: actions/github-script@v9.0.0
         with:
           script: |
-            core.info('Branch: ${{env.HEAD_REF}}');
-            core.info('Base Branch: ${{env.BASE_REF}}');
-            core.info('Repo: ${{github.repository}}');
-            core.info('Owner: ${{github.repository_owner}}');
+            core.info(`Branch: ${process.env.HEAD_REF}`);
+            core.info(`Base Branch: ${process.env.BASE_REF}`);
+            core.info(`Repo: ${context.repo.owner}/${context.repo.repo}`);
+            core.info(`Owner: ${context.repo.owner}`);
 
   include-changelog-entry:
     if: github.event.pull_request.draft == false
