@@ -76,18 +76,24 @@ runs:
 
     - name: "Determine dotnet version"
       id: check_dotnet
-      shell: bash
-      run: |
-        if [[ -d src && -f src/global.json ]]; then
-          version=$(jq -r '.sdk.version' src/global.json)
-          echo "DOTNET_VERSION=$version" >> "$GITHUB_ENV"
-          echo "GLOBAL_JSON_EXIST=true" >> "$GITHUB_OUTPUT"
-          echo "Detected dotnet SDK version: $version"
-        else
-          echo "DOTNET_VERSION=10.0.*" >> "$GITHUB_ENV"
-          echo "GLOBAL_JSON_EXIST=false" >> "$GITHUB_OUTPUT"
-          echo "src/global.json not found, using fallback version: 10.0.*"
-        fi
+      uses: actions/github-script@v9.0.0
+      with:
+        script: |
+          const { existsSync, readFileSync } = require('fs');
+          const path = require('path');
+          const globalJsonPath = path.join(process.env.GITHUB_WORKSPACE, 'src', 'global.json');
+          if (existsSync(globalJsonPath)) {
+            const globalJson = JSON.parse(readFileSync(globalJsonPath, 'utf8'));
+            const version = globalJson.sdk.version;
+            core.exportVariable('DOTNET_VERSION', version);
+            core.setOutput('GLOBAL_JSON_EXIST', 'true');
+            core.info(`✅ Detected dotnet SDK version: ${version}`);
+            core.notice(`Dotnet SDK version: ${version}`);
+          } else {
+            core.exportVariable('DOTNET_VERSION', '10.0.*');
+            core.setOutput('GLOBAL_JSON_EXIST', 'false');
+            core.warning('⚠️ src/global.json not found — using fallback version: 10.0.*');
+          }
 
     - name: "Explicitly kill any existing dotnet"
       shell: bash
