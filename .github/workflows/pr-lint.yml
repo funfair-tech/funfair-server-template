@@ -289,13 +289,10 @@ jobs:
 
       - if: env.REPO_STATUS == ''
         name: "Check repo visibility"
-        uses: credfeto/action-repo-visibility@v1.2.0
+        uses: ./.github/actions/check-repo-visibility
         id: visibility
         with:
-          # optional parameter defaults to the current repo
-          repository: ${{github.repository}}
-          # optional parameter defaults to the current user
-          token: ${{github.token}}
+          github-token: ${{github.token}}
 
       - name: "Checkout Source"
         if: steps.visibility.outputs.is_public == 'true'
