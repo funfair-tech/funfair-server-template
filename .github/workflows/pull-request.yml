@@ -78,7 +78,6 @@ jobs:
         with:
           clean: true
           fetch-depth: 1
-          fetch-tags: true
 
       - name: "Find PR For branch"
         uses: ./.github/actions/find-pull-request
