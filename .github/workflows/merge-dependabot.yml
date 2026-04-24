@@ -54,12 +54,6 @@ jobs:
             echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
 
-      - name: "Check Owner"
-        uses: actions/github-script@v9.0.0
-        with:
-          script: |
-            core.info('Owner: ${{github.repository_owner}}');
-
       - name: "Check Required Secrets"
         if: github.repository_owner == 'funfair-tech'
         shell: bash
@@ -69,15 +63,83 @@ jobs:
             exit 1
           fi
 
+      - name: "Checkout Source"
+        uses: actions/checkout@v6.0.2
+
       - name: "Auto-Merge"
         if: github.repository_owner == 'funfair-tech'
-        uses: pascalgn/automerge-action@v0.16.4
+        uses: actions/github-script@v9.0.0
+        with:
+          github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
+          script: |
+            const mergeLabel = process.env.MERGE_LABEL;
+            core.info(`ℹ️ Owner: ${context.repo.owner}`);
+            core.info(`ℹ️ Event: ${context.eventName}`);
+
+            let prNumber;
+            if (context.eventName === 'pull_request' || context.eventName === 'pull_request_review') {
+              prNumber = context.payload.pull_request?.number;
+            } else if (context.eventName === 'check_suite') {
+              const prs = context.payload.check_suite?.pull_requests ?? [];
+              if (prs.length === 0) {
+                core.info('ℹ️ No PRs associated with this check_suite event');
+                return;
+              }
+              prNumber = prs[0].number;
+            } else if (context.eventName === 'status') {
+              const sha = context.payload.sha;
+              const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: sha,
+              });
+              if (prs.length === 0) {
+                core.info('ℹ️ No PRs associated with this status event');
+                return;
+              }
+              prNumber = prs[0].number;
+            }
+
+            if (!prNumber) {
+              core.info('ℹ️ Unable to determine PR number');
+              return;
+            }
+
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            core.info(`ℹ️ PR #${prNumber}: ${pr.title}`);
+
+            if (pr.head.repo?.fork) {
+              core.info('⚠️ Skipping: PR is from a fork');
+              return;
+            }
+
+            const labels = pr.labels.map(l => l.name);
+            if (!labels.includes(mergeLabel)) {
+              core.info(`⚠️ Skipping: PR does not have the '${mergeLabel}' label (has: ${labels.join(', ')})`);
+              return;
+            }
+
+            await github.graphql(`
+              mutation EnableAutoMerge($pullRequestId: ID!) {
+                enablePullRequestAutoMerge(input: {
+                  pullRequestId: $pullRequestId,
+                  mergeMethod: MERGE
+                }) {
+                  pullRequest {
+                    autoMergeRequest {
+                      enabledAt
+                    }
+                  }
+                }
+              }
+            `, { pullRequestId: pr.node_id });
+
+            core.info(`✅ Auto-merge enabled for PR #${prNumber}: ${pr.title}`);
+            core.notice(`Auto-merge enabled for PR #${prNumber}: ${pr.title}`);
         env:
-          GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
-          MERGE_METHOD: merge
-          MERGE_COMMIT_MESSAGE: pull-request-title-and-description
-          MERGE_REQUIRED_APPROVALS: 1
-          MERGE_DELETE_BRANCH: true
-          MERGE_FORKS: false
-          MERGE_LABELS: github-actions
-          UPDATE_RETRIES: 10
+          MERGE_LABEL: "github-actions"
