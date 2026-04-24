@@ -67,7 +67,7 @@ jobs:
             core.info('Owner: ${{github.repository_owner}}');
 
       - name: "Auto Merge"
-        uses: alexwilson/enable-github-automerge-action@2.0.0
+        uses: ./.github/actions/enable-automerge
         with:
           github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
           merge-method: "MERGE"
@@ -107,7 +107,7 @@ jobs:
             core.info('Owner: ${{github.repository_owner}}');
 
       - name: "Auto Merge"
-        uses: alexwilson/enable-github-automerge-action@2.0.0
+        uses: ./.github/actions/enable-automerge
         with:
           github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
           merge-method: "MERGE"
