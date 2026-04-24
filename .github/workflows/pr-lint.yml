@@ -107,8 +107,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           clean: true
-          fetch-depth: 0
-          fetch-tags: true
+          fetch-depth: 1
 
       - name: "Check Required Secrets"
         if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
@@ -206,8 +205,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           clean: true
-          fetch-depth: 0
-          fetch-tags: true
+          fetch-depth: 1
 
       - name: "Check for merge conflicts"
         uses: olivernybroe/action-conflict-finder@v4.1
@@ -234,8 +232,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           clean: true
-          fetch-depth: 0
-          fetch-tags: true
+          fetch-depth: 1
 
       - name: "Check for case conflicts"
         uses: credfeto/action-case-checker@v1.3.0
@@ -262,8 +259,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           clean: true
-          fetch-depth: 0
-          fetch-tags: true
+          fetch-depth: 1
 
       - name: "Check for ignored files"
         uses: credfeto/action-no-ignored-files@v1.2.0
@@ -342,8 +338,8 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v6.0.2
         with:
-          fetch-depth: 0
-          fetch-tags: true
+          clean: true
+          fetch-depth: 1
 
       # use test version of changelog validator until we can get the fix merged in and released
       # uses: crajapakshe/changelog-validator@v1.0.0
@@ -380,8 +376,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           clean: true
-          fetch-depth: 0
-          fetch-tags: true
+          fetch-depth: 1
 
       - name: "Check Required Secrets"
         shell: bash
