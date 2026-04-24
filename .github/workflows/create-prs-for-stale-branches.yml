@@ -105,12 +105,16 @@ jobs:
 
       - if: env.REPO_STATUS == '' && github.repository_owner != 'funfair-tech'
         name: "Check Required Secrets"
-        shell: bash
-        run: |
-          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
-            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
-            exit 1
-          fi
+        uses: actions/github-script@v9.0.0
+        env:
+          TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        with:
+          script: |
+            if (!process.env.TOKEN) {
+              core.setFailed('❌ SOURCE_PUSH_TOKEN is required but not set');
+            } else {
+              core.info('✅ SOURCE_PUSH_TOKEN is set');
+            }
 
       - if: env.REPO_STATUS == '' && github.repository_owner != 'funfair-tech'
         name: "Check Repo Visibility"
@@ -237,12 +241,16 @@ jobs:
 
       - name: "Check Required Secrets"
         if: steps.open-pr.outputs.pr_number != ''
-        shell: bash
-        run: |
-          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
-            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
-            exit 1
-          fi
+        uses: actions/github-script@v9.0.0
+        env:
+          TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        with:
+          script: |
+            if (!process.env.TOKEN) {
+              core.setFailed('❌ SOURCE_PUSH_TOKEN is required but not set');
+            } else {
+              core.info('✅ SOURCE_PUSH_TOKEN is set');
+            }
 
       - name: "Update PR Labels"
         if: steps.open-pr.outputs.pr_number != ''
@@ -269,12 +277,16 @@ jobs:
           && steps.find-pull-request.outputs.number == ''
           && steps.aheadbehind.outputs.ahead == '0'
           && steps.aheadbehind.outputs.dayssinceupdate > 60
-        shell: bash
-        run: |
-          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
-            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
-            exit 1
-          fi
+        uses: actions/github-script@v9.0.0
+        env:
+          TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        with:
+          script: |
+            if (!process.env.TOKEN) {
+              core.setFailed('❌ SOURCE_PUSH_TOKEN is required but not set');
+            } else {
+              core.info('✅ SOURCE_PUSH_TOKEN is set');
+            }
 
       - name: "Delete Branch"
         if: |-

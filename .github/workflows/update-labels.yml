@@ -27,12 +27,16 @@ jobs:
 
     steps:
       - name: "Check Required Secrets"
-        shell: bash
-        run: |
-          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
-            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
-            exit 1
-          fi
+        uses: actions/github-script@v9.0.0
+        env:
+          TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+        with:
+          script: |
+            if (!process.env.TOKEN) {
+              core.setFailed('❌ SOURCE_PUSH_TOKEN is required but not set');
+            } else {
+              core.info('✅ SOURCE_PUSH_TOKEN is set');
+            }
 
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
