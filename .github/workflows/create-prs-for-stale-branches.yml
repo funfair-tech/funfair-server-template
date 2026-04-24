@@ -285,10 +285,10 @@ jobs:
           && steps.find-pull-request.outputs.number == ''
           && steps.aheadbehind.outputs.ahead == '0'
           && steps.aheadbehind.outputs.dayssinceupdate > 60
-        uses: dawidd6/action-delete-branch@v3.1.0
+        uses: ./.github/actions/delete-branch
         with:
-          github_token: ${{secrets.SOURCE_PUSH_TOKEN}}
-          branches: ${{matrix.branch}}
+          github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
+          branch: ${{matrix.branch}}
 
       - name: "Statistics"
         if: |-
