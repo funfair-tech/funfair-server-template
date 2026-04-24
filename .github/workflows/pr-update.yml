@@ -33,19 +33,8 @@ jobs:
     if: endsWith(github.repository , '-template')
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Info"
         uses: actions/github-script@v9.0.0
@@ -67,19 +56,8 @@ jobs:
     if: ${{github.actor != 'dependabot[bot]'}}
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Add Labels"
         uses: ./.github/actions/sync-labels
@@ -96,19 +74,8 @@ jobs:
       && github.actor != 'dependabot[bot]'}}
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Assign PR to the creator"
         uses: ./.github/actions/assign-pr-to-creator

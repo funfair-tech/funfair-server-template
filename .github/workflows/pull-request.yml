@@ -26,20 +26,8 @@ jobs:
   info:
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        id: active-env
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_OUTPUT"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Info"
         uses: actions/github-script@v9.0.0
@@ -58,20 +46,8 @@ jobs:
       REPO_STATUS: private
 
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        id: active-env
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_OUTPUT"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout source"
         uses: actions/checkout@v6.0.2

@@ -24,19 +24,8 @@ jobs:
             exit 1
           fi
 
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Cleanup"
         uses: actions/github-script@v9.0.0

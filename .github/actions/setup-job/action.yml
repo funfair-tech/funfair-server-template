@@ -1,0 +1,29 @@
+name: "Setup Job"
+description: "Initialises workspace ownership and sets active environment variables"
+
+inputs:
+  include-temp:
+    description: "Whether to also set TEMP and TMP environment variables to runner.temp"
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - name: "Initialise Workspace"
+      if: runner.environment == 'self-hosted'
+      shell: bash
+      run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+
+    - name: "Set Active Environment"
+      shell: bash
+      run: |
+        {
+          echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+          echo "ACTIVE_HOSTNAME=$HOSTNAME"
+          echo "ACTIVE_USER=$USER"
+          if [[ "${{inputs.include-temp}}" == "true" ]]; then
+            echo "TEMP=${{runner.temp}}"
+            echo "TMP=${{runner.temp}}"
+          fi
+        } >> "$GITHUB_ENV"

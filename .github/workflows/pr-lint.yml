@@ -23,19 +23,8 @@ jobs:
     if: endsWith(github.repository, '-template')
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Info"
         uses: actions/github-script@v9.0.0
@@ -50,19 +39,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout Source"
         if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
@@ -89,19 +67,8 @@ jobs:
     # As LibGit2Sharp doesn't work on 20.04
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout Source"
         uses: actions/checkout@v6.0.2
@@ -149,19 +116,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout Source"
         uses: actions/checkout@v6.0.2
@@ -187,19 +143,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout Source"
         uses: actions/checkout@v6.0.2
@@ -220,19 +165,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout Source"
         uses: actions/checkout@v6.0.2
@@ -255,19 +189,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout Source"
         uses: actions/checkout@v6.0.2
@@ -291,19 +214,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - if: env.REPO_STATUS == ''
         name: "Check repo visibility"
@@ -329,19 +241,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Check for merge commits"
         uses: ./.github/actions/check-no-merge-commits
@@ -377,19 +278,8 @@ jobs:
       ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') )
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
-        shell: bash
-        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
-
-      - name: "Set Active Environment"
-        shell: bash
-        run: |
-          {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
-            echo "ACTIVE_HOSTNAME=$HOSTNAME"
-            echo "ACTIVE_USER=$USER"
-          } >> "$GITHUB_ENV"
+      - name: "Setup Job"
+        uses: ./.github/actions/setup-job
 
       - name: "Checkout Source"
         uses: actions/checkout@v6.0.2
