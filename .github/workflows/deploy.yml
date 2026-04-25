@@ -117,9 +117,9 @@ jobs:
             const appName = process.env.APP_NAME;
             const buildVersion = process.env.BUILD_VERSION;
             const stack = process.env.CLOUD_FORMATION_STACK;
-            core.info(`Application: [38;5;6m${appOwner}\\${appName}`);
-            core.info(`Version: [38;5;6m${buildVersion}`);
-            core.info(`Stack: [38;5;6m${stack}`);
+            core.info(`Application: \u001b[38;5;6m${appOwner}\\${appName}`);
+            core.info(`Version: \u001b[38;5;6m${buildVersion}`);
+            core.info(`Stack: \u001b[38;5;6m${stack}`);
             core.notice(`Application: ${appOwner}\\${appName}`);
             core.notice(`Version: ${buildVersion}`);
             core.notice(`Stack: ${stack}`);
