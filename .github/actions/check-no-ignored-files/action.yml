@@ -11,11 +11,10 @@ runs:
           const { execSync, execFileSync } = require('node:child_process');
 
           const excludedFiles = ['server.pfx', '.gitignore'];
-          const isNonFunfairTechTemplateRepo =
-            context.repo.owner !== 'funfair-tech' &&
-            context.repo.repo.endsWith('-template');
+          const isPreCommitRepo =
+            context.repo.repo.endsWith('global-pre-commit');
 
-          if (isNonFunfairTechTemplateRepo) {
+          if (isPreCommitRepo) {
             excludedFiles.push('.pre-commit-config.yaml');
           }
 
