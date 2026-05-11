@@ -10,10 +10,21 @@ runs:
         script: |
           const { execSync, execFileSync } = require('node:child_process');
 
+          const excludedFiles = ['server.pfx', '.gitignore'];
+          const isNonFunfairTechTemplateRepo =
+            context.repo.owner !== 'funfair-tech' &&
+            context.repo.repo.endsWith('-template');
+
+          if (isNonFunfairTechTemplateRepo) {
+            excludedFiles.push('.pre-commit-config.yaml');
+          }
+
+          const isExcludedFile = (file) => excludedFiles.includes(file);
+
           const trackedFiles = execSync('git ls-files', { encoding: 'utf8' })
             .split(/\r?\n/)
             .filter(Boolean)
-            .filter((file) => !file.includes('server.pfx') && !file.includes('.gitignore'));
+            .filter((file) => !isExcludedFile(file));
 
           if (trackedFiles.length === 0) {
             core.info('No ignored files');
@@ -78,4 +89,3 @@ runs:
           }
 
           core.setFailed(`Found ignored files (${offenders.length}).`);
-
