@@ -332,14 +332,24 @@ jobs:
         uses: ./.github/actions/check-no-merge-commits
 
   valid-changelog:
+    if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
     steps:
-      - name: "Correct ownership"
+      - name: "Initialise Workspace"
+        if: runner.environment == 'self-hosted'
         shell: bash
-        working-directory: ${{ github.workspace }}
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
-      - name: "Checkout"
+      - name: "Set Active Environment"
+        shell: bash
+        run: |
+          {
+            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_HOSTNAME=$HOSTNAME"
+            echo "ACTIVE_USER=$USER"
+          } >> "$GITHUB_ENV"
+
+      - name: "Checkout Source"
         uses: actions/checkout@v6.0.2
         with:
           clean: true
