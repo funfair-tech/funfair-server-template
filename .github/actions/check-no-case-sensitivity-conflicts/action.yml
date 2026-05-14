@@ -50,4 +50,3 @@ runs:
           }
 
           core.setFailed(`Case sensitivity conflicts found (${offenders.length}).`);
-

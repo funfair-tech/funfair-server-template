@@ -40,4 +40,3 @@ runs:
           }
 
           core.setFailed('Found merge conflicts.');
-

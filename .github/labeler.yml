@@ -1,69 +1,69 @@
 "C#":
   - changed-files:
-    - any-glob-to-any-file:
-      - "src/**/*.cs"
-      - "src/**/*.csproj"
+      - any-glob-to-any-file:
+          - "src/**/*.cs"
+          - "src/**/*.csproj"
 
 "SQL":
   - changed-files:
-    - any-glob-to-any-file:
-      - "db/**/*"
-      - "tools/**/*.sql"
+      - any-glob-to-any-file:
+          - "db/**/*"
+          - "tools/**/*.sql"
 
 "Solidity":
   - changed-files:
-    - any-glob-to-any-file:
-      - "src/**/*.sol"
+      - any-glob-to-any-file:
+          - "src/**/*.sol"
 
 "unit-tests":
   - changed-files:
-    - any-glob-to-any-file:
-      - "src/*.Tests.*/**/*"
-      - "src/*.Tests.Integration.*/**/*"
-      - "src/*.Tests/**/*"
-      - "src/*.Tests.Integration/**/*"
+      - any-glob-to-any-file:
+          - "src/*.Tests.*/**/*"
+          - "src/*.Tests.Integration.*/**/*"
+          - "src/*.Tests/**/*"
+          - "src/*.Tests.Integration/**/*"
 
 ".NET update":
   - changed-files:
-    - any-glob-to-any-file:
-      - "src/global.json"
+      - any-glob-to-any-file:
+          - "src/global.json"
 
 "Config Change":
   - changed-files:
-    - any-glob-to-any-file:
-      - "src/**/*.json"
+      - any-glob-to-any-file:
+          - "src/**/*.json"
 
 "Static Code Analysis Rules":
   - changed-files:
-    - any-glob-to-any-file:
-      - ".editorconfig"
+      - any-glob-to-any-file:
+          - ".editorconfig"
 
 "Migration Script":
   - changed-files:
-    - any-glob-to-any-file:
-      - "tools/MigrationScripts/**/*"
+      - any-glob-to-any-file:
+          - "tools/MigrationScripts/**/*"
 
 "Legal Text":
   - changed-files:
-    - any-glob-to-any-file:
-      - "tools/LegalText/**/*"
+      - any-glob-to-any-file:
+          - "tools/LegalText/**/*"
 
 "Change Log":
   - changed-files:
-    - any-glob-to-any-file:
-      - "CHANGELOG.md"
+      - any-glob-to-any-file:
+          - "CHANGELOG.md"
 
 "Read Me":
   - changed-files:
-    - any-glob-to-any-file:
-      - "README.md"
+      - any-glob-to-any-file:
+          - "README.md"
 
 "Setup":
   - changed-files:
-    - any-glob-to-any-file:
-      - "SETUP.md"
+      - any-glob-to-any-file:
+          - "SETUP.md"
 
 "github-actions":
   - changed-files:
-    - any-glob-to-any-file:
-      - ".github/workflows/*.yml"
+      - any-glob-to-any-file:
+          - ".github/workflows/*.yml"
