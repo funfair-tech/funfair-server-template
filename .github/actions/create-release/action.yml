@@ -41,22 +41,25 @@ runs:
             return;
           }
 
-          let body = '';
+          let body = undefined;
+          let generate_release_notes = true;
           if (fs.existsSync(notesFile)) {
             body = fs.readFileSync(notesFile, 'utf8');
+            generate_release_notes = false;
           } else {
-            core.warning(`\u001b[38;5;3m⚠️ Release notes file not found: ${notesFile}`);
+            core.warning(`\u001b[38;5;3m⚠️ Release notes file not found: ${notesFile} — using generated notes`);
           }
 
           const release = await github.rest.repos.createRelease({
             owner: context.repo.owner,
             repo: context.repo.repo,
             tag_name: tag,
+            target_commitish: context.sha,
             name,
             body,
             draft: false,
             prerelease: false,
-            generate_release_notes: true,
+            generate_release_notes,
           });
 
           core.info(`✅ Created release ${tag}: ${release.data.html_url}`);
