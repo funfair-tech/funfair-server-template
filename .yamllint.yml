@@ -1,7 +1,10 @@
 ---
 extends: default
 rules:
-  document-start: disable
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
+  document-start: enable
   indentation:
     spaces: 2
     indent-sequences: true

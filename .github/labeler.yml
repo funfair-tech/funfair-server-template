@@ -1,3 +1,4 @@
+--- # Pull request labeler config - maps changed file paths to PR labels
 "C#":
   - changed-files:
       - any-glob-to-any-file:
