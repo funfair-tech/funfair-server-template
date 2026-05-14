@@ -13,7 +13,6 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- Replaced third-party changelog-validator action with Credfeto.ChangeLog.Cmd dotnet tool for changelog linting in PR lint workflow
 ### Deprecated
 ### Removed
 ### Deployment Changes
