@@ -1,3 +1,4 @@
+--- # actionlint self-hosted runner configuration
 self-hosted-runner:
   labels:
     - build
