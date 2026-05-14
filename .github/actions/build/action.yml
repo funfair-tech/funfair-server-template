@@ -179,6 +179,7 @@ runs:
     - name: "Check file existence"
       id: check_files
       shell: bash
+      # yamllint disable rule:line-length
       run: |
         {
         [[ -d src && -f src/global.json && '${{hashfiles('**/*.csproj', '**/*.cs')}}' != '' ]] && echo 'CSPROJ_EXIST=true' || echo 'CSPROJ_EXIST=false';
@@ -191,6 +192,7 @@ runs:
         [[ -f healthcheck && '${{hashfiles('healthcheck')}}' != '' ]] && echo 'HEALTHCHECK_EXIST=true' || echo 'HEALTHCHECK_EXIST=false';
         [[ -f cloudformation.json && '${{hashfiles('cloudformation.json')}}' != '' ]] && echo 'CLOUDFORMATION_EXIST=true'  || echo 'CLOUDFORMATION_EXIST=false'
         } >> "$GITHUB_OUTPUT"
+      # yamllint enable rule:line-length
 
     - name: "Check Files Results"
       uses: actions/github-script@v9.0.0
@@ -247,9 +249,11 @@ runs:
     - name: "Check Build Tools Requirements"
       id: build_tools
       shell: bash
+      # yamllint disable rule:line-length
       run: |
         [[ (${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}) || steps.check_files.outputs.NPM_EXIST_SRC == 'true' || steps.check_files.outputs.NPM_EXIST_ROOT == 'true' ]] && echo 'BUILD_ENV=true' >> "$GITHUB_OUTPUT" || echo 'BUILD_ENV=false' >> "$GITHUB_OUTPUT"
         [[ (${{steps.check_files.outputs.CSPROJ_EXIST == 'true' && steps.check_files.outputs.SLN_EXIST == 'true'}}) || steps.check_files.outputs.NPM_EXIST_SRC == 'true' || steps.check_files.outputs.NPM_EXIST_ROOT == 'true' ]] && echo 'BUILD_ENV=true' >> "$GITHUB_OUTPUT" || echo 'BUILD_ENV=false' >> "$GITHUB_OUTPUT"
+      # yamllint enable rule:line-length
 
     - name: "Install Multi-push tool"
       if: |-
@@ -336,7 +340,6 @@ runs:
         SLEET_CONFIG: ${{inputs.SLEET_CONFIG}}
         SLEET_FEED: ${{inputs.SLEET_FEED}}
         GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
-        REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
         PROJECT_TO_PUBLISH: ${{inputs.PROJECT_TO_PUBLISH}}
         DOTNET_DOCKER_PLATFORM: ${{inputs.DOTNET_DOCKER_PLATFORM}}
 
@@ -348,8 +351,6 @@ runs:
       uses: ./.github/actions/npm
       with:
         BUILD_VERSION: ${{env.BUILD_VERSION}}
-        REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
-        NPM_PRODUCTION_PACKAGER_VERSION: ${{inputs.NPM_PRODUCTION_PACKAGER_VERSION}}
         NPM_CONTENT_PACKAGE_WALLET_PASSWORD: ${{inputs.NPM_CONTENT_PACKAGE_WALLET_PASSWORD}}
         NPM_PACKAGE_STORE_SIGNING_WALLET: ${{inputs.NPM_PACKAGE_STORE_SIGNING_WALLET}}
         NPM_PACKAGE_STORE_SIGNING_WALLET_PASSWORD: ${{inputs.NPM_PACKAGE_STORE_SIGNING_WALLET_PASSWORD}}
@@ -425,7 +426,6 @@ runs:
         env.DEPLOY == 'true'
       uses: ./.github/actions/database-deploy
       with:
-        BUILD_VERSION: ${{env.BUILD_VERSION}}
         SQL_SERVER: "${{inputs.SQL_SERVER}}"
         SQL_DB: "${{inputs.SQL_DB}}"
         SQL_USER: "${{inputs.SQL_USER}}"
@@ -493,9 +493,6 @@ runs:
     - name: "Software Bill of materials"
       if: steps.build_tools.outputs.BUILD_ENV == 'true'
       uses: ./.github/actions/sbom
-      with:
-        GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
-        REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}
 
     ############################################################################################################
     # Upload Sarif files to GitHub
@@ -503,5 +500,4 @@ runs:
     - name: "Upload SARIF file for diagnostics"
       uses: ./.github/actions/sarif
       with:
-        GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
         REPO_VISIBILITY: ${{inputs.REPO_VISIBILITY}}

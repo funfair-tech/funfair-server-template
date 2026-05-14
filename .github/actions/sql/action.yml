@@ -2,11 +2,6 @@
 name: 'Build SQL'
 description: 'Builds SQL Package'
 inputs:
-  # General
-  BUILD_VERSION:
-    description: 'Build version'
-    required: true
-
   DB_FOLDER:
     description: 'Folder where SQL Files live'
     required: true
