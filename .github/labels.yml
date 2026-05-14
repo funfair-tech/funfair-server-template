@@ -45,7 +45,7 @@
 
 - name: "github-actions"
   color: "e09cf4"
-  description: "Github actions workflow files"
+  description: "GitHub actions workflow files"
 
 - name: "Markdown"
   color: "5319e7"
@@ -91,6 +91,6 @@
   color: "30027a"
   description: "Technical debt"
 
-- name: "Unit Tests"
+- name: "unit-tests"
   color: "0e8a16"
   description: "Unit test and integration test projects"

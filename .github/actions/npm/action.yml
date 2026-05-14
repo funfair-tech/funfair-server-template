@@ -111,9 +111,9 @@ runs:
 
     - name: "Npm: Clear node modules"
       shell: bash
-      run: rm -rf "${{github.workspace}}/node-modules"
+      run: rm -rf "${{github.workspace}}/node_modules"
 
-    - name: "Npm: Clear node modules"
+    - name: "Npm: Detect package-lock location"
       id: build_context
       shell: bash
       run: |
