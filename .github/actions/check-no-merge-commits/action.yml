@@ -15,11 +15,10 @@ runs:
       with:
         github-token: ${{inputs.github-token || github.token}}
         script: |
-          const { data: commits } = await octokit.rest.pulls.listCommits({
+          const commits = await github.paginate(github.rest.pulls.listCommits, {
             owner: context.repo.owner,
             repo: context.repo.repo,
             pull_number: context.payload.pull_request.number,
-            per_page: 100,
           });
           const mergeCommits = commits.filter(c => c.parents.length > 1);
           if (mergeCommits.length > 0) {
