@@ -355,36 +355,24 @@ jobs:
           clean: true
           fetch-depth: 1
 
-      - name: "Check Required Secrets"
-        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
-        shell: bash
-        run: |
-          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
-            echo "::error::SOURCE_PUSH_TOKEN is required but not set"
-            exit 1
-          fi
-
       - name: "Install dotnet"
-        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
         uses: ./.github/actions/dotnet-install
         with:
-          GITHUB_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+          GITHUB_TOKEN: ${{github.token}}
           NUGET_PUBLIC_RESTORE_FEED_CACHE: ${{vars.NUGET_BAGET_CACHE}}
           NUGET_PUBLIC_RESTORE_FEED: ${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}
-          NUGET_ADDITIONAL_RESTORE_FEED_RELEASE_CACHE: ${{vars.RELEASE_BAGET_CACHE}}
+          NUGET_ADDITIONAL_RESTORE_FEED_RELEASE_CACHE: ""
           NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE_CACHE: ""
-          NUGET_ADDITIONAL_RESTORE_FEED_RELEASE: ${{vars.NUGET_ADDITIONAL_RESTORE_FEED_RELEASE}}
+          NUGET_ADDITIONAL_RESTORE_FEED_RELEASE: ""
           NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE: ""
 
       - name: "Install Changelog tool"
-        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
         uses: ./.github/actions/dotnet-tool
         with:
           TOOL_NAME: "Credfeto.ChangeLog.Cmd"
           TOOL_VERSION: "latest"
 
       - name: "Check Changelog"
-        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
         uses: ./.github/actions/dotnet-tool-run
         with:
           WORKING_DIRECTORY: ${{github.workspace}}
