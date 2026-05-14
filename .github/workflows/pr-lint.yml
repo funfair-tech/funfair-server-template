@@ -389,7 +389,7 @@ jobs:
         with:
           WORKING_DIRECTORY: ${{github.workspace}}
           TOOL_NAME: "changelog"
-          TOOL_ARGUMENTS: "--changelog \"${{github.workspace}}/CHANGELOG.md\" --lint --additional-sections \"Deployment Changes\""
+          TOOL_ARGUMENTS: "--changelog \"${{github.workspace}}/CHANGELOG.md\" --lint"
 
   lint-code:
     if: |-
