@@ -3,9 +3,6 @@ name: 'Build using NPM'
 description: 'Builds using NPM'
 inputs:
   # NPM
-  NPM_PRODUCTION_PACKAGER_VERSION:
-    description: 'Version of the NPM output nuget packager to use'
-    required: false
   NPM_CONTENT_PACKAGE_WALLET_PASSWORD:
     description: 'Password to unlock /Wallet.json'
     required: false
@@ -28,9 +25,6 @@ inputs:
   # General
   BUILD_VERSION:
     description: 'Build version'
-    required: true
-  REPO_VISIBILITY:
-    description: 'Visibility of the repo'
     required: true
 
   # DEPLOYMENT

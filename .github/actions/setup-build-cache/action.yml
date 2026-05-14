@@ -10,10 +10,6 @@ inputs:
     description: "Whether to use nuget cache (true/false, or empty to disable)"
     required: false
     default: ""
-  repo-status:
-    description: "Repository visibility (public/private, or empty to auto-detect)"
-    required: false
-    default: ""
   nuget-baget-cache:
     description: "Nuget BaGet cache URL"
     required: false

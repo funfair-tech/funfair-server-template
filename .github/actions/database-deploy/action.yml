@@ -2,9 +2,6 @@
 name: 'Build and deploy'
 description: 'Builds and deploys the source'
 inputs:
-  BUILD_VERSION:
-    description: "Build Version"
-    required: true
   SQL_SERVER:
     description: 'SQL Server to connect to'
     required: true
@@ -72,6 +69,7 @@ runs:
     - name: "Dotnet: Deploy/Live Server"
       working-directory: ${{github.workspace}}/src
       shell: bash
+      # yamllint disable rule:line-length
       run: |
         dotnet tool run --allow-roll-forward sqlpackage \
             /Action:publish \
@@ -89,6 +87,7 @@ runs:
             /p:DropObjectsNotInSource=True \
             "/p:DoNotDropObjectTypes=Aggregates;ApplicationRoles;Assemblies;AssemblyFiles;AsymmetricKeys;BrokerPriorities;Certificates;ColumnEncryptionKeys;ColumnMasterKeys;Contracts;DatabaseOptions;DatabaseRoles;Filegroups;Files;FileTables;RoleMembership;Rules;Users;Credentials;CryptographicProviders;DatabaseAuditSpecifications;DatabaseEncryptionKeys;DatabaseScopedCredentials;Endpoints;LinkedServerLogins;LinkedServers;Logins;MasterKeys;Routes;ServerAuditSpecifications;ServerRoleMembership;ServerRoles;ServerTriggers" \
             /p:IncludeCompositeObjects=True
+      # yamllint enable rule:line-length
       env:
         DACPAC_FILE: "${{steps.find_dacpac.outputs.DACPAC}}"
         SQL_SERVER: "${{inputs.SQL_SERVER}}"
