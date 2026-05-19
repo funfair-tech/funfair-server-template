@@ -87,17 +87,21 @@ jobs:
             --retry 5 \
             --retry-delay 0 \
             --retry-max-time 600 \
-            -s \
+            -sS \
             -L \
             -f \
             https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json |
-            jq -r '
+            jq -re '
               ."releases-index"
               | map(select(."support-phase" == "active"))
               | sort_by(."channel-version" | split(".") | map(tonumber))
               | last
               | ."latest-sdk"
             ')
+          if [[ -z "$LATEST" || "$LATEST" == "null" ]]; then
+            echo "::error::Failed to determine latest active .NET SDK version from releases-index.json"
+            exit 1
+          fi
           echo "Latest available SDK: $LATEST (current: $DOTNET_VERSION)"
           echo "LATEST_RELEASE_VERSION=$LATEST" >> "$GITHUB_OUTPUT"
 
