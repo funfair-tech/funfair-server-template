@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   requirements:
-    if: vars.DEPENDABOT_AUTOMERGE == 'true'
+    if: vars.DEPENDABOT_AUTOMERGE == 'true' && github.actor == 'dependabot[bot]'
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Check Required Secrets"
