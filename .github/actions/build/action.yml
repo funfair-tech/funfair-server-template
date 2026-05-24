@@ -426,10 +426,13 @@ runs:
         steps.check_files.outputs.SQL_EXIST == 'true' &&
         inputs.CLOUD_FORMATION_DEPLOY == 'true' &&
         inputs.DOCKER_APP_NAME != '' &&
+        inputs.SQL_SERVER != '' &&
+        inputs.SQL_DB != '' &&
+        inputs.SQL_USER != '' &&
+        inputs.SQL_PASSWORD != '' &&
         env.DEPLOY == 'true'
       uses: ./.github/actions/database-deploy
       with:
-        BUILD_VERSION: ${{env.BUILD_VERSION}}
         SQL_SERVER: "${{inputs.SQL_SERVER}}"
         SQL_DB: "${{inputs.SQL_DB}}"
         SQL_USER: "${{inputs.SQL_USER}}"
