@@ -134,6 +134,7 @@ runs:
       shell: bash
       run: |
         npm install \
+              --use-system-ca \
               --ignore-scripts \
               --no-fund \
               --no-audit \
