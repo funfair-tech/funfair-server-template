@@ -136,3 +136,4 @@ jobs:
           commit_user_email: "credfeto@users.noreply.github.com"
           commit_author: "fun-version[bot] <credfeto@users.noreply.github.com>"
           skip_dirty_check: false
+          create_branch: true
