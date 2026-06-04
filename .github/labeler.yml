@@ -1,70 +1,38 @@
---- # Pull request labeler config - maps changed file paths to PR labels
-"C#":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/**/*.cs"
-          - "src/**/*.csproj"
-
-"SQL":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "db/**/*"
-          - "tools/**/*.sql"
-
-"Solidity":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/**/*.sol"
-
-"unit-tests":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/*.Tests.*/**/*"
-          - "src/*.Tests.Integration.*/**/*"
-          - "src/*.Tests/**/*"
-          - "src/*.Tests.Integration/**/*"
-
 ".NET update":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/global.json"
-
-"Config Change":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/**/*.json"
-
-"Static Code Analysis Rules":
-  - changed-files:
-      - any-glob-to-any-file:
-          - ".editorconfig"
-
-"Migration Script":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "tools/MigrationScripts/**/*"
-
-"Legal Text":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "tools/LegalText/**/*"
-
+ - any: [ 'src/global.json' ]
+"C#":
+ - any: [ './**/*.cs', './**/*.csproj' ]
+"C# Project":
+ - any: [ './**/*.csproj' ]
+"C# Solution":
+ - any: [ './**/*.sln', './**/*.slnx' ]
 "Change Log":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "CHANGELOG.md"
-
-"Read Me":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "README.md"
-
-"Setup":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "SETUP.md"
-
+ - any: [ 'CHANGELOG.md' ]
+"Config Change":
+ - any: [ 'src/**/*.json', '!src/global.json' ]
+"dotnet":
+ - any: [ 'src/**/*.csproj' ]
+"Editorconfig":
+ - any: [ '.editorconfig' ]
 "github-actions":
-  - changed-files:
-      - any-glob-to-any-file:
-          - ".github/workflows/*.yml"
+ - any: [ '.github/actions/*.yml', '.github/workflows/*.yml' ]
+"Markdown":
+ - any: [ './**/*.md' ]
+"Migration Script":
+ - any: [ 'tools/MigrationScripts/**/*' ]
+"npm":
+ - any: [ './**/package-lock.json', './**/package.json' ]
+"Powershell":
+ - any: [ './**/*.ps1', './**/*.psm1' ]
+"Read Me":
+ - any: [ 'README.md' ]
+"Setup":
+ - any: [ 'SETUP.md' ]
+"Solidity":
+ - any: [ './**/*.sol' ]
+"SQL":
+ - any: [ './**/*.sql', 'db/**/*' ]
+"Static Code Analysis Rules":
+ - any: [ '.globalconfig', 'src/CodeAnalysis.ruleset' ]
+"Unit Tests":
+ - any: [ 'src/*.Tests.*/**/*', 'src/*.Tests.Integration.*/**/*', 'src/*.Tests.Integration/**/*', 'src/*.Tests/**/*' ]
