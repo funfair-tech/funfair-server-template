@@ -71,7 +71,25 @@ runs:
         ReleaseNotes: ${{inputs.RELEASE_NOTES}}
 
     - name: "Report publish output size"
-      shell: bash
-      run: |
-        echo "Published output sizes:"
-        du -sh "${{github.workspace}}/server-dist/${{inputs.PLATFORM}}"/* || true
+      uses: actions/github-script@v9.0.0
+      env:
+        OUTPUT_DIR: "${{github.workspace}}/server-dist/${{inputs.PLATFORM}}"
+        PLATFORM: "${{inputs.PLATFORM}}"
+      with:
+        script: |
+          const { execSync } = require('child_process');
+          const outputDir = process.env.OUTPUT_DIR;
+          const platform = process.env.PLATFORM;
+          let sizes = '';
+          try {
+            sizes = execSync(`du -sh "${outputDir}"/*`, { encoding: 'utf8', shell: true }).trim();
+          } catch {
+            // no output files found
+          }
+          if (sizes) {
+            const message = `Published output sizes for ${platform}:\n${sizes}`;
+            core.info(`\u001b[36m${message}\u001b[0m`);
+            core.notice(message, { title: `Publish output size: ${platform}` });
+          } else {
+            core.info(`No output files found for ${platform}`);
+          }
