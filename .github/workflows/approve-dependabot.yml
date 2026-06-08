@@ -1,4 +1,5 @@
 --- # Dependabot: approve dependency updates
+# Maintain in repo: funfair-server-template
 name: "Dependabot: Approve updates"
 on:
   # https://securitylab.github.com/research/github-actions-preventing-pwn-requests
