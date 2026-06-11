@@ -1,3 +1,4 @@
+--- # Action: Run Cloud Formation Linter
 name: 'Run Cloud Formation Linter'
 description: 'Installs cfn-lint via pip and lints a CloudFormation template'
 
