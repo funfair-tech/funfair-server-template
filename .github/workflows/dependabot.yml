@@ -68,8 +68,10 @@ jobs:
                   issue_number: pr.number
                 });
                 const alreadyUpToDate = comments.some(c =>
-                  c.user.login === 'dependabot[bot]' &&
-                  c.body.includes("Looks like this PR is already up-to-date with main!")
+                  c.user.login === 'dependabot[bot]' && (
+                    c.body.includes("Looks like this PR is already up-to-date with main!") ||
+                    c.body.includes("Looks like this PR has been edited by someone other than Dependabot.")
+                  )
                 );
                 if (!alreadyUpToDate) {
                   await github.rest.issues.createComment({
