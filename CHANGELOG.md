@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Security
 ### Added
+* Scheduled workflow to detect outdated GitHub Action version pins in composite actions and workflows, raising a GitHub issue when updates are needed
 ### Fixed
 ### Changed
 ### Deprecated
