@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   check-composite-action-versions:
+    if: endsWith(github.repository, '-template')
     runs-on: [self-hosted, linux, build]
 
     steps:
