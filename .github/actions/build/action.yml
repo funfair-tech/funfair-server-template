@@ -278,6 +278,7 @@ runs:
         GITHUB_TOKEN: ${{inputs.GITHUB_TOKEN}}
 
     - name: "Deploy check - Default"
+      # See: #846 - RELEASE is not set here; fix pending
       shell: bash
       run: |
         { echo "DEPLOY=false"; } >> "$GITHUB_ENV"
