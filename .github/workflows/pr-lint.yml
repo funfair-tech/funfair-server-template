@@ -18,7 +18,7 @@ concurrency:
 env:
   HEAD_REF: ${{github.head_ref}}
   BASE_REF: ${{github.base_ref}}
-  REPO_STATUS: private
+  REPO_STATUS: ${{vars.REPO_VISIBILITY}}
 
 jobs:
   info:
