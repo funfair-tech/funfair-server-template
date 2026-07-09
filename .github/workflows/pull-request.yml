@@ -28,9 +28,6 @@ jobs:
   pull-request:
     runs-on: [self-hosted, linux, build]
 
-    env:
-      CREATE_DRAFT: true
-
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -120,7 +117,7 @@ jobs:
           destination-branch: "main"
           assignee: ${{github.actor}}
           labels: "auto-pr"
-          draft: ${{env.CREATE_DRAFT}}
+          draft: true
           title: ${{steps.commit-info.outputs.commit-title}}
           body: ${{steps.pr-template.outputs.content}}
 

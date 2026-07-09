@@ -87,7 +87,6 @@ jobs:
         branch: ${{fromJson(needs.build-matrix.outputs.branches)}}
     env:
       BRANCH: ${{matrix.branch}}
-      CREATE_DRAFT: true
 
     steps:
       - name: "Initialise Workspace"
@@ -228,7 +227,7 @@ jobs:
           destination-branch: ${{steps.detection.outputs.defaultbranch}}
           assignee: ${{github.actor}}
           labels: "auto-pr,stale"
-          draft: ${{env.CREATE_DRAFT}}
+          draft: true
           title: "${{steps.aheadbehind.outputs.COMMIT_MSG}} [No commits for ${{steps.aheadbehind.outputs.dayssinceupdate}} days]"
           body: "${{steps.pr-template.outputs.content}}"
 
