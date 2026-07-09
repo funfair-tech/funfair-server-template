@@ -96,8 +96,6 @@ jobs:
         if: steps.findPr.outputs.number == ''
         uses: ./.github/actions/check-repo-visibility
         id: visibility
-        with:
-          github-token: ${{github.token}}
 
       - name: "Override DRAFT Flag"
         id: draft-flag

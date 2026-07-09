@@ -295,8 +295,6 @@ jobs:
       - name: "Check repo visibility"
         uses: ./.github/actions/check-repo-visibility
         id: visibility
-        with:
-          github-token: ${{github.token}}
 
       - name: "Checkout Source"
         if: steps.visibility.outputs.is_public == 'true'

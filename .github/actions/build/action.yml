@@ -157,8 +157,6 @@ runs:
     - name: "Check Repo Visibility"
       uses: ./.github/actions/check-repo-visibility
       id: visibility
-      with:
-        github-token: ${{github.token}}
 
     - name: "Parameter Summary"
       uses: actions/github-script@v9.0.0
