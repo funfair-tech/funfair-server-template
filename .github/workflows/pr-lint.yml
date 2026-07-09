@@ -292,17 +292,16 @@ jobs:
             echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
 
-      - name: "Check repo visibility"
-        uses: ./.github/actions/check-repo-visibility
-        id: visibility
-
       - name: "Checkout Source"
-        if: steps.visibility.outputs.is_public == 'true'
         uses: actions/checkout@v7.0.0
         with:
           clean: true
           fetch-depth: 0
           fetch-tags: true
+
+      - name: "Check repo visibility"
+        uses: ./.github/actions/check-repo-visibility
+        id: visibility
 
       - name: "Dependency Review"
         if: steps.visibility.outputs.is_public == 'true'
