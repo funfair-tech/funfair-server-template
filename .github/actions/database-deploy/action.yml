@@ -51,6 +51,7 @@ runs:
 #        arguments: '/p:DoNotDropObjectTypes=Aggregates;ApplicationRoles;Assemblies;AssemblyFiles;AsymmetricKeys;BrokerPriorities;Certificates;ColumnEncryptionKeys;ColumnMasterKeys;Contracts;DatabaseOptions;DatabaseRoles;Filegroups;Files;FileTables;RoleMembership;Rules;Users;Credentials;CryptographicProviders;DatabaseAuditSpecifications;DatabaseEncryptionKeys;DatabaseScopedCredentials;Endpoints;LinkedServerLogins;LinkedServers;Logins;MasterKeys;Routes;ServerAuditSpecifications;ServerRoleMembership;ServerRoles;ServerTriggers'
 # yamllint enable rule:line-length
 
+    # See: #841 - this step leaks SQL_PASSWORD (base64) to the log, and the guard below can never fail; fix pending
     - name: "Pass"
       working-directory: ${{github.workspace}}/src
       shell: bash
