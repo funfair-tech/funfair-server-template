@@ -115,7 +115,6 @@ jobs:
           repository: ${{github.repository}}
 
       - name: "Check Required Secrets"
-        if: github.repository_owner != 'funfair-tech'
         shell: bash
         run: |
           if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
@@ -124,14 +123,13 @@ jobs:
           fi
 
       - name: "Check Repo Visibility"
-        if: github.repository_owner != 'funfair-tech'
         uses: ./.github/actions/check-repo-visibility
         id: visibility
         with:
-          github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
+          github-token: ${{github.token}}
 
       - name: "Override DRAFT Flag"
-        if: github.repository_owner != 'funfair-tech' && steps.visibility.outputs.is_public == 'false'
+        if: steps.visibility.outputs.is_public == 'false'
         shell: bash
         run: echo "CREATE_DRAFT=false" >> "$GITHUB_ENV"
 

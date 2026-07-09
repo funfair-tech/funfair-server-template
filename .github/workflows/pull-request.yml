@@ -97,7 +97,7 @@ jobs:
         uses: ./.github/actions/check-repo-visibility
         id: visibility
         with:
-          github-token: ${{secrets.SOURCE_PUSH_TOKEN}}
+          github-token: ${{github.token}}
 
       - name: "Override DRAFT Flag"
         id: draft-flag
