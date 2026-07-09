@@ -89,7 +89,7 @@ jobs:
     env:
       BRANCH: ${{matrix.branch}}
       CREATE_DRAFT: true
-      REPO_STATUS: private
+      REPO_STATUS: ${{vars.REPO_VISIBILITY}}
 
     steps:
       - name: "Initialise Workspace"
