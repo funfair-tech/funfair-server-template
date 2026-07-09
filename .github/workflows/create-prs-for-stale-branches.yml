@@ -8,7 +8,6 @@ on:
       - "main"
     paths:
       - ".github/workflows/create-prs-for-stale-branches.yml"
-      - ".github/actions/check-repo-visibility/**"
       - ".github/actions/find-pull-request/**"
       - ".github/actions/read-file/**"
       - ".github/actions/create-pull-request/**"
@@ -121,15 +120,6 @@ jobs:
             echo "::error::SOURCE_PUSH_TOKEN is required but not set"
             exit 1
           fi
-
-      - name: "Check Repo Visibility"
-        uses: ./.github/actions/check-repo-visibility
-        id: visibility
-
-      - name: "Override DRAFT Flag"
-        if: steps.visibility.outputs.is_public == 'false'
-        shell: bash
-        run: echo "CREATE_DRAFT=false" >> "$GITHUB_ENV"
 
       - name: "Branch Detection"
         id: detection

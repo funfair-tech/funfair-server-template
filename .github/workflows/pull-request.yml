@@ -92,33 +92,15 @@ jobs:
             exit 1
           fi
 
-      - name: "Check Repo Visibility"
-        if: steps.findPr.outputs.number == ''
-        uses: ./.github/actions/check-repo-visibility
-        id: visibility
-
-      - name: "Override DRAFT Flag"
-        id: draft-flag
-        if: |-
-          steps.findPr.outputs.number == ''
-          && env.REPO_OWNER != 'funfair-tech'
-          && steps.visibility.outputs.is_public == 'false'
-        shell: bash
-        run: echo "create-draft=false" >> "$GITHUB_OUTPUT"
-
       - name: "Status"
         uses: actions/github-script@v9.0.0
         env:
           FIND_PR_NUMBER: ${{steps.findPr.outputs.number}}
-          IS_PUBLIC: ${{steps.visibility.outputs.is_public}}
         with:
           script: |
             core.info(`Repo: ${process.env.REPO}`);
             core.info(`Owner: ${process.env.REPO_OWNER}`);
-            core.info(`Is Public: ${process.env.IS_PUBLIC}`);
             core.info(`PR OK: ${process.env.FIND_PR_NUMBER === ''}`);
-            core.info(`Owner OK: ${process.env.REPO_OWNER !== 'funfair-tech'}`);
-            core.info(`Status OK: ${process.env.IS_PUBLIC === 'false'}`);
 
       - name: "Check Required Secrets"
         if: steps.findPr.outputs.number == ''
@@ -138,7 +120,7 @@ jobs:
           destination-branch: "main"
           assignee: ${{github.actor}}
           labels: "auto-pr"
-          draft: ${{steps.draft-flag.outputs.create-draft || env.CREATE_DRAFT}}
+          draft: ${{env.CREATE_DRAFT}}
           title: ${{steps.commit-info.outputs.commit-title}}
           body: ${{steps.pr-template.outputs.content}}
 
