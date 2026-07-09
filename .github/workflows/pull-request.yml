@@ -30,7 +30,6 @@ jobs:
 
     env:
       CREATE_DRAFT: true
-      REPO_STATUS: private
 
     steps:
       - name: "Initialise Workspace"
@@ -94,7 +93,7 @@ jobs:
           fi
 
       - name: "Check Repo Visibility"
-        if: env.REPO_STATUS == '' && steps.findPr.outputs.number == ''
+        if: steps.findPr.outputs.number == ''
         uses: ./.github/actions/check-repo-visibility
         id: visibility
         with:
@@ -105,7 +104,7 @@ jobs:
         if: |-
           steps.findPr.outputs.number == ''
           && env.REPO_OWNER != 'funfair-tech'
-          && env.REPO_STATUS == 'private'
+          && steps.visibility.outputs.is_public == 'false'
         shell: bash
         run: echo "create-draft=false" >> "$GITHUB_OUTPUT"
 
@@ -113,14 +112,15 @@ jobs:
         uses: actions/github-script@v9.0.0
         env:
           FIND_PR_NUMBER: ${{steps.findPr.outputs.number}}
+          IS_PUBLIC: ${{steps.visibility.outputs.is_public}}
         with:
           script: |
             core.info(`Repo: ${process.env.REPO}`);
             core.info(`Owner: ${process.env.REPO_OWNER}`);
-            core.info(`Repo Status: ${process.env.REPO_STATUS}`);
+            core.info(`Is Public: ${process.env.IS_PUBLIC}`);
             core.info(`PR OK: ${process.env.FIND_PR_NUMBER === ''}`);
             core.info(`Owner OK: ${process.env.REPO_OWNER !== 'funfair-tech'}`);
-            core.info(`Status OK: ${process.env.REPO_STATUS === 'private'}`);
+            core.info(`Status OK: ${process.env.IS_PUBLIC === 'false'}`);
 
       - name: "Check Required Secrets"
         if: steps.findPr.outputs.number == ''
