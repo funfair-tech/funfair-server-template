@@ -42,51 +42,80 @@ runs:
   steps:
     - name: "Log parameters"
       shell: bash
+      env:
+        CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}
+        CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}
+        DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}
+        DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}
+        BUILD_VERSION: ${{inputs.BUILD_VERSION}}
+        API_HOST: ${{inputs.API_HOST}}
+        API_PREFIX: ${{inputs.API_PREFIX}}
+        AWS_LOAD_BALANCER_HOSTNAME: ${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}
+        DOCKER_CONTAINER_REGISTRY: ${{inputs.DOCKER_CONTAINER_REGISTRY}}
+        AWS_LOAD_BALANCER_PRIORITY: ${{inputs.AWS_LOAD_BALANCER_PRIORITY}}
       run: |
-        echo "CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}"
-        echo "CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}"
-        echo "DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}"
-        echo "DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}"
-        echo "BUILD_VERSION: ${{inputs.BUILD_VERSION}}"
-        echo "API_HOST: ${{inputs.API_HOST}}"
-        echo "API_PREFIX: ${{inputs.API_PREFIX}}"
-        echo "AWS_LOAD_BALANCER_HOSTNAME: ${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}"
-        echo "DOCKER_CONTAINER_REGISTRY: ${{inputs.DOCKER_CONTAINER_REGISTRY}}"
-        echo "AWS_LOAD_BALANCER_PRIORITY: ${{inputs.AWS_LOAD_BALANCER_PRIORITY}}"
+        echo "CLOUD_FORMATION_STACK: $CLOUD_FORMATION_STACK"
+        echo "CLOUD_FORMATION_TEMPLATE_FILE: $CLOUD_FORMATION_TEMPLATE_FILE"
+        echo "DOCKER_APP_OWNER: $DOCKER_APP_OWNER"
+        echo "DOCKER_APP_NAME: $DOCKER_APP_NAME"
+        echo "BUILD_VERSION: $BUILD_VERSION"
+        echo "API_HOST: $API_HOST"
+        echo "API_PREFIX: $API_PREFIX"
+        echo "AWS_LOAD_BALANCER_HOSTNAME: $AWS_LOAD_BALANCER_HOSTNAME"
+        echo "DOCKER_CONTAINER_REGISTRY: $DOCKER_CONTAINER_REGISTRY"
+        echo "AWS_LOAD_BALANCER_PRIORITY: $AWS_LOAD_BALANCER_PRIORITY"
 
     - name: "Create tag"
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}
+        BUILD_VERSION: ${{inputs.BUILD_VERSION}}
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
+          const dockerAppName = process.env.DOCKER_APP_NAME;
+          const buildVersion = process.env.BUILD_VERSION;
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: 'refs/tags/${{inputs.DOCKER_APP_NAME}}/v${{inputs.BUILD_VERSION}}',
+            ref: `refs/tags/${dockerAppName}/v${buildVersion}`,
             sha: context.sha
           })
 
     - name: "Trigger Deployment Workflow"
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        DOCKER_APP_NAME: ${{inputs.DOCKER_APP_NAME}}
+        BUILD_VERSION: ${{inputs.BUILD_VERSION}}
+        CLOUD_FORMATION_STACK: ${{inputs.CLOUD_FORMATION_STACK}}
+        CLOUD_FORMATION_TEMPLATE_FILE: ${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}
+        DOCKER_APP_OWNER: ${{inputs.DOCKER_APP_OWNER}}
+        API_HOST: ${{inputs.API_HOST}}
+        API_PREFIX: ${{inputs.API_PREFIX}}
+        AWS_LOAD_BALANCER_HOSTNAME: ${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}
+        DOCKER_CONTAINER_REGISTRY: ${{inputs.DOCKER_CONTAINER_REGISTRY}}
+        AWS_LOAD_BALANCER_PRIORITY: ${{inputs.AWS_LOAD_BALANCER_PRIORITY}}
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
+          const dockerAppName = process.env.DOCKER_APP_NAME;
+          const buildVersion = process.env.BUILD_VERSION;
           const id = await github.rest.actions.createWorkflowDispatch({
             owner: context.repo.owner,
             repo: context.repo.repo,
             workflow_id: 'deploy.yml',
-            ref: '${{inputs.DOCKER_APP_NAME}}/v${{inputs.BUILD_VERSION}}',
+            ref: `${dockerAppName}/v${buildVersion}`,
             inputs: {
-                CLOUD_FORMATION_STACK: "${{inputs.CLOUD_FORMATION_STACK}}",
-                CLOUD_FORMATION_TEMPLATE_FILE: "${{inputs.CLOUD_FORMATION_TEMPLATE_FILE}}",
-                DOCKER_APP_OWNER: "${{inputs.DOCKER_APP_OWNER}}",
-                DOCKER_APP_NAME: "${{inputs.DOCKER_APP_NAME}}",
-                BUILD_VERSION: "${{inputs.BUILD_VERSION}}",
-                API_HOST: "${{inputs.API_HOST}}",
-                API_PREFIX: "${{inputs.API_PREFIX}}",
-                AWS_LOAD_BALANCER_HOSTNAME: "${{inputs.AWS_LOAD_BALANCER_HOSTNAME}}",
-                DOCKER_CONTAINER_REGISTRY: "${{inputs.DOCKER_CONTAINER_REGISTRY}}",
-                AWS_LOAD_BALANCER_PRIORITY: "${{inputs.AWS_LOAD_BALANCER_PRIORITY}}",
+                CLOUD_FORMATION_STACK: process.env.CLOUD_FORMATION_STACK,
+                CLOUD_FORMATION_TEMPLATE_FILE: process.env.CLOUD_FORMATION_TEMPLATE_FILE,
+                DOCKER_APP_OWNER: process.env.DOCKER_APP_OWNER,
+                DOCKER_APP_NAME: dockerAppName,
+                BUILD_VERSION: buildVersion,
+                API_HOST: process.env.API_HOST,
+                API_PREFIX: process.env.API_PREFIX,
+                AWS_LOAD_BALANCER_HOSTNAME: process.env.AWS_LOAD_BALANCER_HOSTNAME,
+                DOCKER_CONTAINER_REGISTRY: process.env.DOCKER_CONTAINER_REGISTRY,
+                AWS_LOAD_BALANCER_PRIORITY: process.env.AWS_LOAD_BALANCER_PRIORITY,
               }
           });
 

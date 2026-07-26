@@ -238,11 +238,15 @@ jobs:
           && steps.aheadbehind.outputs.ahead != 0
           && steps.aheadbehind.outputs.dayssinceupdate > 7
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          PR_URL: ${{steps.open-pr.outputs.pr_url}}
+          PR_NUMBER: ${{steps.open-pr.outputs.pr_number}}
+          HAS_CHANGED_FILES: ${{steps.open-pr.outputs.has_changed_files}}
         with:
           script: |
-            core.info('URL: ${{steps.open-pr.outputs.pr_url}}');
-            core.info('PR: ${{steps.open-pr.outputs.pr_number}}');
-            core.info('CF: ${{steps.open-pr.outputs.has_changed_files}}');
+            core.info(`URL: ${process.env.PR_URL}`);
+            core.info(`PR: ${process.env.PR_NUMBER}`);
+            core.info(`CF: ${process.env.HAS_CHANGED_FILES}`);
 
       - name: "Check Required Secrets"
         if: steps.open-pr.outputs.pr_number != ''
@@ -301,8 +305,12 @@ jobs:
           steps.detection.outputs.defaultbranch != matrix.branch
           && steps.find-pull-request.outputs.number == ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          AHEAD: ${{steps.aheadbehind.outputs.ahead}}
+          BEHIND: ${{steps.aheadbehind.outputs.behind}}
+          DAYS_SINCE_UPDATE: ${{steps.aheadbehind.outputs.dayssinceupdate}}
         with:
           script: |
-            core.info('Ahead: ${{steps.aheadbehind.outputs.ahead}}');
-            core.info('Behind: ${{steps.aheadbehind.outputs.behind}}');
-            core.info('Last Commit: ${{steps.aheadbehind.outputs.dayssinceupdate}} days ago');
+            core.info(`Ahead: ${process.env.AHEAD}`);
+            core.info(`Behind: ${process.env.BEHIND}`);
+            core.info(`Last Commit: ${process.env.DAYS_SINCE_UPDATE} days ago`);
