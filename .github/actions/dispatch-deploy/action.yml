@@ -73,12 +73,10 @@ runs:
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
-          const dockerAppName = process.env.DOCKER_APP_NAME;
-          const buildVersion = process.env.BUILD_VERSION;
           github.rest.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: `refs/tags/${dockerAppName}/v${buildVersion}`,
+            ref: `refs/tags/${process.env.DOCKER_APP_NAME}/v${process.env.BUILD_VERSION}`,
             sha: context.sha
           })
 
@@ -98,19 +96,17 @@ runs:
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
-          const dockerAppName = process.env.DOCKER_APP_NAME;
-          const buildVersion = process.env.BUILD_VERSION;
           const id = await github.rest.actions.createWorkflowDispatch({
             owner: context.repo.owner,
             repo: context.repo.repo,
             workflow_id: 'deploy.yml',
-            ref: `${dockerAppName}/v${buildVersion}`,
+            ref: `${process.env.DOCKER_APP_NAME}/v${process.env.BUILD_VERSION}`,
             inputs: {
                 CLOUD_FORMATION_STACK: process.env.CLOUD_FORMATION_STACK,
                 CLOUD_FORMATION_TEMPLATE_FILE: process.env.CLOUD_FORMATION_TEMPLATE_FILE,
                 DOCKER_APP_OWNER: process.env.DOCKER_APP_OWNER,
-                DOCKER_APP_NAME: dockerAppName,
-                BUILD_VERSION: buildVersion,
+                DOCKER_APP_NAME: process.env.DOCKER_APP_NAME,
+                BUILD_VERSION: process.env.BUILD_VERSION,
                 API_HOST: process.env.API_HOST,
                 API_PREFIX: process.env.API_PREFIX,
                 AWS_LOAD_BALANCER_HOSTNAME: process.env.AWS_LOAD_BALANCER_HOSTNAME,
