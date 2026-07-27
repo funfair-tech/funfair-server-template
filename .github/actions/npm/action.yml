@@ -232,7 +232,10 @@ runs:
             --warnings-as-error"
 
     - name: "NPM: Clean Up Store Signing Wallet"
-      if: always()
+      if: |
+          always() &&
+          inputs.NPM_SIGNING == 'true' &&
+          inputs.PROJECT_TO_PUBLISH != ''
       shell: bash
       run: |
         rm -f "${FILE}"
