@@ -516,10 +516,17 @@ jobs:
             ' poutine.sarif
           } >> "$GITHUB_STEP_SUMMARY"
 
+          ERROR_COUNT=$(jq '[.runs[].results[] | select(.level == "error")] | length' poutine.sarif)
+          if [ "$ERROR_COUNT" -gt 0 ]; then
+            echo "::error::Poutine found ${ERROR_COUNT} error-level finding(s); see job summary for details."
+            exit 1
+          fi
+
       ############################################################################################################
       # Upload Sarif files to GitHub
       ############################################################################################################
       - name: "Upload SARIF file for diagnostics"
+        if: always()
         uses: ./.github/actions/sarif
         with:
           REPO_VISIBILITY: ${{steps.visibility.outputs.is_public == 'true' && 'public' || 'private'}}
