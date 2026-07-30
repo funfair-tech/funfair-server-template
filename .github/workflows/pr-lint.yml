@@ -483,15 +483,18 @@ jobs:
         uses: ./.github/actions/check-repo-visibility
         id: visibility
 
-      - name: "Poutine"
-        uses: boostsecurityio/poutine-action@e240ebd3eff8b2db5a8e5f6b28f58739d7db2247 # v1.1.4
-
-      - name: "Move poutine SARIF file into results folder"
+      - name: "Ensure Results folder exists"
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
           [ ! -d "${{github.workspace}}/results" ] && mkdir "${{github.workspace}}/results" || echo "Results created"
-          mv results.sarif "${{github.workspace}}/results/poutine.sarif"
+
+      - name: "Poutine"
+        uses: boostsecurityio/poutine-action@e240ebd3eff8b2db5a8e5f6b28f58739d7db2247 # v1.1.4
+        with:
+          format: 'sarif'
+          output: "${{github.workspace}}/results/poutine.sarif"
+
 
       ############################################################################################################
       # Upload Sarif files to GitHub
