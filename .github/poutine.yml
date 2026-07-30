@@ -1,0 +1,7 @@
+--- # Poutine GitHub Actions SAST configuration
+# Maintain in repo: funfair-server-template
+# See: https://github.com/boostsecurityio/poutine/blob/main/.poutine.sample.yml
+
+# Skip findings if any rules in this list matches the finding's properties.
+# Each rule can have the following keys: job, level, osv_id, path, purl, rule.
+skip: []
