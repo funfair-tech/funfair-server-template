@@ -1,0 +1,39 @@
+# Include custom Rego rules from specified directories
+# Each path should contain *.rego files with package names following: package rules.<rule_name>
+# For more details, see: https://github.com/boost-rnd/poutine-rules
+# default: []
+# include:
+# - path: ./custom_rules
+# - path: ./github_actions
+
+# When using analyze_org, ignore forked repositories in the organization
+# default: false
+ignoreForks: true
+
+# Disable the once-per-day check for newer poutine releases
+# default: false
+# disableVersionCheck: true
+
+# Set rule configuration options
+rulesConfig:
+  pr_runs_on_self_hosted:
+    allowed_runners:
+      - self-hosted
+      - linux
+      - build
+      - deploy
+
+
+# Skip findings if any rules in this list matches the finding's properties.
+# Each rule can have the following keys: job, level, osv_id, path, purl, rule.
+# The value of each key is a string or a list of strings.
+# default: []
+skip:
+
+
+skipExamples:
+  # skip findings by rule level (one of: note, warning, error)
+  - level: note
+
+  # skip findings of a rule at given paths
+  - rule: pr_runs_on_self_hosted
