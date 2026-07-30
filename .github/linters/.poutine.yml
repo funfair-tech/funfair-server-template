@@ -29,11 +29,4 @@ rulesConfig:
 # The value of each key is a string or a list of strings.
 # default: []
 skip:
-
-
-skipExamples:
-  # skip findings by rule level (one of: note, warning, error)
-  - level: note
-
-  # skip findings of a rule at given paths
   - rule: pr_runs_on_self_hosted
