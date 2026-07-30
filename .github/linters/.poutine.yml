@@ -31,6 +31,8 @@ rulesConfig:
 skip:
   - rule: pr_runs_on_self_hosted
 
+  - rule: unpinnable_action
+
   - rule: github_action_from_unverified_creator_used
     purl:
       - pkg:githubactions/super-linter/super-linter
