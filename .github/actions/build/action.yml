@@ -196,9 +196,11 @@ runs:
       shell: bash
       run: |
         {
-        [[ -d src && -f src/global.json && '${{hashfiles('**/*.csproj', '**/*.cs')}}' != '' ]] && echo 'CSPROJ_EXIST=true' || echo 'CSPROJ_EXIST=false';
-        [[ -d src && -f src/global.json && '${{hashfiles('**/*.sln', '**/*.slnx')}}' != '' ]] && echo 'SLN_EXIST=true' || echo 'SLN_EXIST=false';
-        [[ -d src && -f src/global.json && '${{hashfiles('**/*.csproj', '**/*.cs')}}' != '' && '${{hashfiles('**/*.sln', '**/*.slnx')}}' != '' ]] && echo 'DOTNET_EXIST=true' || echo 'DOTNET_EXIST=false';
+        [[ -d src && -f src/global.json && '${{hashfiles('**/*.csproj', '**/*.cs')}}' != '' ]] && CSPROJ_EXIST=true || CSPROJ_EXIST=false;
+        [[ -d src && -f src/global.json && '${{hashfiles('**/*.sln', '**/*.slnx')}}' != '' ]] && SLN_EXIST=true || SLN_EXIST=false;
+        echo "CSPROJ_EXIST=$CSPROJ_EXIST";
+        echo "SLN_EXIST=$SLN_EXIST";
+        [[ "$CSPROJ_EXIST" == true && "$SLN_EXIST" == true ]] && echo 'DOTNET_EXIST=true' || echo 'DOTNET_EXIST=false';
         [[ -d db && '${{hashfiles('**/*.sql')}}' != '' ]] && echo 'SQL_EXIST=true' || echo 'SQL_EXIST=false';
         [[ -d src && -f src/package.json && -f src/package-lock.json && '${{hashfiles('src/package.json', 'src/package-lock.json')}}' != '' ]] && echo 'NPM_EXIST_SRC=true' || echo 'NPM_EXIST_SRC=false';
         [[ -d src && -f package.json && -f package-lock.json && '${{hashfiles('package.json', 'package-lock.json')}}' != '' ]] && echo 'NPM_EXIST_ROOT=true' || echo 'NPM_EXIST_ROOT=false';

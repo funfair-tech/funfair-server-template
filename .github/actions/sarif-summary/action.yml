@@ -24,6 +24,11 @@ runs:
         # shellcheck disable=SC2206  # GLOB_PATTERN is a glob; word-splitting/expansion is intentional.
         FILES=(${GLOB_PATTERN})
 
+        if [ "${#FILES[@]}" -eq 0 ]; then
+          echo "::error::${TITLE}: no SARIF files matched '${GLOB_PATTERN}' in results/"
+          exit 1
+        fi
+
         {
           echo "## ${TITLE}"
           echo
@@ -33,23 +38,30 @@ runs:
 
         TOTAL_ERRORS=0
         for f in "${FILES[@]}"; do
+          if [ ! -f "$f" ]; then
+            echo "::error::${TITLE}: expected SARIF file '$f' not found"
+            exit 1
+          fi
+
           SOURCE="${f%.sarif}"
-          while IFS=$'\t' read -r is_error rule level uri line message; do
-            echo "| ${SOURCE} | ${rule} | ${level} | ${uri} | ${line} | ${message} |" >> "$GITHUB_STEP_SUMMARY"
-            [ "$is_error" = "true" ] && TOTAL_ERRORS=$((TOTAL_ERRORS + 1))
-          done < <(
-            jq -r '
-              .runs[].results[] |
-              [
-                (.level == "error" | tostring),
-                (.ruleId // "-"),
-                (.level // "-"),
-                (.locations[0].physicalLocation.artifactLocation.uri // "-"),
-                (.locations[0].physicalLocation.region.startLine // "-" | tostring),
-                (.message.text // "-" | gsub("\\r?\\n|\\t"; " ") | gsub("\\|"; "\\|"))
-              ] | @tsv
-            ' "$f"
-          )
+          ROWS="$(jq -r '
+            .runs[].results[] |
+            [
+              (.level == "error" | tostring),
+              (.ruleId // "-"),
+              (.level // "-"),
+              (.locations[0].physicalLocation.artifactLocation.uri // "-"),
+              (.locations[0].physicalLocation.region.startLine // "-" | tostring),
+              (.message.text // "-" | gsub("\\r?\\n|\\t"; " ") | gsub("\\|"; "\\|"))
+            ] | @tsv
+          ' "$f")" || { echo "::error::${TITLE}: failed to parse $f"; exit 1; }
+
+          if [ -n "$ROWS" ]; then
+            while IFS=$'\t' read -r is_error rule level uri line message; do
+              echo "| ${SOURCE} | ${rule} | ${level} | ${uri} | ${line} | ${message} |" >> "$GITHUB_STEP_SUMMARY"
+              [ "$is_error" = "true" ] && TOTAL_ERRORS=$((TOTAL_ERRORS + 1))
+            done <<< "$ROWS"
+          fi
         done
 
         if [ "$TOTAL_ERRORS" -gt 0 ]; then
