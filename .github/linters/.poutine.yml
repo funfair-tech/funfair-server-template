@@ -30,3 +30,8 @@ rulesConfig:
 # default: []
 skip:
   - rule: pr_runs_on_self_hosted
+
+  - rule:
+    github_action_from_unverified_creator_used:
+      purl:
+        - pkg:githubactions/super-linter/super-linter
