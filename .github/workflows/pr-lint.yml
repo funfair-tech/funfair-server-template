@@ -85,11 +85,6 @@ jobs:
           clean: true
           fetch-depth: 0
 
-      - name: "Fetch Base Branch"
-        if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
-        shell: bash
-        run: git fetch origin ${{github.base_ref}}
-
       - name: "Diff Changes"
         if: (github.actor != 'dependabot[bot]' && !endsWith(github.repository , '-template'))
         shell: bash
