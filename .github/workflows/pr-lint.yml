@@ -95,11 +95,8 @@ jobs:
           set -e
 
           case "${diff_exit}" in
-            0)
-              echo "CHANGES=0" >> "$GITHUB_ENV"
-              ;;
-            1)
-              echo "CHANGES=1" >> "$GITHUB_ENV"
+            0|1)
+              echo "CHANGES=${diff_exit}" >> "$GITHUB_ENV"
               ;;
             *)
               echo "::error::git diff against origin/${{github.base_ref}} failed (exit ${diff_exit}): ${diff_output}"
