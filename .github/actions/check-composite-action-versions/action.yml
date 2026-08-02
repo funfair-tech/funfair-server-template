@@ -80,17 +80,30 @@ runs:
             return tag.match(/^v?(\d+)\./)?.[1] ?? null;
           }
 
+          // Cached per owner/repo so multiple pinned versions of the same action (the case
+          // this check exists to catch) don't each re-fetch the same latest-release lookup.
+          const latestReleaseCache = new Map();
+          function getLatestRelease(owner, repo) {
+            const key = `${owner}/${repo}`;
+            if (!latestReleaseCache.has(key)) {
+              latestReleaseCache.set(key, github.rest.repos.getLatestRelease({ owner, repo })
+                .then(({ data }) => ({ tag: data.tag_name, error: null }))
+                .catch(e => ({ tag: null, error: e })));
+            }
+            return latestReleaseCache.get(key);
+          }
+
           async function latestMatchingTag(owner, repo, current) {
             const currentMajor = majorVersion(current);
-            try {
-              const { data } = await github.rest.repos.getLatestRelease({ owner, repo });
-              if (currentMajor !== null && majorVersion(data.tag_name) === currentMajor) return data.tag_name;
-            } catch (e) {
-              if (e.status !== 404) {
-                core.warning(`⚠️ ${owner}/${repo}: getLatestRelease failed (status ${e.status ?? 'unknown'}): ${e.message}`);
-              }
-            }
             if (currentMajor === null) return null;
+            const { tag, error } = await getLatestRelease(owner, repo);
+            if (error) {
+              if (error.status !== 404) {
+                core.warning(`⚠️ ${owner}/${repo}: getLatestRelease failed (status ${error.status ?? 'unknown'}): ${error.message}`);
+              }
+            } else if (majorVersion(tag) === currentMajor) {
+              return tag;
+            }
             for await (const page of github.paginate.iterator(
               github.rest.repos.listReleases, { owner, repo, per_page: 50 }
             )) {
