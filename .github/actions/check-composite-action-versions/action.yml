@@ -83,50 +83,49 @@ runs:
           // Both caches are keyed per owner/repo (the `key` from the outer loop) so multiple
           // pinned versions of the same action (the case this check exists to catch) don't each
           // re-fetch the same latest-release lookup or re-paginate the same release list.
+          function memoize(cache, key, fn) {
+            if (!cache.has(key)) cache.set(key, fn());
+            return cache.get(key);
+          }
+
           const latestReleaseCache = new Map();
           function getLatestRelease(key, owner, repo) {
-            if (!latestReleaseCache.has(key)) {
-              latestReleaseCache.set(key, github.rest.repos.getLatestRelease({ owner, repo })
-                .then(({ data }) => ({ tag: data.tag_name, error: null }))
-                .catch(e => ({ tag: null, error: e })));
-            }
-            return latestReleaseCache.get(key);
+            return memoize(latestReleaseCache, key, () =>
+              github.rest.repos.getLatestRelease({ owner, repo }).then(({ data }) => data.tag_name)
+            );
           }
 
           const releasesByMajorCache = new Map();
           function getReleasesByMajor(key, owner, repo) {
-            if (!releasesByMajorCache.has(key)) {
-              releasesByMajorCache.set(key, (async () => {
-                const byMajor = new Map();
-                for await (const page of github.paginate.iterator(
-                  github.rest.repos.listReleases, { owner, repo, per_page: 50 }
-                )) {
-                  for (const r of page.data) {
-                    if (r.prerelease) continue;
-                    const major = majorVersion(r.tag_name);
-                    if (major === null) continue;
-                    const existing = byMajor.get(major);
-                    if (!existing || new Date(r.published_at) > new Date(existing.published_at)) {
-                      byMajor.set(major, r);
-                    }
+            return memoize(releasesByMajorCache, key, async () => {
+              const byMajor = new Map();
+              for await (const page of github.paginate.iterator(
+                github.rest.repos.listReleases, { owner, repo, per_page: 50 }
+              )) {
+                for (const r of page.data) {
+                  if (r.prerelease) continue;
+                  const major = majorVersion(r.tag_name);
+                  if (major === null) continue;
+                  const existing = byMajor.get(major);
+                  if (!existing || new Date(r.published_at) > new Date(existing.published_at)) {
+                    byMajor.set(major, r);
                   }
                 }
-                return byMajor;
-              })());
-            }
-            return releasesByMajorCache.get(key);
+              }
+              return byMajor;
+            });
           }
 
           async function latestMatchingTag(key, owner, repo, current) {
             const currentMajor = majorVersion(current);
             if (currentMajor === null) return null;
-            const { tag, error } = await getLatestRelease(key, owner, repo);
-            if (error) {
-              if (error.status !== 404) {
-                core.warning(`⚠️ ${key}: getLatestRelease failed (status ${error.status ?? 'unknown'}): ${error.message}`);
+            try {
+              const tag = await getLatestRelease(key, owner, repo);
+              if (majorVersion(tag) === currentMajor) return tag;
+            } catch (e) {
+              if (e.status !== 404) {
+                core.warning(`⚠️ ${key}: getLatestRelease failed (status ${e.status ?? 'unknown'}): ${e.message}`);
               }
-            } else if (majorVersion(tag) === currentMajor) {
-              return tag;
             }
             const byMajor = await getReleasesByMajor(key, owner, repo);
             return byMajor.get(currentMajor)?.tag_name ?? null;
