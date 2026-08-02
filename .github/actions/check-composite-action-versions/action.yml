@@ -80,11 +80,11 @@ runs:
             return tag.match(/^v?(\d+)\./)?.[1] ?? null;
           }
 
-          // Cached per owner/repo so multiple pinned versions of the same action (the case
-          // this check exists to catch) don't each re-fetch the same latest-release lookup.
+          // Both caches are keyed per owner/repo (the `key` from the outer loop) so multiple
+          // pinned versions of the same action (the case this check exists to catch) don't each
+          // re-fetch the same latest-release lookup or re-paginate the same release list.
           const latestReleaseCache = new Map();
-          function getLatestRelease(owner, repo) {
-            const key = `${owner}/${repo}`;
+          function getLatestRelease(key, owner, repo) {
             if (!latestReleaseCache.has(key)) {
               latestReleaseCache.set(key, github.rest.repos.getLatestRelease({ owner, repo })
                 .then(({ data }) => ({ tag: data.tag_name, error: null }))
@@ -93,26 +93,43 @@ runs:
             return latestReleaseCache.get(key);
           }
 
-          async function latestMatchingTag(owner, repo, current) {
+          const releasesByMajorCache = new Map();
+          function getReleasesByMajor(key, owner, repo) {
+            if (!releasesByMajorCache.has(key)) {
+              releasesByMajorCache.set(key, (async () => {
+                const byMajor = new Map();
+                for await (const page of github.paginate.iterator(
+                  github.rest.repos.listReleases, { owner, repo, per_page: 50 }
+                )) {
+                  for (const r of page.data) {
+                    if (r.prerelease) continue;
+                    const major = majorVersion(r.tag_name);
+                    if (major === null) continue;
+                    const existing = byMajor.get(major);
+                    if (!existing || new Date(r.published_at) > new Date(existing.published_at)) {
+                      byMajor.set(major, r);
+                    }
+                  }
+                }
+                return byMajor;
+              })());
+            }
+            return releasesByMajorCache.get(key);
+          }
+
+          async function latestMatchingTag(key, owner, repo, current) {
             const currentMajor = majorVersion(current);
             if (currentMajor === null) return null;
-            const { tag, error } = await getLatestRelease(owner, repo);
+            const { tag, error } = await getLatestRelease(key, owner, repo);
             if (error) {
               if (error.status !== 404) {
-                core.warning(`⚠️ ${owner}/${repo}: getLatestRelease failed (status ${error.status ?? 'unknown'}): ${error.message}`);
+                core.warning(`⚠️ ${key}: getLatestRelease failed (status ${error.status ?? 'unknown'}): ${error.message}`);
               }
             } else if (majorVersion(tag) === currentMajor) {
               return tag;
             }
-            for await (const page of github.paginate.iterator(
-              github.rest.repos.listReleases, { owner, repo, per_page: 50 }
-            )) {
-              const match = page.data
-                .filter(r => !r.prerelease && majorVersion(r.tag_name) === currentMajor)
-                .sort((a, b) => new Date(b.published_at) - new Date(a.published_at))[0];
-              if (match) return match.tag_name;
-            }
-            return null;
+            const byMajor = await getReleasesByMajor(key, owner, repo);
+            return byMajor.get(currentMajor)?.tag_name ?? null;
           }
 
           const githubDir = path.join(process.env.GITHUB_WORKSPACE, '.github');
@@ -130,7 +147,7 @@ runs:
           for (const [key, { owner, repo, versions }] of refs) {
             for (const [version, refFiles] of versions) {
               try {
-                const latest = await latestMatchingTag(owner, repo, version);
+                const latest = await latestMatchingTag(key, owner, repo, version);
                 if (!latest) {
                   core.warning(`⚠️ No matching release found for ${key}@${version}`);
                   continue;
