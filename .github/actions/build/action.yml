@@ -375,6 +375,7 @@ runs:
       with:
         TITLE: "Roslyn analyzer findings"
         GLOB: "*.sarif"
+        github-token: ${{inputs.github-token}}
 
     ############################################################################################################
     # NPM BUILD
