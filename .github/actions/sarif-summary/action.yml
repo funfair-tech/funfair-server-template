@@ -1,7 +1,7 @@
 --- # Summarise SARIF findings as a markdown table in the job summary
 # Maintain in repo: funfair-server-template
 name: 'Summarise SARIF findings'
-description: 'Extracts SARIF results into a markdown table on the job summary, and fails if any error-level findings exist'
+description: 'Extracts SARIF results into a markdown table on the job summary and, on pull requests, as a PR comment; fails if any error-level findings exist'
 inputs:
   TITLE:
     description: 'Heading for the summary table'
@@ -9,11 +9,15 @@ inputs:
   GLOB:
     description: 'Glob (relative to the results folder) matching the SARIF files to summarise'
     required: true
+  github-token:
+    description: 'GitHub token used to post the pull request comment'
+    required: false
 
 runs:
   using: "composite"
   steps:
     - name: "Summarise SARIF findings"
+      id: summarise
       working-directory: ${{github.workspace}}/results
       shell: bash
       env:
@@ -29,13 +33,17 @@ runs:
           exit 1
         fi
 
+        BODY_FILE="$(mktemp)"
+        echo "body-file=${BODY_FILE}" >> "$GITHUB_OUTPUT"
+
         {
           echo "## ${TITLE}"
           echo
           echo "| Source | Rule | Level | File | Line | Suppressed | Message |"
           echo "| --- | --- | --- | --- | --- | --- | --- |"
-        } >> "$GITHUB_STEP_SUMMARY"
+        } >> "$BODY_FILE"
 
+        TOTAL_ROWS=0
         TOTAL_ERRORS=0
         for f in "${FILES[@]}"; do
           if [ ! -f "$f" ]; then
@@ -60,13 +68,77 @@ runs:
 
           if [ -n "$ROWS" ]; then
             while IFS=$'\t' read -r is_error rule level uri line suppressed message; do
-              echo "| ${SOURCE} | ${rule} | ${level} | ${uri} | ${line} | ${suppressed} | ${message} |" >> "$GITHUB_STEP_SUMMARY"
+              echo "| ${SOURCE} | ${rule} | ${level} | ${uri} | ${line} | ${suppressed} | ${message} |" >> "$BODY_FILE"
+              TOTAL_ROWS=$((TOTAL_ROWS + 1))
               [ "$is_error" = "true" ] && TOTAL_ERRORS=$((TOTAL_ERRORS + 1))
             done <<< "$ROWS"
           fi
         done
+        echo "row-count=${TOTAL_ROWS}" >> "$GITHUB_OUTPUT"
+
+        cat "$BODY_FILE" >> "$GITHUB_STEP_SUMMARY"
 
         if [ "$TOTAL_ERRORS" -gt 0 ]; then
           echo "::error::${TITLE}: found ${TOTAL_ERRORS} error-level finding(s); see job summary for details."
           exit 1
         fi
+
+    - name: "Comment on pull request"
+      if: ${{ !cancelled() && github.event_name == 'pull_request' && steps.summarise.outputs.body-file != '' }}
+      # PRs from forks/Dependabot get a read-only GITHUB_TOKEN regardless of the permissions
+      # block above; commenting is a nice-to-have on top of the (already enforced) job summary
+      # and step failure, so it must never be what fails the job.
+      continue-on-error: true
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        TITLE: ${{inputs.TITLE}}
+        BODY_FILE: ${{steps.summarise.outputs.body-file}}
+        ROW_COUNT: ${{steps.summarise.outputs.row-count}}
+      with:
+        github-token: ${{inputs.github-token || github.token}}
+        script: |
+          const fs = require('fs');
+
+          const MAX_BODY_LENGTH = 60000; // GitHub's comment body limit is 65536
+
+          const title = process.env.TITLE;
+          const rowCount = Number(process.env.ROW_COUNT || '0');
+          const marker = `<!-- sarif-summary: ${title} -->`;
+          const prNumber = context.payload.pull_request.number;
+
+          const comments = await github.paginate(github.rest.issues.listComments, {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+          });
+          const existing = comments.find(c => c.body && c.body.includes(marker));
+
+          if (rowCount === 0 && !existing) {
+            core.info(`✅ No findings for "${title}"; skipping PR comment`);
+            return;
+          }
+
+          const body = rowCount === 0
+            ? `${marker}\n## ${title}\n\n✅ No findings.`
+            : `${marker}\n${fs.readFileSync(process.env.BODY_FILE, 'utf8')}`;
+          const commentBody = body.length > MAX_BODY_LENGTH
+            ? `${body.slice(0, MAX_BODY_LENGTH)}\n\n_… truncated, see the job summary for the full table._`
+            : body;
+
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existing.id,
+              body: commentBody,
+            });
+            core.info(`✅ Updated existing PR comment for "${title}"`);
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: commentBody,
+            });
+            core.info(`✅ Created PR comment for "${title}"`);
+          }
