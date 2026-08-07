@@ -54,6 +54,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'heads/release/',
+              per_page: 100,
             });
             const existingReleases = new Set(
               releaseBranches.map(b => b.ref.replace('refs/heads/release/', ''))
