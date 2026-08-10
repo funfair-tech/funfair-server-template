@@ -91,21 +91,33 @@ runs:
                 e => e.resource === 'PullRequest' && typeof e.message === 'string' && e.message.startsWith('A pull request already exists')
               );
             if (isPrAlreadyExists) {
-              core.info(`PR already exists for branch ${sourceBranch} - nothing to do`);
-              return;
-            }
+              core.info(`PR already exists for branch ${sourceBranch} - looking up the existing pull request`);
+              const { data: existingPrs } = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head: `${context.repo.owner}:${sourceBranch}`,
+                base: destinationBranch,
+                state: 'open',
+              });
+              if (existingPrs.length === 0) {
+                throw new Error(
+                  `Pull request creation reported "already exists" for ${sourceBranch} -> ${destinationBranch}, but no matching open pull request was found`
+                );
+              }
+              pr = existingPrs[0];
+            } else {
+              const isDraftUnsupported =
+                draft &&
+                err.status === 422 &&
+                typeof err.response?.data?.message === 'string' &&
+                err.response.data.message.includes('Draft pull requests are not supported');
+              if (!isDraftUnsupported) {
+                throw err;
+              }
 
-            const isDraftUnsupported =
-              draft &&
-              err.status === 422 &&
-              typeof err.response?.data?.message === 'string' &&
-              err.response.data.message.includes('Draft pull requests are not supported');
-            if (!isDraftUnsupported) {
-              throw err;
+              core.warning('Draft pull requests are not supported in this repository - creating a regular pull request instead');
+              pr = await createPr(false);
             }
-
-            core.warning('Draft pull requests are not supported in this repository - creating a regular pull request instead');
-            pr = await createPr(false);
           }
 
           if (assignees.length > 0) {
@@ -126,7 +138,7 @@ runs:
             });
           }
 
-          core.info(`Created PR #${pr.number}: ${pr.html_url}`);
+          core.info(`Pull request #${pr.number}: ${pr.html_url}`);
           core.setOutput('pr_number', String(pr.number));
           core.setOutput('pr_url', pr.html_url);
           core.setOutput('has_changed_files', String(pr.changed_files > 0));
