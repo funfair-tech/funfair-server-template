@@ -84,8 +84,11 @@ runs:
           try {
             pr = await createPr(draft);
           } catch (err) {
+            if (err.status !== 422) {
+              throw err;
+            }
+
             const isPrAlreadyExists =
-              err.status === 422 &&
               Array.isArray(err.response?.data?.errors) &&
               err.response.data.errors.some(
                 e => e.resource === 'PullRequest' && typeof e.message === 'string' && e.message.startsWith('A pull request already exists')
@@ -114,7 +117,6 @@ runs:
               pr = existingPr;
             } else if (
               draft &&
-              err.status === 422 &&
               typeof err.response?.data?.message === 'string' &&
               err.response.data.message.includes('Draft pull requests are not supported')
             ) {
@@ -125,21 +127,28 @@ runs:
             }
           }
 
+          const followUps = [];
           if (assignees.length > 0) {
-            await github.rest.issues.addAssignees({
-              ...ownerRepo,
-              issue_number: pr.number,
-              assignees: assignees,
-            });
+            followUps.push(
+              github.rest.issues.addAssignees({
+                ...ownerRepo,
+                issue_number: pr.number,
+                assignees: assignees,
+              })
+            );
           }
 
           if (labels.length > 0) {
-            await github.rest.issues.addLabels({
-              ...ownerRepo,
-              issue_number: pr.number,
-              labels: labels,
-            });
+            followUps.push(
+              github.rest.issues.addLabels({
+                ...ownerRepo,
+                issue_number: pr.number,
+                labels: labels,
+              })
+            );
           }
+
+          await Promise.all(followUps);
 
           core.info(`Pull request #${pr.number}: ${pr.html_url}`);
           core.setOutput('pr_number', String(pr.number));
