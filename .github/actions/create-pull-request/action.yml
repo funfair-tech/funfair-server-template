@@ -104,7 +104,14 @@ runs:
                   `Pull request creation reported "already exists" for ${sourceBranch} -> ${destinationBranch}, but no matching open pull request was found`
                 );
               }
-              pr = existingPrs[0];
+              // pulls.list omits fields such as changed_files that pulls.create returns;
+              // fetch the full representation so both paths converge on the same shape.
+              const { data: existingPr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: existingPrs[0].number,
+              });
+              pr = existingPr;
             } else {
               const isDraftUnsupported =
                 draft &&
