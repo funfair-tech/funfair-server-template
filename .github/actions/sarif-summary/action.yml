@@ -70,6 +70,10 @@ runs:
 
             for (const run of sarif.runs ?? []) {
               for (const result of run.results ?? []) {
+                if (result.level === 'note') {
+                  continue;
+                }
+
                 const suppressed = (result.suppressions ?? []).length > 0;
                 const isError = result.level === 'error' && !suppressed;
                 const location = result.locations?.[0]?.physicalLocation;
