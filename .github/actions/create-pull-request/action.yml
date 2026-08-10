@@ -90,6 +90,12 @@ runs:
               err.response.data.errors.some(
                 e => e.resource === 'PullRequest' && typeof e.message === 'string' && e.message.startsWith('A pull request already exists')
               );
+            const isDraftUnsupported =
+              draft &&
+              err.status === 422 &&
+              typeof err.response?.data?.message === 'string' &&
+              err.response.data.message.includes('Draft pull requests are not supported');
+
             if (isPrAlreadyExists) {
               core.info(`PR already exists for branch ${sourceBranch} - looking up the existing pull request`);
               const { data: existingPrs } = await github.rest.pulls.list({
@@ -98,6 +104,7 @@ runs:
                 head: `${context.repo.owner}:${sourceBranch}`,
                 base: destinationBranch,
                 state: 'open',
+                per_page: 1,
               });
               if (existingPrs.length === 0) {
                 throw new Error(
@@ -112,18 +119,11 @@ runs:
                 pull_number: existingPrs[0].number,
               });
               pr = existingPr;
-            } else {
-              const isDraftUnsupported =
-                draft &&
-                err.status === 422 &&
-                typeof err.response?.data?.message === 'string' &&
-                err.response.data.message.includes('Draft pull requests are not supported');
-              if (!isDraftUnsupported) {
-                throw err;
-              }
-
+            } else if (isDraftUnsupported) {
               core.warning('Draft pull requests are not supported in this repository - creating a regular pull request instead');
               pr = await createPr(false);
+            } else {
+              throw err;
             }
           }
 
