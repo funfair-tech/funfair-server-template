@@ -15,10 +15,15 @@ Template repository for C# / server code
 | main    | [![Build: Pre-Release][pre-release-img]][pre-release-link]   |
 | release | [![Build: Release][release-img]][release-link]               |
 
+## Documentation
+
+See [NuGet Trusted Publishing][nuget-trusted-publishing] for the nuget.org and repository secret configuration a repository derived from this template needs to publish packages.
+
 ## Changelog
 
 View [changelog](CHANGELOG.md)
 
+[nuget-trusted-publishing]: NUGET-TRUSTED-PUBLISHING.md
 [pre-release-img]: https://github.com/funfair-tech/funfair-server-template/actions/workflows/build-and-publish-pre-release.yml/badge.svg
 [pre-release-link]: https://github.com/funfair-tech/funfair-server-template/actions/workflows/build-and-publish-pre-release.yml
 [release-img]: https://github.com/funfair-tech/funfair-server-template/actions/workflows/build-and-publish-release.yml/badge.svg
