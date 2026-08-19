@@ -19,7 +19,10 @@ inputs:
     description: 'Nuget feed to push packages symbols to'
     required: false
   nuget-api-key:
-    description: 'API key to authenticate when pushing packages'
+    description: >-
+      API key to authenticate when pushing packages, or one of the sentinel values 'SLEET'
+      (push via Sleet) or 'TRUSTED_PUBLISHING' (exchange a GitHub OIDC token for a short-lived
+      nuget.org API key instead of using a static key)
     required: false
   nuget-username:
     description: 'nuget.org username (profile name) for trusted publishing'

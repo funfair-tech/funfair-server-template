@@ -24,7 +24,11 @@ runs:
         NUGET_SYMBOL_FEED: ${{inputs.nuget-symbol-feed}}
       run: |
         if [ -n "${NUGET_SYMBOL_FEED}" ] && [ "${NUGET_SYMBOL_FEED}" != " " ]; then
-          echo "arg=--symbol-source \"${NUGET_SYMBOL_FEED}\"" >> "$GITHUB_OUTPUT"
+          {
+            echo "arg<<NUGET_SYMBOL_SOURCE_EOF"
+            echo "--symbol-source \"${NUGET_SYMBOL_FEED}\""
+            echo "NUGET_SYMBOL_SOURCE_EOF"
+          } >> "$GITHUB_OUTPUT"
         else
           echo "arg=" >> "$GITHUB_OUTPUT"
         fi

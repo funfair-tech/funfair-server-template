@@ -14,7 +14,13 @@ runs:
   using: "composite"
   steps:
 
-    - name: "Check Required Secrets"
+    - name: "Check Required Secrets: nuget-feed"
+      uses: ./.github/actions/check-required-secret
+      with:
+        secret-name: "nuget-feed"
+        secret-value: ${{inputs.nuget-feed}}
+
+    - name: "Check Required Secrets: nuget-username"
       uses: ./.github/actions/check-required-secret
       with:
         secret-name: "nuget-username"
@@ -25,12 +31,6 @@ runs:
       uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
       with:
         user: ${{inputs.nuget-username}}
-
-    - name: "Mask temporary API key"
-      shell: bash
-      env:
-        NUGET_TEMP_API_KEY: ${{steps.login.outputs.NUGET_API_KEY}}
-      run: echo "::add-mask::${NUGET_TEMP_API_KEY}"
 
     - name: "NuGet Push"
       uses: ./.github/actions/nuget-push
