@@ -1,6 +1,6 @@
 # NuGet Trusted Publishing
 
-Repositories derived from this template can publish to nuget.org using [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) instead of a long-lived `NUGET_API_KEY`. GitHub Actions requests a short-lived OIDC token, exchanges it with nuget.org for a temporary (1-hour) API key, and uses that key to push. Trusted Publishing only applies to the nuget.org feed; other feeds (private feeds, Sleet) keep using a static API key unchanged.
+Repositories derived from this template publish to nuget.org using [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) instead of a long-lived `NUGET_API_KEY`; nuget.org is deprecating static API keys. GitHub Actions requests a short-lived OIDC token, exchanges it with nuget.org for a temporary (1-hour) API key, and uses that key to push. Trusted Publishing only applies to the nuget.org feed; `NUGET_FEED` must point at nuget.org for this to work. A repository publishing to Sleet instead (`NUGET_API_KEY` set to the sentinel value `SLEET`) is unaffected.
 
 ## nuget.org setup (one-off, per repository)
 
@@ -19,12 +19,12 @@ Set these in the repository (or organisation) secrets:
 
 | Secret | Value |
 | --- | --- |
-| `NUGET_API_KEY` | Set to the literal sentinel value `TRUSTED_PUBLISHING` to opt in (mirrors the existing `SLEET` sentinel used to select the Sleet publish path) |
+| `NUGET_API_KEY` | Any non-empty value opts into a nuget.org push (the value itself is no longer used as a credential); set to the literal sentinel value `SLEET` instead to publish via Sleet |
 | `NUGET_USER_NAME` | The nuget.org username (profile name) the Trusted Publishing policy above is registered against, not an email address |
 | `NUGET_FEED` | Must remain the nuget.org v3 index, `https://api.nuget.org/v3/index.json` |
 
 `NUGET_USER_NAME` may be set once at the organisation level if all repositories publish under the same nuget.org account.
 
-Leave `NUGET_API_KEY` as a real API key (or `SLEET`) for any repository not publishing to nuget.org; Trusted Publishing is not available for other feeds.
+`NUGET_SYMBOL_FEED` is no longer used: nuget.org pushes symbols through the same push call, so a separate symbol feed isn't needed.
 
-`NUGET_SYMBOL_FEED` is not used on the Trusted Publishing path: nuget.org pushes symbols through the same push call, so any configured separate symbol feed is ignored while `NUGET_API_KEY` is `TRUSTED_PUBLISHING`.
+A repository whose nuget.org policy or `NUGET_USER_NAME` isn't set up yet will fail the build's publish step with a clear error rather than silently doing nothing; set both up before merging a change that triggers a publish.

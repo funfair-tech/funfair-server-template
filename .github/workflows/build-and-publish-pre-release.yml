@@ -95,7 +95,6 @@ jobs:
           nuget-additional-restore-feed-prerelease: ${{vars.NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE}}
           nuget-pack: ${{vars.NUGET_PACK}}
           nuget-feed: ${{secrets.NUGET_FEED}}
-          nuget-symbol-feed: ${{secrets.NUGET_SYMBOL_FEED}}
           nuget-api-key: ${{secrets.NUGET_API_KEY}}
           nuget-username: ${{secrets.NUGET_USER_NAME}}
           sleet-config: ${{secrets.SLEET_CONFIG}}

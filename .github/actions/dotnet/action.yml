@@ -15,17 +15,14 @@ inputs:
   nuget-feed:
     description: 'Nuget feed to push packages to'
     required: false
-  nuget-symbol-feed:
-    description: 'Nuget feed to push packages symbols to'
-    required: false
   nuget-api-key:
     description: >-
-      API key to authenticate when pushing packages, or one of the sentinel values 'SLEET'
-      (push via Sleet) or 'TRUSTED_PUBLISHING' (exchange a GitHub OIDC token for a short-lived
-      nuget.org API key instead of using a static key)
+      Set to any non-empty value to publish to nuget-feed via Trusted Publishing (a static API
+      key is no longer used for that push, nuget.org is deprecating them), or to the sentinel
+      value 'SLEET' to publish via Sleet instead
     required: false
   nuget-username:
-    description: 'nuget.org username (profile name) for trusted publishing'
+    description: 'nuget.org username (profile name) the Trusted Publishing policy is registered against'
     required: false
   sleet-config:
     description: 'Sleet config file'
@@ -217,21 +214,10 @@ runs:
         cp **/*.nupkg "${{github.workspace}}/dist"
       working-directory: ${{github.workspace}}/src
 
-    - name: "Dotnet: Publish Packages to Nuget"
+    - name: "Dotnet: Publish Packages to Nuget (Trusted Publishing)"
       if: |-
         inputs.nuget-api-key != '' &&
         inputs.nuget-api-key != 'SLEET' &&
-        inputs.nuget-api-key != 'TRUSTED_PUBLISHING' &&
-        inputs.nuget-pack == 'true'
-      uses: ./.github/actions/nuget-push
-      with:
-        nuget-feed: ${{inputs.nuget-feed}}
-        nuget-symbol-feed: ${{inputs.nuget-symbol-feed}}
-        nuget-api-key: ${{inputs.nuget-api-key}}
-
-    - name: "Dotnet: Publish Packages to Nuget (Trusted Publishing)"
-      if: |-
-        inputs.nuget-api-key == 'TRUSTED_PUBLISHING' &&
         inputs.nuget-pack == 'true'
       uses: ./.github/actions/nuget-trusted-publish
       with:
