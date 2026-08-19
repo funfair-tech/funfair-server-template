@@ -54,10 +54,13 @@ inputs:
     description: 'Nuget feed to push packages to'
     required: false
   nuget-api-key:
-    description: 'API key to authenticate when pushing packages'
+    description: >-
+      Set to any non-empty value to publish to nuget-feed via Trusted Publishing (a static API
+      key is no longer used for that push, nuget.org is deprecating them), or to the sentinel
+      value 'SLEET' to publish via Sleet instead
     required: false
   nuget-username:
-    description: 'nuget.org username (profile name) for trusted publishing'
+    description: 'nuget.org username (profile name) the Trusted Publishing policy is registered against'
     required: false
   sleet-config:
     description: 'Sleet config file'

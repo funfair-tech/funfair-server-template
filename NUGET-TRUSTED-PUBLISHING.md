@@ -27,4 +27,4 @@ Set these in the repository (or organisation) secrets:
 
 `NUGET_SYMBOL_FEED` is no longer used: nuget.org pushes symbols through the same push call, so a separate symbol feed isn't needed.
 
-A repository whose nuget.org policy or `NUGET_USER_NAME` isn't set up yet will fail the build's publish step with a clear error rather than silently doing nothing; set both up before merging a change that triggers a publish.
+A repository whose `NUGET_USER_NAME` secret is missing entirely will fail fast with a clear "required but not set" error. If `NUGET_USER_NAME` is set (e.g. inherited from an organisation-level secret) but the matching nuget.org policy hasn't been created yet, the failure instead surfaces as a less obvious error from the OIDC login/exchange step itself; set the policy up before merging a change that triggers a publish.
