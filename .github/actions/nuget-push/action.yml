@@ -18,14 +18,15 @@ runs:
   steps:
 
     - name: "Determine symbol source argument"
+      id: symbol-source
       shell: bash
       env:
         NUGET_SYMBOL_FEED: ${{inputs.nuget-symbol-feed}}
       run: |
         if [ -n "${NUGET_SYMBOL_FEED}" ] && [ "${NUGET_SYMBOL_FEED}" != " " ]; then
-          echo "NUGET_SYMBOL_SOURCE_ARG=--symbol-source \"${NUGET_SYMBOL_FEED}\"" >> "$GITHUB_ENV"
+          echo "arg=--symbol-source \"${NUGET_SYMBOL_FEED}\"" >> "$GITHUB_OUTPUT"
         else
-          echo "NUGET_SYMBOL_SOURCE_ARG=" >> "$GITHUB_ENV"
+          echo "arg=" >> "$GITHUB_OUTPUT"
         fi
 
 # yamllint disable rule:line-length
@@ -34,5 +35,5 @@ runs:
       with:
         working-directory: "${{github.workspace}}"
         tool-name: "pushpackages"
-        tool-arguments: "--folder dist --api-key \"${{inputs.nuget-api-key}}\" --source \"${{inputs.nuget-feed}}\" ${{env.NUGET_SYMBOL_SOURCE_ARG}}"
+        tool-arguments: "--folder dist --api-key \"${{inputs.nuget-api-key}}\" --source \"${{inputs.nuget-feed}}\" ${{steps.symbol-source.outputs.arg}}"
 # yamllint enable rule:line-length
