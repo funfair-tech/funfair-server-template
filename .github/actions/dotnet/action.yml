@@ -233,7 +233,6 @@ runs:
       uses: ./.github/actions/nuget-trusted-publish
       with:
         nuget-feed: ${{inputs.nuget-feed}}
-        nuget-symbol-feed: ${{inputs.nuget-symbol-feed}}
         nuget-username: ${{inputs.nuget-username}}
 
     - name: "Dotnet: Publish Packages using sleet"

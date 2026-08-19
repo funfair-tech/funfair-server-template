@@ -6,9 +6,6 @@ inputs:
   nuget-feed:
     description: 'Nuget feed to push packages to (must be the nuget.org v3 index)'
     required: true
-  nuget-symbol-feed:
-    description: 'Nuget feed to push packages symbols to'
-    required: false
   nuget-username:
     description: 'nuget.org username (profile name) the trusted publishing policy is registered against'
     required: true
@@ -17,6 +14,12 @@ runs:
   using: "composite"
   steps:
 
+    - name: "Check Required Secrets"
+      uses: ./.github/actions/check-required-secret
+      with:
+        secret-name: "nuget-username"
+        secret-value: ${{inputs.nuget-username}}
+
     - name: "NuGet login (OIDC to temporary API key)"
       id: login
       uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
@@ -24,15 +27,13 @@ runs:
         user: ${{inputs.nuget-username}}
 
     - name: "Mask temporary API key"
-      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      shell: bash
       env:
         NUGET_TEMP_API_KEY: ${{steps.login.outputs.NUGET_API_KEY}}
-      with:
-        script: core.setSecret(process.env.NUGET_TEMP_API_KEY);
+      run: echo "::add-mask::${NUGET_TEMP_API_KEY}"
 
     - name: "NuGet Push"
       uses: ./.github/actions/nuget-push
       with:
         nuget-feed: ${{inputs.nuget-feed}}
-        nuget-symbol-feed: ${{inputs.nuget-symbol-feed}}
         nuget-api-key: ${{steps.login.outputs.NUGET_API_KEY}}

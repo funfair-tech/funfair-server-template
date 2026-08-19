@@ -17,21 +17,22 @@ runs:
   using: "composite"
   steps:
 
-    - name: "NuGet Push with Symbols"
-      if: inputs.nuget-symbol-feed == '' || inputs.nuget-symbol-feed == ' '
-      uses: ./.github/actions/dotnet-tool-run
-      with:
-        working-directory: "${{github.workspace}}"
-        tool-name: "pushpackages"
-        tool-arguments: "--folder dist --api-key \"${{inputs.nuget-api-key}}\" --source \"${{inputs.nuget-feed}}\""
+    - name: "Determine symbol source argument"
+      shell: bash
+      env:
+        NUGET_SYMBOL_FEED: ${{inputs.nuget-symbol-feed}}
+      run: |
+        if [ -n "${NUGET_SYMBOL_FEED}" ] && [ "${NUGET_SYMBOL_FEED}" != " " ]; then
+          echo "NUGET_SYMBOL_SOURCE_ARG=--symbol-source \"${NUGET_SYMBOL_FEED}\"" >> "$GITHUB_ENV"
+        else
+          echo "NUGET_SYMBOL_SOURCE_ARG=" >> "$GITHUB_ENV"
+        fi
 
 # yamllint disable rule:line-length
-    - name: "NuGet Push with Separate Symbol Feed"
-      if: |-
-        !(inputs.nuget-symbol-feed == '' || inputs.nuget-symbol-feed == ' ')
+    - name: "NuGet Push"
       uses: ./.github/actions/dotnet-tool-run
       with:
         working-directory: "${{github.workspace}}"
         tool-name: "pushpackages"
-        tool-arguments: "--folder dist --api-key \"${{inputs.nuget-api-key}}\" --source \"${{inputs.nuget-feed}}\" --symbol-source \"${{inputs.nuget-symbol-feed}}\""
+        tool-arguments: "--folder dist --api-key \"${{inputs.nuget-api-key}}\" --source \"${{inputs.nuget-feed}}\" ${{env.NUGET_SYMBOL_SOURCE_ARG}}"
 # yamllint enable rule:line-length

@@ -26,3 +26,5 @@ Set these in the repository (or organisation) secrets:
 `NUGET_USER_NAME` may be set once at the organisation level if all repositories publish under the same nuget.org account.
 
 Leave `NUGET_API_KEY` as a real API key (or `SLEET`) for any repository not publishing to nuget.org; Trusted Publishing is not available for other feeds.
+
+`NUGET_SYMBOL_FEED` is not used on the Trusted Publishing path: nuget.org pushes symbols through the same push call, so any configured separate symbol feed is ignored while `NUGET_API_KEY` is `TRUSTED_PUBLISHING`.
