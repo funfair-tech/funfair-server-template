@@ -17,8 +17,8 @@ This repository publishes from two workflows (`build-and-publish-pre-release.yml
 
 | Setting | Kind | Value |
 | --- | --- | --- |
-| `NUGET_FEED_TYPE` | variable | `NUGET` to publish to nuget.org via Trusted Publishing, `SLEET` to publish via Sleet, empty/unset to skip publishing. Neither this nor `NUGET_USER_NAME` carries any credential material, so both are plain variables, not secrets |
-| `NUGET_USER_NAME` | variable | The nuget.org username (profile name) the Trusted Publishing policy above is registered against, not an email address |
+| `NUGET_FEED_TYPE` | variable | `NUGET` to publish to nuget.org via Trusted Publishing, `SLEET` to publish via Sleet, empty/unset to skip publishing. Not a secret: it carries no credential material |
+| `NUGET_USER_NAME` | secret | The nuget.org username (profile name) the Trusted Publishing policy above is registered against, not an email address |
 | `NUGET_FEED` | secret | Must remain the nuget.org v3 index, `https://api.nuget.org/v3/index.json` |
 
 `NUGET_USER_NAME` may be set once at the organisation level if all repositories publish under the same nuget.org account.
@@ -27,6 +27,6 @@ An unrecognised `NUGET_FEED_TYPE` value (a typo, or a leftover static API key fr
 
 `NUGET_SYMBOL_FEED` and `NUGET_API_KEY` are no longer used. This template currently packs with `IncludeSymbols=False`, so no symbol package is produced at all; if that ever changes, nuget.org accepts a `.snupkg` through the same push call, so no separate symbol feed configuration would be needed even then. No static API key is stored or read for the nuget.org path any more.
 
-A repository whose `NUGET_USER_NAME` variable is missing entirely will fail fast with a clear "required but not set" error. If `NUGET_USER_NAME` is set (e.g. inherited from an organisation-level variable) but the matching nuget.org policy hasn't been created yet, the failure instead surfaces as a less obvious error from the OIDC login/exchange step itself; set the policy up before merging a change that triggers a publish.
+A repository whose `NUGET_USER_NAME` secret is missing entirely will fail fast with a clear "required but not set" error. If `NUGET_USER_NAME` is set (e.g. inherited from an organisation-level secret) but the matching nuget.org policy hasn't been created yet, the failure instead surfaces as a less obvious error from the OIDC login/exchange step itself; set the policy up before merging a change that triggers a publish.
 
-**Migrating an existing repository**: `NUGET_USER_NAME` and `NUGET_FEED_TYPE` are GitHub Actions variables, not secrets - a value already set as an organisation *secret* (from before this change) does not carry over to a variable of the same name; it must be created separately as a variable.
+`NUGET_FEED_TYPE` is new with this change and must be created as a variable (it did not exist before); no existing secret needs migrating for it.

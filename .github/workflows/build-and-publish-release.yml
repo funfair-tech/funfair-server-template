@@ -95,7 +95,7 @@ jobs:
           nuget-pack: ${{vars.NUGET_PACK}}
           nuget-feed: ${{secrets.NUGET_FEED}}
           nuget-feed-type: ${{vars.NUGET_FEED_TYPE}}
-          nuget-username: ${{vars.NUGET_USER_NAME}}
+          nuget-username: ${{secrets.NUGET_USER_NAME}}
           sleet-config: ${{secrets.SLEET_CONFIG}}
           sleet-feed: "dotnet-release"
           project-to-publish: ${{vars.PROJECT_TO_PUBLISH}}
