@@ -1,6 +1,6 @@
 # NuGet Trusted Publishing
 
-Repositories derived from this template can publish to nuget.org using [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) instead of a long-lived `NUGET_API_KEY`. GitHub Actions requests a short-lived OIDC token, exchanges it with nuget.org for a temporary (1-hour) API key, and uses that key to push. Trusted Publishing only applies to the nuget.org feed; other feeds (private feeds, Sleet) keep using a static API key unchanged.
+Repositories derived from this template publish to nuget.org using [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) instead of a long-lived API key; nuget.org is deprecating static API keys. GitHub Actions requests a short-lived OIDC token, exchanges it with nuget.org for a temporary (1-hour) API key, and uses that key to push. Trusted Publishing only applies to the nuget.org feed; `NUGET_FEED` must point at nuget.org for this to work. Which path a repository takes (nuget.org, Sleet, or no publish at all) is controlled by `NUGET_FEED_TYPE` below.
 
 ## nuget.org setup (one-off, per repository)
 
@@ -15,16 +15,18 @@ This repository publishes from two workflows (`build-and-publish-pre-release.yml
 
 ## GitHub repository configuration
 
-Set these in the repository (or organisation) secrets:
-
-| Secret | Value |
-| --- | --- |
-| `NUGET_API_KEY` | Set to the literal sentinel value `TRUSTED_PUBLISHING` to opt in (mirrors the existing `SLEET` sentinel used to select the Sleet publish path) |
-| `NUGET_USER_NAME` | The nuget.org username (profile name) the Trusted Publishing policy above is registered against, not an email address |
-| `NUGET_FEED` | Must remain the nuget.org v3 index, `https://api.nuget.org/v3/index.json` |
+| Setting | Kind | Value |
+| --- | --- | --- |
+| `NUGET_FEED_TYPE` | variable | `NUGET` to publish to nuget.org via Trusted Publishing, `SLEET` to publish via Sleet, empty/unset to skip publishing. Not a secret: it carries no credential material |
+| `NUGET_USER_NAME` | secret | The nuget.org username (profile name) the Trusted Publishing policy above is registered against, not an email address |
+| `NUGET_FEED` | secret | Must remain the nuget.org v3 index, `https://api.nuget.org/v3/index.json` |
 
 `NUGET_USER_NAME` may be set once at the organisation level if all repositories publish under the same nuget.org account.
 
-Leave `NUGET_API_KEY` as a real API key (or `SLEET`) for any repository not publishing to nuget.org; Trusted Publishing is not available for other feeds.
+An unrecognised `NUGET_FEED_TYPE` value (a typo, or a leftover static API key from before this template switched to Trusted Publishing) fails the build with a clear error rather than silently skipping the publish step.
 
-`NUGET_SYMBOL_FEED` is not used on the Trusted Publishing path: nuget.org pushes symbols through the same push call, so any configured separate symbol feed is ignored while `NUGET_API_KEY` is `TRUSTED_PUBLISHING`.
+`NUGET_SYMBOL_FEED` and `NUGET_API_KEY` are no longer used. This template currently packs with `IncludeSymbols=False`, so no symbol package is produced at all; if that ever changes, nuget.org accepts a `.snupkg` through the same push call, so no separate symbol feed configuration would be needed even then. No static API key is stored or read for the nuget.org path any more.
+
+A repository whose `NUGET_USER_NAME` secret is missing entirely will fail fast with a clear "required but not set" error. If `NUGET_USER_NAME` is set (e.g. inherited from an organisation-level secret) but the matching nuget.org policy hasn't been created yet, the failure instead surfaces as a less obvious error from the OIDC login/exchange step itself; set the policy up before merging a change that triggers a publish.
+
+`NUGET_FEED_TYPE` is new with this change and must be created as a variable (it did not exist before); no existing secret needs migrating for it.
