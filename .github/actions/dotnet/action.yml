@@ -214,6 +214,20 @@ runs:
         cp **/*.nupkg "${{github.workspace}}/dist"
       working-directory: ${{github.workspace}}/src
 
+    - name: "Check nuget-feed-type is valid"
+      if: inputs.nuget-pack == 'true'
+      shell: bash
+      env:
+        NUGET_FEED_TYPE: ${{inputs.nuget-feed-type}}
+      run: |
+        case "${NUGET_FEED_TYPE}" in
+          ''|'NUGET'|'SLEET') ;;
+          *)
+            echo "::error::nuget-feed-type must be 'NUGET', 'SLEET', or empty/unset - got '${NUGET_FEED_TYPE}'"
+            exit 1
+            ;;
+        esac
+
     - name: "Dotnet: Publish Packages to Nuget (Trusted Publishing)"
       if: |-
         inputs.nuget-feed-type == 'NUGET' &&
