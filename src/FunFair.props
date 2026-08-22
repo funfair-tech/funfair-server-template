@@ -29,12 +29,15 @@
     </PropertyGroup>
 
     <!-- Package Icon -->
-    <PropertyGroup Condition="$(FFPacking) == 'True' AND Exists('$(MSBuildThisFileDirectory)packageicon.png')">
+    <PropertyGroup>
+        <_PackageIconFile>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', 'packageicon.png'))</_PackageIconFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(FFPacking) == 'True' AND Exists('$(_PackageIconFile)')">
         <PackageIcon>packageicon.png</PackageIcon>
         <PackageIconUrl>https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
     </PropertyGroup>
-    <ItemGroup Condition="$(FFPacking) == 'True' AND Exists('$(MSBuildThisFileDirectory)packageicon.png')">
-        <None Include="$(MSBuildThisFileDirectory)packageicon.png" Pack="true" PackagePath="\" />
+    <ItemGroup Condition="$(FFPacking) == 'True' AND Exists('$(_PackageIconFile)')">
+        <None Include="$(_PackageIconFile)" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <!-- License -->
