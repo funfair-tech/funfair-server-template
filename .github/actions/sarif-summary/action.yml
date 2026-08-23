@@ -49,10 +49,13 @@ runs:
             return;
           }
 
+          // No files matching the glob is a valid outcome (e.g. a repo whose analyzable
+          // projects produced no SARIF output at all), not a pipeline failure; fall through
+          // with an empty file list so it's reported the same way as "files present, zero
+          // findings" below (sarif-merge already treats a zero-file merge the same way).
           const files = entries.filter(f => pattern.test(f)).sort();
           if (files.length === 0) {
-            core.setFailed(`❌ ${title}: no SARIF files matched '${globPattern}' in results/`);
-            return;
+            core.info(`ℹ️ ${title}: no SARIF files matched '${globPattern}' in results/; treating as no findings`);
           }
 
           const rows = [];
