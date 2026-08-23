@@ -116,8 +116,8 @@ jobs:
           fetch-depth: 0
 
       - name: "Check repo visibility"
-        if: github.actor != 'dependabot[bot]'
         id: visibility
+        if: github.actor != 'dependabot[bot]'
         uses: ./.github/actions/check-repo-visibility
 
       - name: "Diff Changes"
