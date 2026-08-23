@@ -170,6 +170,7 @@ jobs:
 
       - name: "Check repo visibility"
         id: visibility
+        if: github.actor != 'dependabot[bot]'
         uses: ./.github/actions/check-repo-visibility
 
       - name: "Check Required Secrets"
