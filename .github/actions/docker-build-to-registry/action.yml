@@ -34,17 +34,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Validate required inputs"
-      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-      env:
-        DOCKER_CONTAINER_REGISTRY: ${{inputs.docker-container-registry}}
+    - name: "Check Required Secrets: docker-container-registry"
+      uses: ./.github/actions/check-required-secret
       with:
-        script: |
-          if (!process.env.DOCKER_CONTAINER_REGISTRY) {
-            core.setFailed('❌ Required input docker-container-registry is not set');
-          } else {
-            core.info('✅ docker-container-registry is set');
-          }
+        secret-name: "docker-container-registry"
+        secret-value: ${{inputs.docker-container-registry}}
 
     - name: "Docker Trust Enable"
       shell: bash
