@@ -73,8 +73,8 @@ runs:
         tags: |
           ${{inputs.docker-container-registry}}/${{inputs.app-owner}}/${{inputs.app-name}}:${{inputs.build-tag}}
           ${{inputs.docker-container-registry}}/${{inputs.app-owner}}/${{inputs.app-name}}:${{inputs.build-version}}
-        cache-from: type=gha,scope=${{inputs.app-owner}}-${{inputs.app-name}}-deploy-${{inputs.container-platform}}
-        cache-to: type=gha,mode=max,scope=${{inputs.app-owner}}-${{inputs.app-name}}-deploy-${{inputs.container-platform}}
+        cache-from: type=local,src=${{runner.temp}}/.buildx-cache
+        cache-to: type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max
         provenance: false
 
     - name: "Docker Trust Restore"
