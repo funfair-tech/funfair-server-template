@@ -64,6 +64,7 @@ runs:
         github-token: ${{inputs.github-token}}
 
     - name: "Docker: Build with tags"
+      id: build-with-tags
       if: inputs.deploy == 'true'
       uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
       with:
@@ -78,7 +79,7 @@ runs:
         provenance: false
 
     - name: "Move docker build cache"
-      if: inputs.deploy == 'true'
+      if: steps.build-with-tags.outcome == 'success'
       shell: bash
       run: |
         rm -rf "${{runner.temp}}/.buildx-cache"
