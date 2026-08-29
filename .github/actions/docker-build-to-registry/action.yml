@@ -77,6 +77,13 @@ runs:
         cache-to: type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max
         provenance: false
 
+    - name: "Move docker build cache"
+      if: inputs.deploy == 'true'
+      shell: bash
+      run: |
+        rm -rf "${{runner.temp}}/.buildx-cache"
+        mv "${{runner.temp}}/.buildx-cache-new" "${{runner.temp}}/.buildx-cache"
+
     - name: "Docker Trust Restore"
       if: always()
       shell: bash
