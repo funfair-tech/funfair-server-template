@@ -47,13 +47,21 @@ runs:
         echo "DOCKER_CONTENT_TRUST=1" >> "$GITHUB_ENV"
 
     - name: "Build and export docker container"
+      id: build-test
       uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
       with:
         context: ${{inputs.container-source}}
         load: true
         tags: ${{inputs.app-owner}}/${{inputs.app-name}}:test
-        cache-from: type=gha,scope=${{inputs.app-owner}}-${{inputs.app-name}}-test
-        cache-to: type=gha,mode=max,scope=${{inputs.app-owner}}-${{inputs.app-name}}-test
+        cache-from: type=local,src=${{runner.temp}}/.buildx-cache
+        cache-to: type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max
+
+    - name: "Move docker build cache (test)"
+      if: steps.build-test.outcome == 'success'
+      shell: bash
+      run: |
+        rm -rf "${{runner.temp}}/.buildx-cache"
+        mv "${{runner.temp}}/.buildx-cache-new" "${{runner.temp}}/.buildx-cache"
 
     ## Run docker image tests
     - name: "Run docker image tests"
@@ -78,7 +86,7 @@ runs:
         cache-to: type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max
         provenance: false
 
-    - name: "Move docker build cache"
+    - name: "Move docker build cache (deploy)"
       if: steps.build-with-tags.outcome == 'success'
       shell: bash
       run: |
