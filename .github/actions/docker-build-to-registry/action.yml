@@ -58,10 +58,7 @@ runs:
 
     - name: "Move docker build cache (test)"
       if: steps.build-test.outcome == 'success'
-      shell: bash
-      run: |
-        rm -rf "${{runner.temp}}/.buildx-cache"
-        mv "${{runner.temp}}/.buildx-cache-new" "${{runner.temp}}/.buildx-cache"
+      uses: ./.github/actions/move-docker-build-cache
 
     ## Run docker image tests
     - name: "Run docker image tests"
@@ -88,10 +85,7 @@ runs:
 
     - name: "Move docker build cache (deploy)"
       if: steps.build-with-tags.outcome == 'success'
-      shell: bash
-      run: |
-        rm -rf "${{runner.temp}}/.buildx-cache"
-        mv "${{runner.temp}}/.buildx-cache-new" "${{runner.temp}}/.buildx-cache"
+      uses: ./.github/actions/move-docker-build-cache
 
     - name: "Docker Trust Restore"
       if: always()
