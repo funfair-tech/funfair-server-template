@@ -359,9 +359,7 @@ runs:
         production-build: ${{inputs.production-build}}
         build-version: ${{env.BUILD_VERSION}}
         release: ${{env.RELEASE}}
-        pre-release-build: >-
-          ${{steps.find_pull_request.outputs.base == 'main' &&
-          steps.find_pull_request.outputs.draft == 'true'}}
+        pre-release-build: ${{steps.find_pull_request.outputs.pre-release-build}}
         build-sql: ${{steps.check_files.outputs.SQL_EXIST}}
         db-folder: ${{github.workspace}}/db
         nuget-pack: ${{inputs.nuget-pack}}
