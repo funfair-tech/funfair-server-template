@@ -292,6 +292,7 @@ runs:
 
     - name: "Find Pull Request for branch"
       id: find_pull_request
+      if: steps.check_files.outputs.DOTNET_EXIST == 'true'
       uses: ./.github/actions/find-pull-request
       with:
         branch: ${{github.ref_name}}

@@ -18,12 +18,6 @@ outputs:
   head-sha:
     description: "Head commit SHA of the pull request, or empty string if not found"
     value: ${{steps.find-pr.outputs.head-sha}}
-  draft:
-    description: "Whether the pull request is a draft, or empty string if not found"
-    value: ${{steps.find-pr.outputs.draft}}
-  base:
-    description: "Base branch the pull request targets, or empty string if not found"
-    value: ${{steps.find-pr.outputs.base}}
   pre-release-build:
     description: "Whether the pull request is a draft targeting main, or 'false' if not"
     value: ${{steps.find-pr.outputs.pre-release-build}}
@@ -50,13 +44,9 @@ runs:
             const pr = pulls[0];
             core.setOutput('number', String(pr.number));
             core.setOutput('head-sha', pr.head.sha);
-            core.setOutput('draft', String(pr.draft));
-            core.setOutput('base', pr.base.ref);
             core.setOutput('pre-release-build', String(pr.draft === true && pr.base.ref === 'main'));
           } else {
             core.setOutput('number', '');
             core.setOutput('head-sha', '');
-            core.setOutput('draft', '');
-            core.setOutput('base', '');
             core.setOutput('pre-release-build', 'false');
           }
