@@ -290,6 +290,23 @@ runs:
       with:
         github-token: ${{inputs.github-token}}
 
+    - name: "Find Pull Request for branch"
+      id: find_pull_request
+      uses: ./.github/actions/find-pull-request
+      with:
+        branch: ${{github.ref_name}}
+        github-token: ${{inputs.github-token}}
+
+    - name: "Pre-Release Build check"
+      shell: bash
+      env:
+        PR_BASE: ${{steps.find_pull_request.outputs.base}}
+        PR_DRAFT: ${{steps.find_pull_request.outputs.draft}}
+      run: |
+        [[ "$PR_BASE" == 'main' && "$PR_DRAFT" == 'true' ]] && \
+          echo 'PRE_RELEASE_BUILD=true' >> "$GITHUB_ENV" || \
+          echo 'PRE_RELEASE_BUILD=false' >> "$GITHUB_ENV"
+
     - name: "Deploy check - Default"
       shell: bash
       run: |
@@ -352,6 +369,7 @@ runs:
         production-build: ${{inputs.production-build}}
         build-version: ${{env.BUILD_VERSION}}
         release: ${{env.RELEASE}}
+        pre-release-build: ${{env.PRE_RELEASE_BUILD}}
         build-sql: ${{steps.check_files.outputs.SQL_EXIST}}
         db-folder: ${{github.workspace}}/db
         nuget-pack: ${{inputs.nuget-pack}}
