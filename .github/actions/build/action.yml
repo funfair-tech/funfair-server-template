@@ -295,7 +295,7 @@ runs:
       if: steps.check_files.outputs.DOTNET_EXIST == 'true'
       uses: ./.github/actions/find-pull-request
       with:
-        branch: ${{github.ref_name}}
+        branch: ${{github.head_ref || github.ref_name}}
         github-token: ${{inputs.github-token}}
 
     - name: "Deploy check - Default"
