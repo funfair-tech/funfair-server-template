@@ -148,10 +148,20 @@ runs:
         branch: ${{github.ref_name}}
         github-token: ${{inputs.github-token || github.token}}
 
+    - name: "Resolve pull request number"
+      id: resolve-pr
+      if: ${{ !cancelled() && steps.build-table.outputs.table-file != '' }}
+      shell: bash
+      run: echo "number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+      env:
+        PR_NUMBER: >-
+          ${{ inputs.pr-number != '' && inputs.pr-number ||
+          (github.event_name == 'pull_request' && github.event.pull_request.number || steps.find-pr.outputs.number) }}
+
     - name: "Comment on pull request"
       if: >-
         ${{ !cancelled() && steps.build-table.outputs.table-file != '' &&
-        (github.event_name == 'pull_request' || inputs.pr-number != '' || steps.find-pr.outputs.number != '') }}
+        steps.resolve-pr.outputs.number != '' }}
       # PRs from forks/Dependabot get a read-only GITHUB_TOKEN regardless of the permissions
       # block above; commenting is a nice-to-have on top of the (already enforced) job summary
       # and step failure, so it must never be what fails the job.
@@ -161,9 +171,7 @@ runs:
         TITLE: ${{inputs.title}}
         TABLE_FILE: ${{steps.build-table.outputs.table-file}}
         ROW_COUNT: ${{steps.build-table.outputs.row-count}}
-        PR_NUMBER: >-
-          ${{ inputs.pr-number != '' && inputs.pr-number ||
-          (github.event_name == 'pull_request' && github.event.pull_request.number || steps.find-pr.outputs.number) }}
+        PR_NUMBER: ${{steps.resolve-pr.outputs.number}}
       with:
         github-token: ${{inputs.github-token || github.token}}
         script: |
