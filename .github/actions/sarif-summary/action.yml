@@ -15,6 +15,9 @@ inputs:
   pr-number:
     description: 'Pull request number already resolved by the caller, to skip the internal lookup on push'
     required: false
+  pr-lookup-done:
+    description: 'Set to true when the caller already attempted to resolve pr-number, even if none was found - skips the redundant internal lookup'
+    required: false
 
 runs:
   using: "composite"
@@ -136,7 +139,7 @@ runs:
       id: find-pr
       if: >-
         ${{ !cancelled() && github.event_name == 'push' &&
-        steps.build-table.outputs.table-file != '' && inputs.pr-number == '' }}
+        steps.build-table.outputs.table-file != '' && inputs.pr-lookup-done != 'true' }}
       # A lookup failure (transient API error, missing pull-requests permission in a
       # not-yet-synced consuming repo) must degrade to "no comment", not fail the build.
       continue-on-error: true
