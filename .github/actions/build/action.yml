@@ -397,6 +397,7 @@ runs:
       with:
         title: "Roslyn analyzer findings"
         glob: "DotNet.sarif"
+        pr-number: ${{steps.find_pull_request.outputs.number}}
         github-token: ${{inputs.github-token}}
 
     ############################################################################################################
