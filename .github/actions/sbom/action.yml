@@ -13,6 +13,7 @@ runs:
     - name: "Install Syft"
       shell: bash
       env:
+        # Not a `uses:` pin, so dependabot's github-actions ecosystem watch cannot see it - bump manually.
         SYFT_VERSION: "1.51.1"
       run: |
         set -euo pipefail
@@ -26,14 +27,12 @@ runs:
         tar -xzf "${workdir}/${archive}" -C "${{runner.temp}}/syft-bin" syft
         rm -rf "${workdir}"
 
-    - name: "Add Syft to PATH"
-      shell: bash
-      run: echo "${{runner.temp}}/syft-bin" >> "$GITHUB_PATH"
-
     - name: "Create SBOM"
       shell: bash
-      working-directory: ${{github.workspace}}
-      run: syft "dir:${{github.workspace}}" -c "${{github.workspace}}/.github/linters/syft.yml" -o "spdx-json=${{github.event.repository.name}}-sbom.spdx.json"
+      run: |
+        "${{runner.temp}}/syft-bin/syft" "dir:${{github.workspace}}" \
+          -c "${{github.workspace}}/.github/linters/syft.yml" \
+          -o "spdx-json=${{github.event.repository.name}}-sbom.spdx.json"
 
     - name: "Scan SBOM (public repo)"
       if: inputs.repo-visibility == 'public'
