@@ -34,25 +34,13 @@ runs:
           -c "${{github.workspace}}/.github/linters/syft.yml" \
           -o "spdx-json=${{github.event.repository.name}}-sbom.spdx.json"
 
-    - name: "Scan SBOM (public repo)"
-      if: inputs.repo-visibility == 'public'
+    - name: "Scan SBOM"
       uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
       with:
         scan-type: "sbom"
         scan-ref: "${{github.event.repository.name}}-sbom.spdx.json"
-        format: "sarif"
-        output: "${{github.workspace}}/results/${{github.event.repository.name}}-sbom.sarif"
-        ignore-unfixed: true
-        severity: "HIGH,CRITICAL"
-        cache-dir: "${{github.workspace}}/.trivy-cache"
-
-    - name: "Scan SBOM (private repo)"
-      if: inputs.repo-visibility != 'public'
-      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
-      with:
-        scan-type: "sbom"
-        scan-ref: "${{github.event.repository.name}}-sbom.spdx.json"
-        format: "table"
+        format: ${{inputs.repo-visibility == 'public' && 'sarif' || 'table'}}
+        output: ${{inputs.repo-visibility == 'public' && format('{0}/results/{1}-sbom.sarif', github.workspace, github.event.repository.name) || ''}}
         ignore-unfixed: true
         severity: "HIGH,CRITICAL"
         cache-dir: "${{github.workspace}}/.trivy-cache"
