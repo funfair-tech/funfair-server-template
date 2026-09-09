@@ -461,7 +461,6 @@ runs:
       uses: ./.github/actions/docker-build-to-registry
       with:
         deploy: ${{env.DEPLOY}}
-        github-token: ${{inputs.github-token}}
         build-version: ${{env.BUILD_VERSION}}
         build-tag: ${{inputs.build-tag}}
         app-owner: ${{inputs.docker-app-owner}}
@@ -549,6 +548,8 @@ runs:
     - name: "Software Bill of materials"
       if: steps.build_tools.outputs.BUILD_ENV == 'true'
       uses: ./.github/actions/sbom
+      with:
+        repo-visibility: ${{steps.visibility.outputs.is_public == 'true' && 'public' || 'private'}}
 
     ############################################################################################################
     # Upload Sarif files to GitHub

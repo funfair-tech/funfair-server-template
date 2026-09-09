@@ -2,56 +2,46 @@
 # Maintain in repo: funfair-server-template
 name: 'Run Software Bill of Materials'
 description: 'Software Bill of materials'
+inputs:
+  repo-visibility:
+    description: 'Visibility of the repo (public or private)'
+    required: true
+
 runs:
   using: "composite"
   steps:
+    - name: "Install Syft"
+      shell: bash
+      run: curl -sSfL "https://raw.githubusercontent.com/anchore/syft/v1.51.1/install.sh" | sh -s -- -b "${{runner.temp}}/syft-bin" v1.51.1
+
+    - name: "Add Syft to PATH"
+      shell: bash
+      run: echo "${{runner.temp}}/syft-bin" >> "$GITHUB_PATH"
+
     - name: "Create SBOM"
       shell: bash
-      run: echo "Create SBOM..."
+      working-directory: ${{github.workspace}}
+      run: syft "dir:${{github.workspace}}" -c "${{github.workspace}}/.github/linters/syft.yml" -o "spdx-json=${{github.event.repository.name}}-sbom.spdx.json"
 
-#    - name: "Create SBOM"
-#      uses: anchore/sbom-action@v0.24.0
-#      with:
-#        github-token: ${{inputs.GITHUB_TOKEN}}
-#        format: spdx-json
-#        output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
-#        config: "${{ github.workspace }}.github/linters/syft.yml"
-#
-#    - name: "Log SBOM filename"
-#      shell: bash
-#      run: |
-#        echo "Output ${{ github.event.repository.name }}-sbom.spdx.json"
-#        ls "${{ github.event.repository.name }}-sbom.spdx.json"
-#
-#    - name: "Scan SBOM (public Repo)"
-#      if: inputs.repo-visibility == 'public'
-#      uses: anchore/scan-action@v7.4.0
-#      id: sbom
-#      with:
-#        sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
-#        fail-build: false
-#        output-format: sarif
-#        only-fixed: true
-#        add-cpes-if-none: false
-#        by-cve: false
-#
-#    - name: "Copy SBOM to sarif (public Repo)"
-#      if: |-
-#        inputs.repo-visibility == 'public' &&
-#        steps.sbom.outputs.sarif != ''
-#      shell: bash
-#      run: |
-#        echo "SBOM: ${{ steps.sbom.outputs.sarif }}"
-#        cp "${{ steps.sbom.outputs.sarif }}" "${{ github.workspace }}/results/${{ github.event.repository.name }}-sbom.sarif"
-#        cat "${{ steps.sbom.outputs.sarif }}"
-#
-#    - name: "Scan SBOM (private repo)"
-#      uses: anchore/scan-action@v7.4.0
-#      if: inputs.repo-visibility == 'private'
-#      with:
-#        sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
-#        fail-build: false
-#        output-format: table
-#        only-fixed: true
-#        add-cpes-if-none: false
-#        by-cve: false
+    - name: "Scan SBOM (public repo)"
+      if: inputs.repo-visibility == 'public'
+      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+      with:
+        scan-type: "sbom"
+        scan-ref: "${{github.event.repository.name}}-sbom.spdx.json"
+        format: "sarif"
+        output: "${{github.workspace}}/results/${{github.event.repository.name}}-sbom.sarif"
+        ignore-unfixed: true
+        severity: "HIGH,CRITICAL"
+        cache-dir: "${{github.workspace}}/.trivy-cache"
+
+    - name: "Scan SBOM (private repo)"
+      if: inputs.repo-visibility != 'public'
+      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+      with:
+        scan-type: "sbom"
+        scan-ref: "${{github.event.repository.name}}-sbom.spdx.json"
+        format: "table"
+        ignore-unfixed: true
+        severity: "HIGH,CRITICAL"
+        cache-dir: "${{github.workspace}}/.trivy-cache"
