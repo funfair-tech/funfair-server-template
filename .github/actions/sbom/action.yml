@@ -36,15 +36,17 @@ runs:
 
     - name: "Determine SBOM scan output"
       id: scan-config
-      shell: bash
-      run: |
-        if [[ "${{inputs.repo-visibility}}" == "public" ]]; then
-          echo "format=sarif" >> "$GITHUB_OUTPUT"
-          echo "output=${{github.workspace}}/results/${{github.event.repository.name}}-sbom.sarif" >> "$GITHUB_OUTPUT"
-        else
-          echo "format=table" >> "$GITHUB_OUTPUT"
-          echo "output=" >> "$GITHUB_OUTPUT"
-        fi
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        REPO_VISIBILITY: ${{inputs.repo-visibility}}
+        WORKSPACE: ${{github.workspace}}
+        REPO_NAME: ${{github.event.repository.name}}
+      with:
+        script: |
+          const isPublic = process.env.REPO_VISIBILITY === 'public';
+
+          core.setOutput('format', isPublic ? 'sarif' : 'table');
+          core.setOutput('output', isPublic ? `${process.env.WORKSPACE}/results/${process.env.REPO_NAME}-sbom.sarif` : '');
 
     - name: "Scan SBOM"
       uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
