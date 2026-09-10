@@ -93,15 +93,16 @@ runs:
       shell: bash
       run: |
         r=5
-        while ! dotnet restore \
+        delay=30
+        until dotnet restore \
               --warnaserror \
               -nodeReuse:False \
               -p:NoWarn=MSB4241 \
               -p:SuppressNETCoreSdkPreviewMessage=true
         do
           ((--r)) || exit 1
-          echo "⚠️ Restore failed, retrying in 30s ($r attempt(s) left)"
-          sleep 30
+          echo "⚠️ Restore failed, retrying in ${delay}s ($r attempt(s) left)"
+          sleep "${delay}"
         done
 
     - name: "Dotnet: Build"
