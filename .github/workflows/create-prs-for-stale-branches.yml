@@ -62,14 +62,15 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const { data: repo } = await github.rest.repos.get({ owner: context.repo.owner, repo: context.repo.repo });
-            const defaultBranch = repo.default_branch;
+            const { stdout: remoteShowRaw } = await exec.getExecOutput('git', ['remote', 'show', 'origin']);
+            const defaultBranch = remoteShowRaw.match(/HEAD branch:\s+(\S+)/)?.[1];
 
             const { stdout: branchList } = await exec.getExecOutput('git', ['branch', '--remote', '--format=%(refname:short)']);
             const branches = branchList
               .split('\n')
               .map(line => line.trim().match(/^origin\/(.+)$/)?.[1])
               .filter(branch => branch && branch !== 'HEAD' && !branch.startsWith('release/') && !branch.startsWith('hotfix/') && branch !== defaultBranch);
+            const branchSet = new Set(branches);
 
             const { stdout: commitMsgRaw } = await exec.getExecOutput('git', ['log', '-1', '--pretty=%s', `origin/${defaultBranch}`]);
             const commitMsg = commitMsgRaw.trim();
@@ -82,9 +83,8 @@ jobs:
             const lastUpdateByBranch = new Map(
               lastUpdateRaw
                 .split('\n')
-                .map(line => line.trim())
-                .filter(Boolean)
-                .map(line => line.split(' '))
+                .map(line => line.trim().split(' '))
+                .filter(([ref]) => ref && branchSet.has(ref.slice('origin/'.length)))
                 .map(([ref, timestamp]) => [ref.slice('origin/'.length), Number(timestamp)]),
             );
 
@@ -103,16 +103,18 @@ jobs:
             );
 
             core.setOutput('branches', JSON.stringify(matrix));
+            core.setOutput('haschanges', matrix.length > 0);
             core.setOutput('defaultbranch', defaultBranch);
             core.setOutput('commitmsg', commitMsg);
     outputs:
       branches: ${{steps.set-matrix.outputs.branches}}
+      haschanges: ${{steps.set-matrix.outputs.haschanges}}
       defaultbranch: ${{steps.set-matrix.outputs.defaultbranch}}
       commitmsg: ${{steps.set-matrix.outputs.commitmsg}}
 
   check-branch:
     needs: build-matrix
-    if: needs.build-matrix.outputs.branches != '[]'
+    if: needs.build-matrix.outputs.haschanges == 'true'
     runs-on: [self-hosted, linux, build]
 
     permissions:
@@ -125,6 +127,9 @@ jobs:
     env:
       BRANCH: ${{matrix.branch}}
       DEFAULT_BRANCH: ${{needs.build-matrix.outputs.defaultbranch}}
+      AHEAD: ${{matrix.ahead}}
+      BEHIND: ${{matrix.behind}}
+      DAYS_SINCE_UPDATE: ${{matrix.dayssinceupdate}}
 
     steps:
       - name: "Initialise Workspace"
@@ -172,9 +177,6 @@ jobs:
         run: |
           echo "$BRANCH is behind $DEFAULT_BRANCH by $BEHIND commit(s)"
           echo "$BRANCH is ahead of $DEFAULT_BRANCH by $AHEAD commit(s)"
-        env:
-          BEHIND: ${{matrix.behind}}
-          AHEAD: ${{matrix.ahead}}
 
       # Ahead of default branch (the default branch itself is excluded from the matrix above), and no pre-existing PR then create one.
       - name: "Read PR Template"
@@ -284,10 +286,6 @@ jobs:
       - name: "Statistics"
         if: steps.find-pull-request.outputs.number == ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          AHEAD: ${{matrix.ahead}}
-          BEHIND: ${{matrix.behind}}
-          DAYS_SINCE_UPDATE: ${{matrix.dayssinceupdate}}
         with:
           script: |
             core.info(`Ahead: ${process.env.AHEAD}`);
