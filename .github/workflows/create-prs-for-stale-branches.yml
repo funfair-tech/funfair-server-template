@@ -68,25 +68,39 @@ jobs:
             const { stdout: branchList } = await exec.getExecOutput('git', ['branch', '--remote', '--format=%(refname:short)']);
             const branches = branchList
               .split('\n')
-              .map(line => line.trim())
-              .filter(line => line.startsWith('origin/'))
-              .map(line => line.slice('origin/'.length))
+              .map(line => line.trim().match(/^origin\/(.+)$/)?.[1])
               .filter(branch => branch && branch !== 'HEAD' && !branch.startsWith('release/') && !branch.startsWith('hotfix/') && branch !== defaultBranch);
 
             const { stdout: commitMsgRaw } = await exec.getExecOutput('git', ['log', '-1', '--pretty=%s', `origin/${defaultBranch}`]);
             const commitMsg = commitMsgRaw.trim();
 
-            const matrix = [];
-            for (const branch of branches) {
-              const compareRef = `origin/${defaultBranch}...origin/${branch}`;
-              const { stdout: countsRaw } = await exec.getExecOutput('git', ['rev-list', '--left-right', '--count', compareRef]);
-              const [behind, ahead] = countsRaw.trim().split(/\s+/);
+            const { stdout: lastUpdateRaw } = await exec.getExecOutput('git', [
+              'for-each-ref',
+              '--format=%(refname:short) %(committerdate:unix)',
+              'refs/remotes/origin/',
+            ]);
+            const lastUpdateByBranch = new Map(
+              lastUpdateRaw
+                .split('\n')
+                .map(line => line.trim())
+                .filter(Boolean)
+                .map(line => line.split(' '))
+                .map(([ref, timestamp]) => [ref.slice('origin/'.length), Number(timestamp)]),
+            );
 
-              const { stdout: lastUpdateRaw } = await exec.getExecOutput('git', ['log', '-1', '--format=%ct', `origin/${branch}`]);
-              const daysSinceUpdate = Math.floor((Math.floor(Date.now() / 1000) - Number(lastUpdateRaw.trim())) / 86400);
+            const nowSeconds = Math.floor(Date.now() / 1000);
 
-              matrix.push({ branch, ahead, behind, dayssinceupdate: String(daysSinceUpdate) });
-            }
+            const matrix = await Promise.all(
+              branches.map(async branch => {
+                const compareRef = `origin/${defaultBranch}...origin/${branch}`;
+                const { stdout: countsRaw } = await exec.getExecOutput('git', ['rev-list', '--left-right', '--count', compareRef]);
+                const [behind, ahead] = countsRaw.trim().split(/\s+/);
+
+                const daysSinceUpdate = Math.floor((nowSeconds - lastUpdateByBranch.get(branch)) / 86400);
+
+                return { branch, ahead, behind, dayssinceupdate: String(daysSinceUpdate) };
+              }),
+            );
 
             core.setOutput('branches', JSON.stringify(matrix));
             core.setOutput('defaultbranch', defaultBranch);
