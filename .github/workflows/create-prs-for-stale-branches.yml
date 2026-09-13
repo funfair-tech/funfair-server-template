@@ -62,24 +62,27 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const { stdout: remoteShowRaw } = await exec.getExecOutput('git', ['remote', 'show', 'origin']);
-            const defaultBranch = remoteShowRaw.match(/HEAD branch:\s+(\S+)/)?.[1];
+            const { data: repo } = await github.rest.repos.get({ owner: context.repo.owner, repo: context.repo.repo });
+            const defaultBranch = repo.default_branch;
 
-            const { stdout: branchList } = await exec.getExecOutput('git', ['branch', '--remote', '--format=%(refname:short)']);
+            const [{ stdout: branchList }, { stdout: commitMsgRaw }, { stdout: lastUpdateRaw }] = await Promise.all([
+              exec.getExecOutput('git', ['branch', '--remote', '--format=%(refname:short)']),
+              exec.getExecOutput('git', ['log', '-1', '--pretty=%s', `origin/${defaultBranch}`]),
+              exec.getExecOutput('git', [
+                'for-each-ref',
+                '--format=%(refname:short) %(committerdate:unix)',
+                'refs/remotes/origin/',
+              ]),
+            ]);
+
             const branches = branchList
               .split('\n')
               .map(line => line.trim().match(/^origin\/(.+)$/)?.[1])
               .filter(branch => branch && branch !== 'HEAD' && !branch.startsWith('release/') && !branch.startsWith('hotfix/') && branch !== defaultBranch);
             const branchSet = new Set(branches);
 
-            const { stdout: commitMsgRaw } = await exec.getExecOutput('git', ['log', '-1', '--pretty=%s', `origin/${defaultBranch}`]);
             const commitMsg = commitMsgRaw.trim();
 
-            const { stdout: lastUpdateRaw } = await exec.getExecOutput('git', [
-              'for-each-ref',
-              '--format=%(refname:short) %(committerdate:unix)',
-              'refs/remotes/origin/',
-            ]);
             const lastUpdateByBranch = new Map(
               lastUpdateRaw
                 .split('\n')
