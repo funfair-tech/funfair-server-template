@@ -176,7 +176,7 @@ jobs:
           BEHIND: ${{matrix.behind}}
           AHEAD: ${{matrix.ahead}}
 
-      # Non-default - ahead of default branch, and no pre-existing PR then create one.
+      # Ahead of default branch (the default branch itself is excluded from the matrix above), and no pre-existing PR then create one.
       - name: "Read PR Template"
         if: |-
           steps.find-pull-request.outputs.number == ''
