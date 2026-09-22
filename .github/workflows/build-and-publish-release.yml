@@ -122,3 +122,10 @@ jobs:
           sql-user: "${{vars.SQL_USER}}"
           sql-password: "${{secrets.SQL_PASSWORD}}"
           create-release: true
+
+      - name: "Build Version"
+        shell: bash
+        env:
+          BUILD_VERSION: ${{env.BUILD_VERSION}}
+        run: |
+          echo "::notice::Version: $BUILD_VERSION"
