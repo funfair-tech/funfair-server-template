@@ -44,7 +44,7 @@ runs:
             const pr = pulls[0];
             core.setOutput('number', String(pr.number));
             core.setOutput('head-sha', pr.head.sha);
-            core.setOutput('pre-release-build', String(pr.draft === true && pr.base.ref === 'main'));
+            core.setOutput('pre-release-build', String(pr.draft && pr.base.ref === 'main'));
           } else {
             core.setOutput('number', '');
             core.setOutput('head-sha', '');
