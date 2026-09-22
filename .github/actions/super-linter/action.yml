@@ -25,9 +25,10 @@ runs:
     # GITHUB_SHA handling is mode-specific, not a caller input: each mode has a fixed, known
     # checkout pattern, so encoding it here (rather than trusting every caller to pass the right
     # expression) is what actually prevents the two call sites drifting apart again (#995).
-    #   - sql: callers (build/action.yml's dotnet build path) checkout an explicit ref that can
-    #     differ from the default GITHUB_SHA on pull_request runs (the ref is the PR head commit,
-    #     not the ephemeral merge commit GITHUB_SHA points at), so it must be overridden to match.
+    #   - sql: reached via build/action.yml's dotnet build path, called from
+    #     build-and-publish-pre-release.yml, which checks out an explicit ref that can differ
+    #     from the default GITHUB_SHA on pull_request runs (the ref is the PR head commit, not
+    #     the ephemeral merge commit GITHUB_SHA points at), so it must be overridden to match.
     #   - pr: pr-lint.yml's checkout never overrides `ref:`, so its default checkout already
     #     agrees with the default GITHUB_SHA; overriding it here would break that agreement.
 
