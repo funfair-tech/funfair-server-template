@@ -218,16 +218,7 @@ runs:
 
     - name: "Check Files Results"
       shell: bash
-      run: |
-        echo "CSPROJ_EXIST: ${{steps.check_files.outputs.CSPROJ_EXIST}}"
-        echo "SLN_EXIST: ${{steps.check_files.outputs.SLN_EXIST}}"
-        echo "SQL_EXIST: ${{steps.check_files.outputs.SQL_EXIST}}"
-        echo "NPM_EXIST_SRC: ${{steps.check_files.outputs.NPM_EXIST_SRC}}"
-        echo "NPM_EXIST_ROOT: ${{steps.check_files.outputs.NPM_EXIST_ROOT}}"
-        echo "NPM_SIGNING_EXIST: ${{steps.check_files.outputs.NPM_SIGNING_EXIST}}"
-        echo "DOCKERFILE_EXIST: ${{steps.check_files.outputs.DOCKERFILE_EXIST}}"
-        echo "HEALTHCHECK_EXIST: ${{steps.check_files.outputs.HEALTHCHECK_EXIST}}"
-        echo "CLOUDFORMATION_EXIST: ${{steps.check_files.outputs.CLOUDFORMATION_EXIST}}"
+      run: echo '${{ toJSON(steps.check_files.outputs) }}'
 
     - name: "Prepare build Results folder"
       working-directory: ${{github.workspace}}

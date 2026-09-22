@@ -14,17 +14,13 @@ runs:
   using: "composite"
   steps:
     - name: "Validate Mode"
+      if: inputs.mode != 'pr' && inputs.mode != 'sql'
       shell: bash
       env:
         MODE: ${{inputs.mode}}
       run: |
-        case "$MODE" in
-          pr|sql) ;;
-          *)
-            echo "::error::Unsupported mode '$MODE' (expected 'pr' or 'sql')"
-            exit 1
-            ;;
-        esac
+        echo "::error::Unsupported mode '$MODE' (expected 'pr' or 'sql')"
+        exit 1
 
     # GITHUB_SHA handling is mode-specific, not a caller input: each mode has a fixed, known
     # checkout pattern, so encoding it here (rather than trusting every caller to pass the right
@@ -40,7 +36,6 @@ runs:
       uses: super-linter/super-linter@4ce20838b8ab83717e78138c5b3a1407148e0918 # v8.7.0
       env:
         GITHUB_TOKEN: ${{inputs.github-token}}
-        GITHUB_SHA: ${{github.sha}}
         CLOUDFORMATION_CONFIG_FILE: .cfnlintrc.yaml
         DEFAULT_BRANCH: main
         ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
