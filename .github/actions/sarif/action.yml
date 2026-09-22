@@ -14,10 +14,11 @@ runs:
     - name: "Sarif Files to upload"
       shell: bash
       working-directory: ${{github.workspace}}/results
+      env:
+        SARIF_HASH: ${{ hashfiles('**/*.sarif') }}
       run: |
         ls -la
         rm -rf *.Tests.sarif
-        SARIF_HASH="${{ hashfiles('**/*.sarif') }}"
         echo "Hash: $SARIF_HASH"
         echo "SARIF_HASH=$SARIF_HASH" >> $GITHUB_ENV
 

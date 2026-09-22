@@ -218,7 +218,9 @@ runs:
 
     - name: "Check Files Results"
       shell: bash
-      run: echo '${{ toJSON(steps.check_files.outputs) }}'
+      env:
+        CHECK_FILES_OUTPUTS: ${{ toJSON(steps.check_files.outputs) }}
+      run: echo "$CHECK_FILES_OUTPUTS"
 
     - name: "Prepare build Results folder"
       working-directory: ${{github.workspace}}
