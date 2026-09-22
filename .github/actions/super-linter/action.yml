@@ -13,6 +13,19 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: "Validate Mode"
+      shell: bash
+      env:
+        MODE: ${{inputs.mode}}
+      run: |
+        case "$MODE" in
+          pr|sql) ;;
+          *)
+            echo "::error::Unsupported mode '$MODE' (expected 'pr' or 'sql')"
+            exit 1
+            ;;
+        esac
+
     # GITHUB_SHA handling is mode-specific, not a caller input: each mode has a fixed, known
     # checkout pattern, so encoding it here (rather than trusting every caller to pass the right
     # expression) is what actually prevents the two call sites drifting apart again (#995).
