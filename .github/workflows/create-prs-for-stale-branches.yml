@@ -8,6 +8,7 @@ on:
       - "main"
     paths:
       - ".github/workflows/create-prs-for-stale-branches.yml"
+      - ".github/actions/check-required-secret/**"
       - ".github/actions/find-pull-request/**"
       - ".github/actions/read-file/**"
       - ".github/actions/create-pull-request/**"
