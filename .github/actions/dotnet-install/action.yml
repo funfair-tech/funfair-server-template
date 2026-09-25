@@ -133,6 +133,7 @@ runs:
           echo "DOTNET_TieredPGO=1"
           echo "MSBUILDTERMINALLOGGER=auto"
         } >> "$GITHUB_ENV"
+        echo "$DOTNET_DIR" >> "$GITHUB_PATH"
 
     - name: "Re-map users nuget package feed to temp folder"
       shell: bash
