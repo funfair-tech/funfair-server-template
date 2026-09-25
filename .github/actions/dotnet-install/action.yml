@@ -151,6 +151,15 @@ runs:
         } >> "$GITHUB_ENV"
         echo "$DOTNET_DIR" >> "$GITHUB_PATH"
 
+    # Workaround for https://github.com/dotnet/sdk/issues/11432
+    - name: "Reset users dotnet state"
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        [ -d "$HOME/.dotnet" ] && rm -fr "$HOME/.dotnet"
+        mkdir "$HOME/.dotnet"
+
+    # Workaround for https://github.com/dotnet/sdk/issues/11432
     - name: "Re-map users nuget package feed to temp folder"
       shell: bash
       working-directory: ${{ github.workspace }}
