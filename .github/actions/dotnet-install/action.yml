@@ -231,6 +231,27 @@ runs:
             return { version, major: Number(match[1]), parts: [Number(match[1]), Number(match[2]), Number(match[3])], pre: match[4] || '' };
           };
 
+          const comparePre = (a, b) => {
+            const left = a.split('.');
+            const right = b.split('.');
+            for (let i = 0; i < Math.max(left.length, right.length); i++) {
+              if (left[i] === undefined) {
+                return -1;
+              }
+              if (right[i] === undefined) {
+                return 1;
+              }
+              const bothNumeric = /^\d+$/.test(left[i]) && /^\d+$/.test(right[i]);
+              if (bothNumeric && Number(left[i]) !== Number(right[i])) {
+                return Number(left[i]) - Number(right[i]);
+              }
+              if (!bothNumeric && left[i] !== right[i]) {
+                return left[i] < right[i] ? -1 : 1;
+              }
+            }
+            return 0;
+          };
+
           const compare = (a, b) => {
             for (let i = 0; i < 3; i++) {
               if (a.parts[i] !== b.parts[i]) {
@@ -246,7 +267,7 @@ runs:
             if (b.pre === '') {
               return -1;
             }
-            return a.pre < b.pre ? -1 : 1;
+            return comparePre(a.pre, b.pre);
           };
 
           try {
@@ -313,7 +334,7 @@ runs:
             }
 
             for (const directory of candidates) {
-              if (directory.name !== currentName && !directory.versions.some(v => keep.has(v))) {
+              if (directory.name !== currentName && directory.versions.length > 0 && !directory.versions.some(v => keep.has(v))) {
                 deletions.push(directory.name);
               }
             }
