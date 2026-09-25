@@ -64,7 +64,7 @@ runs:
             core.warning('⚠️ src/global.json not found - no pinned SDK version');
           }
 
-          const requestedChannels = (process.env.DOTNET_SDK_CHANNELS || '10')
+          const requestedChannels = process.env.DOTNET_SDK_CHANNELS
             .split('\n')
             .map(channel => channel.trim())
             .filter(Boolean);
@@ -77,21 +77,34 @@ runs:
             resolved.add(globalVersion);
           }
 
-          const unresolvedChannels = requestedChannels.filter(requested => !(globalChannel && channelMatches(globalChannel, requested)));
-
+          const releasesIndexUrl = 'https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json';
+          const unresolvedChannels = [];
           for (const requested of requestedChannels) {
             if (globalChannel && channelMatches(globalChannel, requested)) {
               core.info(`ℹ️ Channel ${requested} already covered by global.json (${globalVersion})`);
+            } else {
+              unresolvedChannels.push(requested);
             }
           }
 
           if (unresolvedChannels.length > 0) {
-            const response = await fetch('https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/releases-index.json');
-            if (!response.ok) {
-              core.setFailed(`❌ Failed to fetch releases-index.json: ${response.status}`);
+            let index = null;
+            for (let attempt = 1; attempt <= 5 && index === null; attempt++) {
+              try {
+                const response = await fetch(releasesIndexUrl, { signal: AbortSignal.timeout(120000) });
+                if (response.ok) {
+                  index = await response.json();
+                } else {
+                  core.warning(`⚠️ releases-index.json attempt ${attempt} returned ${response.status}`);
+                }
+              } catch (error) {
+                core.warning(`⚠️ releases-index.json attempt ${attempt} failed: ${error.message}`);
+              }
+            }
+            if (index === null) {
+              core.setFailed('❌ Failed to fetch releases-index.json after 5 attempts');
               return;
             }
-            const index = await response.json();
 
             for (const requested of unresolvedChannels) {
               const match = index['releases-index'].find(entry => channelMatches(entry['channel-version'], requested));
