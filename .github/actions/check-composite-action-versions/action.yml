@@ -300,6 +300,17 @@ runs:
                       }
                     }
                   }`;
+                const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+                const applyApprovedStatus = () => github.graphql(
+                  `mutation($p: ID!, $i: ID!, $f: ID!, $v: String!) {
+                    updateProjectV2ItemFieldValue(
+                      input: { projectId: $p, itemId: $i, fieldId: $f, value: { singleSelectOptionId: $v } }
+                    ) { projectV2Item { id } }
+                  }`,
+                  { p: project.id, i: itemId, f: statusField.id, v: approvedOption.id }
+                );
+                const isApprovedNow = async () =>
+                  (await github.graphql(readBackQuery, { i: itemId })).node?.fieldValueByName?.optionId === approvedOption.id;
 
                 // The item was just added to the project, so the field write below can be
                 // accepted (no GraphQL error) without actually persisting yet - a known
@@ -311,17 +322,9 @@ runs:
                 // step below for that.
                 let verified = false;
                 for (let attempt = 1; attempt <= 3 && !verified; attempt++) {
-                  await github.graphql(
-                    `mutation($p: ID!, $i: ID!, $f: ID!, $v: String!) {
-                      updateProjectV2ItemFieldValue(
-                        input: { projectId: $p, itemId: $i, fieldId: $f, value: { singleSelectOptionId: $v } }
-                      ) { projectV2Item { id } }
-                    }`,
-                    { p: project.id, i: itemId, f: statusField.id, v: approvedOption.id }
-                  );
-                  await new Promise(resolve => setTimeout(resolve, attempt * 1000));
-                  const readBack = await github.graphql(readBackQuery, { i: itemId });
-                  verified = readBack.node?.fieldValueByName?.optionId === approvedOption.id;
+                  await applyApprovedStatus();
+                  await sleep(attempt * 1000);
+                  verified = await isApprovedNow();
                   if (!verified) {
                     core.info(`⚠️ Pre-approval write not yet visible on attempt ${attempt} - retrying`);
                   }
@@ -342,22 +345,13 @@ runs:
                   // can fire minutes later. Settle for much longer than that, then re-check and
                   // re-apply once if needed - not an unbounded loop, since the automation only
                   // fires once per item.
-                  await new Promise(resolve => setTimeout(resolve, OVERWRITE_SETTLE_DELAY_MS));
-                  const settledReadBack = await github.graphql(readBackQuery, { i: itemId });
-                  const stillApproved = settledReadBack.node?.fieldValueByName?.optionId === approvedOption.id;
-                  if (!stillApproved) {
+                  await sleep(OVERWRITE_SETTLE_DELAY_MS);
+                  if (!(await isApprovedNow())) {
                     core.warning(
                       `⚠️ Workflow Status for issue #${issue.number} was reset after pre-approval ` +
                       `(likely by the project's built-in "Item added to project" automation) - re-applying Approved`
                     );
-                    await github.graphql(
-                      `mutation($p: ID!, $i: ID!, $f: ID!, $v: String!) {
-                        updateProjectV2ItemFieldValue(
-                          input: { projectId: $p, itemId: $i, fieldId: $f, value: { singleSelectOptionId: $v } }
-                        ) { projectV2Item { id } }
-                      }`,
-                      { p: project.id, i: itemId, f: statusField.id, v: approvedOption.id }
-                    );
+                    await applyApprovedStatus();
                     core.info(`✅ Re-applied Approved status for issue #${issue.number} after overwrite`);
                   }
                 } else {
