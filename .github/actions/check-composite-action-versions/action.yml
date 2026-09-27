@@ -358,17 +358,31 @@ runs:
                   try {
                     await sleep(OVERWRITE_SETTLE_DELAY_MS);
                     if (!(await isApprovedNow())) {
-                      core.warning(
-                        `⚠️ Workflow Status for issue #${issue.number} was reset after pre-approval ` +
-                        `(likely by the project's built-in "Item added to project" automation) - re-applying Approved`
-                      );
-                      if (await applyAndVerifyApproved(3)) {
-                        core.info(`✅ Re-applied Approved status for issue #${issue.number} after overwrite`);
+                      // A non-Approved read here isn't necessarily the automation's overwrite -
+                      // the issue may have been legitimately closed in the meantime. Check state
+                      // before re-applying, so a closed issue isn't force-reopened-in-spirit by
+                      // having Approved reapplied to it.
+                      const { data: currentIssue } = await github.rest.issues.get({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: issue.number,
+                      });
+                      if (currentIssue.state !== 'open') {
+                        core.info(`ℹ️ Issue #${issue.number} is no longer open - skipping re-apply`);
                       } else {
                         core.warning(
-                          `⚠️ Re-applied Approved status for issue #${issue.number} but read-back still ` +
-                          `does not confirm it - issue left for manual/orchestrator review`
+                          `⚠️ Workflow Status for issue #${issue.number} was reset after pre-approval ` +
+                          `(likely by the project's built-in "Item added to project" automation) - re-applying Approved`
                         );
+                        if (await applyAndVerifyApproved(3)) {
+                          core.info(`✅ Re-applied Approved status for issue #${issue.number} after overwrite`);
+                        } else {
+                          core.warning(
+                            `⚠️ Attempted to re-apply Approved status for issue #${issue.number} but it ` +
+                            `still does not read back as Approved after 3 attempts - issue left for ` +
+                            `manual/orchestrator review`
+                          );
+                        }
                       }
                     }
                   } catch (e) {
