@@ -345,14 +345,33 @@ runs:
                   // can fire minutes later. Settle for much longer than that, then re-check and
                   // re-apply once if needed - not an unbounded loop, since the automation only
                   // fires once per item.
-                  await sleep(OVERWRITE_SETTLE_DELAY_MS);
-                  if (!(await isApprovedNow())) {
+                  // Scoped to its own try/catch, separate from the outer one around the whole
+                  // pre-approval block: that block's core.notice above has already reported
+                  // pre-approval as successful, so a failure here must be reported as its own,
+                  // more specific warning rather than falling through to the generic
+                  // "Failed to pre-approve" message the outer catch would otherwise log.
+                  try {
+                    await sleep(OVERWRITE_SETTLE_DELAY_MS);
+                    if (!(await isApprovedNow())) {
+                      core.warning(
+                        `⚠️ Workflow Status for issue #${issue.number} was reset after pre-approval ` +
+                        `(likely by the project's built-in "Item added to project" automation) - re-applying Approved`
+                      );
+                      await applyApprovedStatus();
+                      if (await isApprovedNow()) {
+                        core.info(`✅ Re-applied Approved status for issue #${issue.number} after overwrite`);
+                      } else {
+                        core.warning(
+                          `⚠️ Re-applied Approved status for issue #${issue.number} but read-back still ` +
+                          `does not confirm it - issue left for manual/orchestrator review`
+                        );
+                      }
+                    }
+                  } catch (e) {
                     core.warning(
-                      `⚠️ Workflow Status for issue #${issue.number} was reset after pre-approval ` +
-                      `(likely by the project's built-in "Item added to project" automation) - re-applying Approved`
+                      `⚠️ Pre-approval succeeded but the settle-and-recheck step failed for issue ` +
+                      `#${issue.number}: ${e.message} - issue left for manual/orchestrator review`
                     );
-                    await applyApprovedStatus();
-                    core.info(`✅ Re-applied Approved status for issue #${issue.number} after overwrite`);
                   }
                 } else {
                   core.warning(
