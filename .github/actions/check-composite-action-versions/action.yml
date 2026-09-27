@@ -228,7 +228,7 @@ runs:
             '',
             ...planSteps,
             '',
-            'This item has been pre-approved (Workflow Status set directly to `Approved`) under the',
+            'This item has been pre-approved (its status on the Workflow board set directly to `Approved`) under the',
             'narrow policy for composite-action pin-bump issues raised by this workflow - see',
             '`.github/actions/check-composite-action-versions/action.yml`.',
           ].join('\n');
@@ -248,6 +248,15 @@ runs:
           // project is optional (see same doc), so any failure here just leaves the issue at
           // "Not Started" for a human/the orchestrator's normal fallback to pick up.
           const OVERWRITE_SETTLE_DELAY_MS = 5 * 60 * 1000;
+          // The board's status field is either the built-in "Status" (once the board is converted)
+          // or the older custom "Workflow Status". Only a single-select field that actually offers
+          // an "Approved" option qualifies, so an unconverted board's built-in "Status"
+          // (Todo/In Progress/Done) is passed over; when both qualify mid-conversion, "Status" wins.
+          const STATUS_FIELD_NAMES = ['Status', 'Workflow Status'];
+          const selectStatusField = fields => {
+            const approvable = fields.filter(f => f?.options?.some(o => o.name === 'Approved'));
+            return STATUS_FIELD_NAMES.map(name => approvable.find(f => f.name === name)).find(Boolean);
+          };
           try {
             const projectQuery = `
               query($owner: String!, $repo: String!) {
@@ -278,11 +287,15 @@ runs:
             if (!project) {
               core.warning('⚠️ No "Workflow" project linked to this repo - skipping pre-approval');
             } else {
-              const statusField = (project.fields?.nodes ?? []).find(f => f?.name === 'Workflow Status');
-              const approvedOption = statusField?.options?.find(o => o.name === 'Approved');
-              if (!statusField || !approvedOption) {
-                core.warning('⚠️ "Workflow Status" field or "Approved" option not found - skipping pre-approval');
+              const statusField = selectStatusField(project.fields?.nodes ?? []);
+              if (!statusField) {
+                core.warning(
+                  '⚠️ No "Status" or "Workflow Status" single-select field with an "Approved" option found ' +
+                  '- skipping pre-approval'
+                );
               } else {
+                const approvedOption = statusField.options.find(o => o.name === 'Approved');
+                core.info(`ℹ️ Using the "${statusField.name}" field for pre-approval`);
                 const addResult = await github.graphql(
                   `mutation($p: ID!, $c: ID!) {
                     addProjectV2ItemById(input: { projectId: $p, contentId: $c }) { item { id } }
@@ -291,10 +304,10 @@ runs:
                 );
                 const itemId = addResult.addProjectV2ItemById.item.id;
                 const readBackQuery = `
-                  query($i: ID!) {
+                  query($i: ID!, $n: String!) {
                     node(id: $i) {
                       ... on ProjectV2Item {
-                        fieldValueByName(name: "Workflow Status") {
+                        fieldValueByName(name: $n) {
                           ... on ProjectV2ItemFieldSingleSelectValue { optionId }
                         }
                       }
@@ -310,7 +323,7 @@ runs:
                   { p: project.id, i: itemId, f: statusField.id, v: approvedOption.id }
                 );
                 const isApprovedNow = async () =>
-                  (await github.graphql(readBackQuery, { i: itemId })).node?.fieldValueByName?.optionId === approvedOption.id;
+                  (await github.graphql(readBackQuery, { i: itemId, n: statusField.name })).node?.fieldValueByName?.optionId === approvedOption.id;
                 // Every write to this field is followed by a read-back rather than trusting the
                 // mutation response, because a freshly-added item's field write can be accepted
                 // (no GraphQL error) without actually persisting yet - a known eventual-consistency
@@ -371,7 +384,7 @@ runs:
                         core.info(`ℹ️ Issue #${issue.number} is no longer open - skipping re-apply`);
                       } else {
                         core.warning(
-                          `⚠️ Workflow Status for issue #${issue.number} was reset after pre-approval ` +
+                          `⚠️ ${statusField.name} for issue #${issue.number} was reset after pre-approval ` +
                           `(likely by the project's built-in "Item added to project" automation) - re-applying Approved`
                         );
                         if (await applyAndVerifyApproved(3)) {
