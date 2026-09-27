@@ -252,10 +252,9 @@ runs:
           // or the older custom "Workflow Status". Only a single-select field that actually offers
           // an "Approved" option qualifies, so an unconverted board's built-in "Status"
           // (Todo/In Progress/Done) is passed over; when both qualify mid-conversion, "Status" wins.
-          const STATUS_FIELD_NAMES = ['Status', 'Workflow Status'];
           const selectStatusField = fields => {
             const approvable = fields.filter(f => f?.options?.some(o => o.name === 'Approved'));
-            return STATUS_FIELD_NAMES.map(name => approvable.find(f => f.name === name)).find(Boolean);
+            return approvable.find(f => f.name === 'Status') ?? approvable.find(f => f.name === 'Workflow Status');
           };
           try {
             const projectQuery = `
