@@ -25,12 +25,13 @@ runs:
     # File discovery is fixed per mode rather than a caller input, as each mode has a known
     # checkout pattern.
     #   - sql: reached via build/action.yml's dotnet build path, called from
-    #     build-and-publish-pre-release.yml, which on pull_request runs checks out the PR head
-    #     commit, so GITHUB_SHA (the merge commit) is never fetched and Git-based discovery fails.
-    #     Step env cannot override GITHUB_SHA for a docker action, so USE_FIND_ALGORITHM is used
-    #     on pull_request runs only; other events check out github.ref, so GITHUB_SHA is present
-    #     and the faster Git-based discovery is kept. Find mode does not honour .gitignore, so
-    #     FILTER_REGEX_EXCLUDE skips bin/obj, where SQL projects emit generated scripts.
+    #     build-and-publish-pre-release.yml. Git-based discovery needs GITHUB_SHA in the clone,
+    #     which is not guaranteed: pull_request runs check out the PR head, so the merge commit is
+    #     never fetched, and push runs check out the branch tip, which may no longer contain
+    #     GITHUB_SHA after a force-push. Step env cannot override GITHUB_SHA for a docker action,
+    #     so USE_FIND_ALGORITHM is used on every event; it requires VALIDATE_ALL_CODEBASE: true.
+    #     Find mode does not honour .gitignore, so FILTER_REGEX_EXCLUDE skips bin/obj, where SQL
+    #     projects emit generated scripts.
     #   - pr: pr-lint.yml's checkout never overrides `ref:`, so its default checkout contains
     #     GITHUB_SHA and super-linter's default Git-based discovery of changed files works as-is.
 
@@ -76,5 +77,6 @@ runs:
         MULTI_STATUS: false
         SAVE_SUPER_LINTER_SUMMARY: false
         SQLFLUFF_CONFIG_FILE: .sqlfluff
-        USE_FIND_ALGORITHM: "${{ github.event_name == 'pull_request' }}"
+        USE_FIND_ALGORITHM: true
+        VALIDATE_ALL_CODEBASE: true
         VALIDATE_SQLFLUFF: true
