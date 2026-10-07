@@ -22,15 +22,14 @@ runs:
         echo "::error::Unsupported mode '$MODE' (expected 'pr' or 'sql')"
         exit 1
 
-    # File discovery is fixed per mode, not a caller input: each mode has a known checkout
-    # pattern, so the discovery settings that suit it are encoded here rather than left to callers.
+    # File discovery is fixed per mode rather than a caller input, as each mode has a known
+    # checkout pattern.
     #   - sql: reached via build/action.yml's dotnet build path, called from
     #     build-and-publish-pre-release.yml, which on pull_request runs checks out the PR head
-    #     commit, so GITHUB_SHA (the merge commit) is never fetched and super-linter's Git mode
-    #     fails validating it. Step env cannot override GITHUB_SHA for a docker action, so the
-    #     find algorithm is used instead, which skips Git variable initialisation and SHA
-    #     validation. Find mode ignores .gitignore by default, so build output folders (where SQL
-    #     projects emit generated scripts) are excluded explicitly.
+    #     commit, so GITHUB_SHA (the merge commit) is never fetched and Git-based discovery fails.
+    #     Step env cannot override GITHUB_SHA for a docker action, so USE_FIND_ALGORITHM is used
+    #     instead. That does not honour .gitignore, so FILTER_REGEX_EXCLUDE skips bin/obj, where
+    #     SQL projects emit generated scripts.
     #   - pr: pr-lint.yml's checkout never overrides `ref:`, so its default checkout contains
     #     GITHUB_SHA and super-linter's default Git-based discovery of changed files works as-is.
 
