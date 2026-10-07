@@ -4,7 +4,7 @@ name: "Run Super-Linter"
 description: "Runs super-linter/super-linter with the validation matrix and file discovery mode appropriate to the caller"
 inputs:
   mode:
-    description: "Which validation matrix to apply: 'pr' (full PR lint pass) or 'sql' (SQLFluff-only, minimal scope, see #869)"
+    description: "Which validation matrix to apply: 'pr' (full PR lint pass) or 'sql' (SQLFluff only, whole workspace via find mode, see #869)"
     required: true
   github-token:
     description: "GitHub token"
@@ -29,7 +29,8 @@ runs:
     #     which is not guaranteed: pull_request runs check out the PR head, so the merge commit is
     #     never fetched, and push runs check out the branch tip, which may no longer contain
     #     GITHUB_SHA after a force-push. Step env cannot override GITHUB_SHA for a docker action,
-    #     so USE_FIND_ALGORITHM is used on every event; it requires VALIDATE_ALL_CODEBASE: true.
+    #     so USE_FIND_ALGORITHM is used on every event; find mode cannot be combined with
+    #     VALIDATE_ALL_CODEBASE: false, so it is set to true explicitly.
     #     Find mode does not honour .gitignore, so FILTER_REGEX_EXCLUDE skips bin/obj, where SQL
     #     projects emit generated scripts.
     #   - pr: pr-lint.yml's checkout never overrides `ref:`, so its default checkout contains
