@@ -31,8 +31,10 @@ runs:
     #     GITHUB_SHA after a force-push. Step env cannot override GITHUB_SHA for a docker action,
     #     so USE_FIND_ALGORITHM is used on every event; find mode cannot be combined with
     #     VALIDATE_ALL_CODEBASE: false, so it is set to true explicitly.
-    #     Find mode does not honour .gitignore, so FILTER_REGEX_EXCLUDE skips bin/obj, where SQL
-    #     projects emit generated scripts.
+    #     Find mode does not honour .gitignore by itself, so IGNORE_GITIGNORED_FILES skips anything
+    #     Git ignores; this needs only a valid local Git repository, not GITHUB_SHA.
+    #     FILTER_REGEX_EXCLUDE pre-filters bin/obj, where SQL projects emit generated scripts, so
+    #     those trees are not checked against Git file by file.
     #   - pr: pr-lint.yml's checkout never overrides `ref:`, so its default checkout contains
     #     GITHUB_SHA and super-linter's default Git-based discovery of changed files works as-is.
 
@@ -75,6 +77,7 @@ runs:
         ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
         ENABLE_GITHUB_PULL_REQUEST_SUMMARY_COMMENT: false
         FILTER_REGEX_EXCLUDE: "(^|/)([Bb]in|[Oo]bj)/"
+        IGNORE_GITIGNORED_FILES: true
         MULTI_STATUS: false
         SAVE_SUPER_LINTER_SUMMARY: false
         SQLFLUFF_CONFIG_FILE: .sqlfluff
