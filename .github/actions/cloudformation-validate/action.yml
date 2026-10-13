@@ -51,9 +51,6 @@ runs:
     - name: "AWS CloudFormation Validate Template"
       if: steps.credentials.outputs.validate == 'true'
       shell: bash
-      run: |
-        /usr/local/aws-cli/v2/current/bin/aws \
-                  cloudformation validate-template \
-                        --template-body "file://$TEMPLATE"
+      run: /usr/local/aws-cli/v2/current/bin/aws cloudformation validate-template --template-body "file://$TEMPLATE"
       env:
         TEMPLATE: ${{inputs.template}}
