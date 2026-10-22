@@ -188,7 +188,7 @@ runs:
       run: |
           ls -la "${{github.workspace}}"
           echo "-----------------------"
-          ls "${{github.workspace}}/dist/${{inputs.project-to-publish}}-${{env.BUILD_VERSION}}.nupkg"
+          ls "${{github.workspace}}/dist/${{inputs.project-to-publish}}-${{inputs.build-version}}.nupkg"
 
     - if: |
           inputs.npm-signing == 'true' &&
