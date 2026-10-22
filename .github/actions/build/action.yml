@@ -231,17 +231,11 @@ runs:
         aws-secret-access-key: ${{inputs.aws-secret-access-key}}
         aws-region: ${{inputs.aws-region}}
 
-    - name: "Prepare build Results folder"
+    - name: "Prepare results and dist folders"
       working-directory: "${{github.workspace}}"
       shell: bash
       run: |
-        mkdir -p "${{github.workspace}}/results" && echo "results folder ready"
-
-    - name: "Prepare dist folder"
-      working-directory: "${{github.workspace}}"
-      shell: bash
-      run: |
-        mkdir -p "${{github.workspace}}/dist" && echo "dist folder ready"
+        mkdir -p "${{github.workspace}}/results" "${{github.workspace}}/dist"
 
     - name: "Install Build tools"
       uses: ./.github/actions/build-tools
