@@ -164,7 +164,7 @@ runs:
     - name: "Determine Repo Visibility Label"
       id: repo-visibility
       shell: bash
-      run: echo "value=${{steps.visibility.outputs.is_public == 'true' && 'public' || 'private'}}" >> "$GITHUB_OUTPUT"
+      run: echo "value=${{steps.visibility.outputs.is-public == 'true' && 'public' || 'private'}}" >> "$GITHUB_OUTPUT"
 
     - name: "Parameter Summary"
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
@@ -582,4 +582,4 @@ runs:
       uses: ./.github/actions/sarif
       with:
         repo-visibility: "${{steps.repo-visibility.outputs.value}}"
-        repo-fork: "${{steps.visibility.outputs.is_fork}}"
+        repo-fork: "${{steps.visibility.outputs.is-fork}}"
