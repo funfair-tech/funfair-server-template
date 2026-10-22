@@ -157,7 +157,7 @@ runs:
       shell: bash
       run: npm run build
 
-    - name: "NPM: Build Package"
+    - name: "NPM: Show Package Settings"
       shell: bash
       run: |
         echo "SIGNING: ${{inputs.npm-signing}}"
