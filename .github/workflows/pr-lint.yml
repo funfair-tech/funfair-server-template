@@ -327,6 +327,8 @@ jobs:
 
       - name: "Check for ignored files"
         uses: ./.github/actions/check-no-ignored-files
+        with:
+          extra-excluded-files: "${{endsWith(github.repository, 'global-pre-commit') && '.pre-commit-config.yaml' || ''}}"
 
   # @@required: merge
   no-prohibited-files:
