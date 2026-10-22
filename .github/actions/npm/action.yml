@@ -86,8 +86,16 @@ runs:
     #          core.notice('Cache Hit: ${{steps.npm-cache.outputs.cache-hit}}');
     ####################################################################################################################
 
+    - name: "Npm: Detect package-lock location"
+      id: build_context
+      shell: bash
+      run: |
+        [ -f ${{github.workspace}}/package-lock.json ] && echo "WORK_DIR=${{github.workspace}}" >> "$GITHUB_OUTPUT" && exit 0
+        [ -f ${{github.workspace}}/src/package-lock.json ] && echo "WORK_DIR=${{github.workspace}}/src" >> "$GITHUB_OUTPUT" && exit 0
+        echo "Error: no package-lock.json" && exit 1
+
     - name: "NPM: Show Config"
-      working-directory: "${{github.workspace}}/src"
+      working-directory: "${{steps.build_context.outputs.WORK_DIR}}"
       shell: bash
       run: |
         echo "NPM_REGISTRY: ${{inputs.npm-registry}}"
@@ -113,14 +121,6 @@ runs:
     - name: "Npm: Clear node modules"
       shell: bash
       run: rm -rf "${{github.workspace}}/node_modules"
-
-    - name: "Npm: Detect package-lock location"
-      id: build_context
-      shell: bash
-      run: |
-        [ -f ${{github.workspace}}/package-lock.json ] && echo "WORK_DIR=${{github.workspace}}" >> "$GITHUB_OUTPUT" && exit 0
-        [ -f ${{github.workspace}}/src/package-lock.json ] && echo "WORK_DIR=${{github.workspace}}/src" >> "$GITHUB_OUTPUT" && exit 0
-        echo "Error: no package-lock.json" && exit 1
 
     - name: "NPM: Force registry before restore"
       if: inputs.npm-registry != ''
