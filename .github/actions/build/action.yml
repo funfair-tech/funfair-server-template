@@ -362,6 +362,21 @@ runs:
         tool-name: "changelog"
         tool-arguments: "\"${{github.workspace}}/CHANGELOG.md\" --extract RELEASE_NOTES.md --version \"${{env.BUILD_VERSION}}\""
 
+    - name: "Read Release Notes"
+      id: release_notes
+      if: steps.build_tools.outputs.BUILD_ENV == 'true'
+      shell: bash
+      working-directory: "${{github.workspace}}"
+      run: |
+        if [ -f RELEASE_NOTES.md ]; then
+          {
+            echo "RELEASE_NOTES<<RELEASE_NOTES_EOF"
+            cat RELEASE_NOTES.md
+            echo
+            echo "RELEASE_NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+        fi
+
     ############################################################################################################
     # DOTNET BUILD
     ############################################################################################################
@@ -371,6 +386,7 @@ runs:
       with:
         production-build: "${{inputs.production-build}}"
         build-version: "${{env.BUILD_VERSION}}"
+        release-notes: "${{steps.release_notes.outputs.RELEASE_NOTES}}"
         release: "${{env.RELEASE}}"
         pre-release-build: "${{steps.find_pull_request.outputs.pre-release-build || 'false'}}"
         build-sql: "${{steps.check_files.outputs.SQL_EXIST}}"
