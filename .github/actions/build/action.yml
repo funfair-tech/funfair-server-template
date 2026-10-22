@@ -204,7 +204,7 @@ runs:
         [[ "$CSPROJ_EXIST" == true && "$SLN_EXIST" == true ]] && echo 'DOTNET_EXIST=true' || echo 'DOTNET_EXIST=false';
         [[ -d db && '${{hashfiles('**/*.sql')}}' != '' ]] && echo 'SQL_EXIST=true' || echo 'SQL_EXIST=false';
         [[ -d src && -f src/package.json && -f src/package-lock.json && '${{hashfiles('src/package.json', 'src/package-lock.json')}}' != '' ]] && echo 'NPM_EXIST_SRC=true' || echo 'NPM_EXIST_SRC=false';
-        [[ -d src && -f package.json && -f package-lock.json && '${{hashfiles('package.json', 'package-lock.json')}}' != '' ]] && echo 'NPM_EXIST_ROOT=true' || echo 'NPM_EXIST_ROOT=false';
+        [[ -f package.json && -f package-lock.json && '${{hashfiles('package.json', 'package-lock.json')}}' != '' ]] && echo 'NPM_EXIST_ROOT=true' || echo 'NPM_EXIST_ROOT=false';
         [[ -f Wallet.json ]] && echo 'NPM_SIGNING_EXIST=true' || echo 'NPM_SIGNING_EXIST=false';
         [[ -f Dockerfile && '${{hashfiles('Dockerfile')}}' != '' ]] && echo 'DOCKERFILE_EXIST=true' || echo 'DOCKERFILE_EXIST=false';
         [[ -f healthcheck && '${{hashfiles('healthcheck')}}' != '' ]] && echo 'HEALTHCHECK_EXIST=true' || echo 'HEALTHCHECK_EXIST=false';
@@ -235,13 +235,13 @@ runs:
       working-directory: "${{github.workspace}}"
       shell: bash
       run: |
-        [ ! -d "${{github.workspace}}/results" ] && mkdir "${{github.workspace}}/results" || echo "Results created"
+        mkdir -p "${{github.workspace}}/results" && echo "results folder ready"
 
     - name: "Prepare dist folder"
       working-directory: "${{github.workspace}}"
       shell: bash
       run: |
-        [ ! -d "${{github.workspace}}/dist" ] && mkdir "${{github.workspace}}/dist" || echo "dist created"
+        mkdir -p "${{github.workspace}}/dist" && echo "dist folder ready"
 
     - name: "Install Build tools"
       uses: ./.github/actions/build-tools
@@ -461,7 +461,8 @@ runs:
       if: |-
         steps.check_files.outputs.DOTNET_EXIST == 'true' &&
         steps.check_files.outputs.DOCKERFILE_EXIST == 'true' &&
-        inputs.docker-app-name != ''
+        inputs.docker-app-name != '' &&
+        inputs.dotnet-docker-platform != ''
       shell: bash
       run: cp "${{github.workspace}}/Dockerfile" "${{github.workspace}}/server-dist/${{inputs.dotnet-docker-platform}}"
 
@@ -469,7 +470,8 @@ runs:
       if: |-
         steps.check_files.outputs.DOTNET_EXIST == 'true' &&
         steps.check_files.outputs.HEALTHCHECK_EXIST == 'true' &&
-        inputs.docker-app-name != ''
+        inputs.docker-app-name != '' &&
+        inputs.dotnet-docker-platform != ''
       shell: bash
       run: cp "${{github.workspace}}/healthcheck" "${{github.workspace}}/server-dist/${{inputs.dotnet-docker-platform}}"
 
@@ -478,7 +480,8 @@ runs:
         steps.check_files.outputs.DOTNET_EXIST == 'true' &&
         steps.check_files.outputs.DOCKERFILE_EXIST == 'true' &&
         inputs.docker-app-owner != '' &&
-        inputs.docker-app-name != ''
+        inputs.docker-app-name != '' &&
+        inputs.dotnet-docker-platform != ''
       uses: ./.github/actions/docker-build-to-registry
       with:
         deploy: "${{env.DEPLOY}}"
