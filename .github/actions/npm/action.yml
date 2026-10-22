@@ -41,7 +41,7 @@ runs:
       shell: bash
       run: |
         {
-          [[ -d src && -f .nvmrc && '${{hashfiles('.nvmrc')}}' != '' ]] && echo 'NVMRC_EXIST=true' || echo 'NVMRC_EXIST=false'
+          [[ -f .nvmrc && '${{hashfiles('.nvmrc')}}' != '' ]] && echo 'NVMRC_EXIST=true' || echo 'NVMRC_EXIST=false'
         } >> "$GITHUB_OUTPUT"
 
     - if: steps.node_files.outputs.NVMRC_EXIST == 'true'
