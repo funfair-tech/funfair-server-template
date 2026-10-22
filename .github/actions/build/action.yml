@@ -191,10 +191,6 @@ runs:
             core.info(`${name}: ${process.env[name]}`);
           }
 
-    - name: "Set branch"
-      shell: bash
-      run: echo "GIT_BRANCH=$GITHUB_REF" >> "$GITHUB_ENV"
-
 # yamllint disable rule:line-length
     - name: "Check file existence"
       id: check_files
