@@ -143,8 +143,8 @@ jobs:
             echo "::error::Failed to determine latest active .NET SDK version from releases-index.json"
             exit 1
           fi
-          CURRENT_VER=$(jq -r '.sdk.version' src/global.json) || {
-            echo "::error::Failed to read sdk.version from src/global.json"
+          CURRENT_VER=$(jq -re '.sdk.version' src/global.json) || {
+            echo "::error::Failed to read sdk.version from src/global.json (file missing, invalid JSON, or sdk.version missing or null)"
             exit 1
           }
           echo "Latest available SDK: ${LATEST//[$'\r\n']/ } (current: $CURRENT_VER)"
