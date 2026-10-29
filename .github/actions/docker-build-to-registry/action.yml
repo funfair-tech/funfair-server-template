@@ -38,6 +38,7 @@ runs:
         secret-value: "${{inputs.docker-container-registry}}"
 
     - name: "Docker Trust Enable"
+      id: docker-trust-enable
       shell: bash
       run: |
         echo "DOCKER_CONTENT_TRUST_ORIGINAL=$CONTENT_TRUST_ORIGINAL" >> "$GITHUB_ENV"
@@ -86,6 +87,6 @@ runs:
       uses: ./.github/actions/move-docker-build-cache
 
     - name: "Docker Trust Restore"
-      if: always()
+      if: always() && steps.docker-trust-enable.outcome == 'success'
       shell: bash
       run: echo "DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST_ORIGINAL" >> "$GITHUB_ENV"
