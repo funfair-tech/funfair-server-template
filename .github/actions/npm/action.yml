@@ -182,12 +182,18 @@ runs:
       with:
         working-directory: "${{github.workspace}}"
         tool-name: "buildcontentpackage"
-        tool-arguments: "build \
-            --source-path \"${{github.workspace}}/src/dist\" \
-            --target-path \"${{github.workspace}}/dist\" \
-            --version \"${{inputs.build-version}}\" \
-            --wallet \"${{github.workspace}}/Wallet.json\" \
-            --wallet-password \"${{ inputs.npm-content-package-wallet-password }}\""
+        tool-arguments: |
+          build
+          --source-path
+          ${{github.workspace}}/src/dist
+          --target-path
+          ${{github.workspace}}/dist
+          --version
+          ${{inputs.build-version}}
+          --wallet
+          ${{github.workspace}}/Wallet.json
+          --wallet-password
+          ${{inputs.npm-content-package-wallet-password}}
   #            --warnings-as-error
   #            --optimise \
 
@@ -221,11 +227,15 @@ runs:
       with:
         working-directory: "${{github.workspace}}"
         tool-name: "signcontentpackage"
-        tool-arguments: "sign \
-            --package \"${{github.workspace}}/dist/${{inputs.project-to-publish}}-${{inputs.build-version}}.nupkg\" \
-            --wallet \"${{steps.store-signing-wallet.outputs.file}}\" \
-            --wallet-password \"${{inputs.npm-package-store-signing-wallet-password}}\" \
-            --warnings-as-error"
+        tool-arguments: |
+          sign
+          --package
+          ${{github.workspace}}/dist/${{inputs.project-to-publish}}-${{inputs.build-version}}.nupkg
+          --wallet
+          ${{steps.store-signing-wallet.outputs.file}}
+          --wallet-password
+          ${{inputs.npm-package-store-signing-wallet-password}}
+          --warnings-as-error
 
     - name: "NPM: Clean Up Store Signing Wallet"
       if: |
