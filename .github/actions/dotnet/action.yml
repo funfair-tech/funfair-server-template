@@ -173,6 +173,7 @@ runs:
       with:
         production-build: "${{inputs.production-build}}"
         build-version: "${{inputs.build-version}}"
+        release: "${{inputs.release}}"
         release-notes: "${{inputs.release-notes}}"
         platform: "${{inputs.dotnet-docker-platform}}"
         project-to-publish: "${{inputs.project-to-publish}}"

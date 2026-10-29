@@ -12,6 +12,10 @@ inputs:
     description: "Build version"
     required: true
 
+  release:
+    description: "Whether this is a release build (disables Swagger when 'true')"
+    required: true
+
   release-notes:
     description: "Release notes"
     required: false
@@ -72,6 +76,7 @@ runs:
         PUBLISH_PLATFORM: "${{inputs.platform}}"
         PRODUCTION_BUILD: "${{inputs.production-build}}"
         BUILD_VERSION: "${{inputs.build-version}}"
+        RELEASE: "${{inputs.release}}"
 
     - name: "Report publish output size"
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
