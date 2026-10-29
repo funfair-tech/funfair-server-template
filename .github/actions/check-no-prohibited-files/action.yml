@@ -15,7 +15,10 @@ runs:
 
         found=0
         for pattern in "${patterns[@]}"; do
-          matches=$(git ls-files --cached -- "${pattern}")
+          matches=$(git ls-files --cached -- "${pattern}") || {
+            echo "::error::git ls-files failed while checking for ${pattern}"
+            exit 1
+          }
           if [ -n "${matches}" ]; then
             found=1
             while IFS= read -r file; do

@@ -131,7 +131,7 @@ jobs:
               echo "CHANGES=${diff_exit}" >> "$GITHUB_ENV"
               ;;
             *)
-              echo "::error::git diff against origin/${BASE_REF} failed (exit ${diff_exit}): ${diff_output}"
+              echo "::error::git diff against origin/${BASE_REF} failed (exit ${diff_exit}): ${diff_output//[$'\r\n']/ }"
               exit "${diff_exit}"
               ;;
           esac

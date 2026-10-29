@@ -135,12 +135,18 @@ jobs:
               | sort_by(."channel-version" | split(".") | map(tonumber))
               | last
               | ."latest-sdk"
-            ')
+            ') || {
+            echo "::error::Failed to download releases-index.json or read the latest active .NET SDK version from it"
+            exit 1
+          }
           if [[ -z "$LATEST" || "$LATEST" == "null" ]]; then
             echo "::error::Failed to determine latest active .NET SDK version from releases-index.json"
             exit 1
           fi
-          CURRENT_VER=$(jq -r '.sdk.version' src/global.json)
+          CURRENT_VER=$(jq -r '.sdk.version' src/global.json) || {
+            echo "::error::Failed to read sdk.version from src/global.json"
+            exit 1
+          }
           echo "Latest available SDK: $LATEST (current: $CURRENT_VER)"
           reject_newlines() {
             case "$2" in

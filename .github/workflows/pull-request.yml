@@ -75,7 +75,10 @@ jobs:
         if: steps.findPr.outputs.number == ''
         shell: bash
         run: |
-          title="$(git log -1 --pretty=%s)"
+          title="$(git log -1 --pretty=%s)" || {
+            echo "::error::Failed to read the last commit title"
+            exit 1
+          }
           case "$title" in
             *$'\n'*|*$'\r'*) echo "::error::Commit title must not contain newlines"; exit 1;;
           esac
