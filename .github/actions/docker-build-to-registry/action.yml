@@ -40,8 +40,10 @@ runs:
     - name: "Docker Trust Enable"
       shell: bash
       run: |
-        echo "DOCKER_CONTENT_TRUST_ORIGINAL=${{env.DOCKER_CONTENT_TRUST}}" >> "$GITHUB_ENV"
+        echo "DOCKER_CONTENT_TRUST_ORIGINAL=$CONTENT_TRUST_ORIGINAL" >> "$GITHUB_ENV"
         echo "DOCKER_CONTENT_TRUST=1" >> "$GITHUB_ENV"
+      env:
+        CONTENT_TRUST_ORIGINAL: "${{env.DOCKER_CONTENT_TRUST}}"
 
     - name: "Build and export docker container"
       id: build-test
@@ -86,4 +88,4 @@ runs:
     - name: "Docker Trust Restore"
       if: always()
       shell: bash
-      run: echo "DOCKER_CONTENT_TRUST=${{env.DOCKER_CONTENT_TRUST_ORIGINAL}}" >> "$GITHUB_ENV"
+      run: echo "DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST_ORIGINAL" >> "$GITHUB_ENV"
