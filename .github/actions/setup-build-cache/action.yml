@@ -5,7 +5,7 @@ description: "Configures nuget/npm cache env vars"
 
 inputs:
   use-nuget-cache:
-    description: "Whether to use nuget cache (true/false, or empty to disable)"
+    description: "Whether to use nuget cache: true or false (case-insensitive), or empty to disable; any other value fails"
     required: false
     default: ""
   nuget-baget-cache:
@@ -32,11 +32,15 @@ runs:
       id: cache-status
       shell: bash
       run: |
-        case "$USE_NUGET_CACHE_INPUT" in
-          *$'\n'*|*$'\r'*) echo "::error::use-nuget-cache must not contain newlines"; exit 1;;
+        case "${USE_NUGET_CACHE_INPUT,,}" in
+          ''|'false') use_cache="false";;
+          'true') use_cache="true";;
+          *)
+            echo "::error::use-nuget-cache must be 'true', 'false', or empty/unset"
+            exit 1
+            ;;
         esac
-        use_cache="$USE_NUGET_CACHE_INPUT"
-        if [[ -z "$use_cache" || "$CACHE_RUNNER_ENVIRONMENT" != "self-hosted" ]]; then
+        if [[ "$CACHE_RUNNER_ENVIRONMENT" != "self-hosted" ]]; then
           use_cache="false"
         fi
         echo "USE_NUGET_CACHE=${use_cache}" >> "$GITHUB_ENV"
