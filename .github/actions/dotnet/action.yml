@@ -115,14 +115,16 @@ runs:
                   --configuration Release \
                   "-p:ContinuousIntegrationBuild=true" \
                   "-p:EnableSarif=True" \
-                  "-p:IsProduction=${{inputs.production-build}}" \
+                  "-p:IsProduction=$PRODUCTION_BUILD" \
                   "-p:NoWarn=MSB4241" \
                   "-p:Optimize=true" \
                   "-p:SuppressNETCoreSdkPreviewMessage=true" \
-                  "-p:Version=${{inputs.build-version}}" \
+                  "-p:Version=$BUILD_VERSION" \
                   -nodeReuse:False
       env:
         ReleaseNotes: "${{inputs.release-notes}}"
+        PRODUCTION_BUILD: "${{inputs.production-build}}"
+        BUILD_VERSION: "${{inputs.build-version}}"
 
     ## RUN TESTS
     - name: "Dotnet: Test"
@@ -141,13 +143,15 @@ runs:
                   --report-github \
                   "-p:ContinuousIntegrationBuild=true" \
                   "-p:EnableSarif=True" \
-                  "-p:IsProduction=${{inputs.production-build}}" \
+                  "-p:IsProduction=$PRODUCTION_BUILD" \
                   "-p:NoWarn=MSB4241" \
                   "-p:Optimize=true" \
                   "-p:SuppressNETCoreSdkPreviewMessage=true" \
-                  "-p:Version=${{inputs.build-version}}"
+                  "-p:Version=$BUILD_VERSION"
       env:
         ReleaseNotes: "${{inputs.release-notes}}"
+        PRODUCTION_BUILD: "${{inputs.production-build}}"
+        BUILD_VERSION: "${{inputs.build-version}}"
 
     # ############################################################################################################
     # # DATABASE BUILD
