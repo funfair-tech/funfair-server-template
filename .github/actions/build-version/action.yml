@@ -16,7 +16,11 @@ runs:
       with:
         working-directory: "${{github.workspace}}"
         tool-name: "buildversion"
-        tool-arguments: "--GithubToken \"${{inputs.github-token}}\" --TagPrefix \"github\""
+        tool-arguments: |
+          --GithubToken
+          ${{inputs.github-token}}
+          --TagPrefix
+          github
 
     - name: "Log build version"
       shell: bash
