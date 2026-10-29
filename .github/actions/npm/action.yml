@@ -141,9 +141,23 @@ runs:
       working-directory: "${{steps.build_context.outputs.WORK_DIR}}"
       shell: bash
       run: |
-        sed -i "s|https://registry.npmjs.org/|${NPM_REGISTRY}|g" package-lock.json
-        sed -i "s|http://npm.local:5554/|${NPM_REGISTRY}|g" package-lock.json
-        sed -i "s|https://npm.local:5555/|${NPM_REGISTRY}|g" package-lock.json
+        if [[ ! "$NPM_REGISTRY" =~ ^https?://[^[:space:]]+$ ]]; then
+          echo "::error::npm-registry must be an http(s) URL"
+          exit 1
+        fi
+        # Each replaced prefix ends in exactly one '/', so the registry must too, or the
+        # rewritten URLs would lose their separator or gain a doubled one.
+        REGISTRY="$NPM_REGISTRY"
+        while [[ "$REGISTRY" == */ ]]; do
+          REGISTRY="${REGISTRY%/}"
+        done
+        REGISTRY="$REGISTRY/"
+        # The value is inserted into a sed replacement, where '\', '&' and the '|'
+        # delimiter are special, so escape them to keep it literal.
+        REPLACEMENT="$(printf '%s' "$REGISTRY" | sed -e 's/[\\&|]/\\&/g')"
+        sed -i "s|https://registry\.npmjs\.org/|${REPLACEMENT}|g" package-lock.json
+        sed -i "s|http://npm\.local:5554/|${REPLACEMENT}|g" package-lock.json
+        sed -i "s|https://npm\.local:5555/|${REPLACEMENT}|g" package-lock.json
       env:
         NPM_REGISTRY: "${{inputs.npm-registry}}"
 
