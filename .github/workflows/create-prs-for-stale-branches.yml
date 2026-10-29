@@ -55,7 +55,7 @@ jobs:
         with:
           clean: true
           fetch-depth: 0
-          ref: main
+          ref: "main"
           repository: "${{github.repository}}"
 
       - name: "Create matrix of branches"
@@ -154,7 +154,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: true
-          ref: main
+          ref: "main"
           repository: "${{github.repository}}"
 
       - name: "Check Required Secrets"
@@ -192,7 +192,7 @@ jobs:
           && matrix.dayssinceupdate > 7
         uses: ./.github/actions/read-file
         with:
-          path: ./.github/PULL_REQUEST_TEMPLATE.md
+          path: "./.github/PULL_REQUEST_TEMPLATE.md"
 
       - name: "Check Required Secrets"
         if: |-

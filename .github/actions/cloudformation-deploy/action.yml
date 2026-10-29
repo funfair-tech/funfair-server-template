@@ -86,7 +86,7 @@ runs:
         ApplicationName: "${{inputs.cloud-formation-stack}}"
         ApplicationContainer: "${{inputs.docker-app-name}}"
         ApplicationVersion: "${{inputs.build-version}}"
-        ApiPrefix: /${{inputs.docker-app-name}}
+        ApiPrefix: "/${{inputs.docker-app-name}}"
         ApiHost: "${{inputs.api-host}}"
         LoadBalancerHostName: "${{inputs.aws-load-balancer-hostname}}"
         LoadBalancerPriority: "${{steps.priorities.outputs.MAIN}}"

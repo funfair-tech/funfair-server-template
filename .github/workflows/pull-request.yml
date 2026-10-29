@@ -68,7 +68,7 @@ jobs:
         if: steps.findPr.outputs.number == ''
         uses: ./.github/actions/read-file
         with:
-          path: ./.github/PULL_REQUEST_TEMPLATE.md
+          path: "./.github/PULL_REQUEST_TEMPLATE.md"
 
       - name: "Get last commit info"
         id: commit-info

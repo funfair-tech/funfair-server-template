@@ -52,8 +52,8 @@ runs:
         context: "${{inputs.container-source}}"
         load: true
         tags: "${{inputs.app-owner}}/${{inputs.app-name}}:test"
-        cache-from: type=local,src=${{runner.temp}}/.buildx-cache
-        cache-to: type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max
+        cache-from: "type=local,src=${{runner.temp}}/.buildx-cache"
+        cache-to: "type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max"
 
     - name: "Move docker build cache (test)"
       if: steps.build-test.outcome == 'success'
@@ -77,8 +77,8 @@ runs:
         tags: |
           ${{inputs.docker-container-registry}}/${{inputs.app-owner}}/${{inputs.app-name}}:${{inputs.build-tag}}
           ${{inputs.docker-container-registry}}/${{inputs.app-owner}}/${{inputs.app-name}}:${{inputs.build-version}}
-        cache-from: type=local,src=${{runner.temp}}/.buildx-cache
-        cache-to: type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max
+        cache-from: "type=local,src=${{runner.temp}}/.buildx-cache"
+        cache-to: "type=local,dest=${{runner.temp}}/.buildx-cache-new,mode=max"
         provenance: false
 
     - name: "Move docker build cache (deploy)"

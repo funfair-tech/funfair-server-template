@@ -68,7 +68,7 @@ jobs:
             exit 1
           fi
         env:
-          SOURCE_PUSH_TOKEN: ${{secrets.SOURCE_PUSH_TOKEN}}
+          SOURCE_PUSH_TOKEN: "${{secrets.SOURCE_PUSH_TOKEN}}"
 
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -179,7 +179,7 @@ jobs:
         with:
           commit_message: "SDK - Update DotNet SDK to ${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
           branch: "depends/dotnet/${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
-          file_pattern: src/global.json
+          file_pattern: "src/global.json"
           commit_user_name: "fun-version[bot]"
           commit_user_email: "credfeto@users.noreply.github.com"
           commit_author: "fun-version[bot] <credfeto@users.noreply.github.com>"
