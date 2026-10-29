@@ -5,7 +5,7 @@ description: "Builds and deploys the source"
 inputs:
   # GENERAL
   production-build:
-    description: "Whether to build a production build"
+    description: "Whether to build a production build: true or false (case-insensitive); any other value fails"
     required: true
   build-version:
     description: >-
@@ -162,6 +162,19 @@ inputs:
 runs:
   using: "composite"
   steps:
+
+    - name: "Check production-build is valid"
+      shell: bash
+      run: |
+        case "${PRODUCTION_BUILD,,}" in
+          'true'|'false') ;;
+          *)
+            echo "::error::production-build must be 'true' or 'false'"
+            exit 1
+            ;;
+        esac
+      env:
+        PRODUCTION_BUILD: "${{inputs.production-build}}"
 
     - name: "Check Repo Visibility"
       id: visibility
