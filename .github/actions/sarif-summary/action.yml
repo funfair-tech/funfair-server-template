@@ -36,6 +36,7 @@ runs:
 
           const title = process.env.TITLE;
           const globPattern = process.env.GLOB_PATTERN;
+          const logTitle = title.replace(/[\r\n]/g, ' ');
           const resultsDir = path.join(process.env.GITHUB_WORKSPACE, 'results');
 
           const toRegExp = glob => new RegExp(`^${glob.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.')}$`);
@@ -62,7 +63,7 @@ runs:
           // same as they would for "files present, zero results" below.
           const files = entries.filter(f => pattern.test(f)).sort();
           if (files.length === 0) {
-            core.info(`ℹ️ ${title}: no SARIF files matched '${globPattern}' in results/; treating as no findings`);
+            core.info(`ℹ️ ${logTitle}: no SARIF files matched '${globPattern.replace(/[\r\n]/g, ' ')}' in results/; treating as no findings`);
           }
 
           const rows = [];
@@ -119,7 +120,7 @@ runs:
           core.setOutput('table-file', tableFile);
           core.setOutput('row-count', String(rows.length));
           core.setOutput('error-count', String(errorCount));
-          core.info(`✅ ${title}: ${rows.length} finding(s), ${errorCount} error-level`);
+          core.info(`✅ ${logTitle}: ${rows.length} finding(s), ${errorCount} error-level`);
 
     - name: "Post job summary"
       if: "${{ !cancelled() && steps.build-table.outputs.table-file != '' }}"
@@ -185,6 +186,7 @@ runs:
 
           const title = process.env.TITLE;
           const rowCount = Number(process.env.ROW_COUNT);
+          const logTitle = title.replace(/[\r\n]/g, ' ');
           const marker = `<!-- sarif-summary: ${title} -->`;
           const prNumber = Number(process.env.PR_NUMBER);
 
@@ -196,7 +198,7 @@ runs:
           const existing = comments.find(c => c.body && c.body.includes(marker));
 
           if (rowCount === 0 && !existing) {
-            core.info(`✅ No findings for "${title}"; skipping PR comment`);
+            core.info(`✅ No findings for "${logTitle}"; skipping PR comment`);
             return;
           }
 
@@ -214,7 +216,7 @@ runs:
               comment_id: existing.id,
               body: commentBody,
             });
-            core.info(`✅ Updated existing PR comment for "${title}"`);
+            core.info(`✅ Updated existing PR comment for "${logTitle}"`);
           } else {
             await github.rest.issues.createComment({
               owner: context.repo.owner,
@@ -222,7 +224,7 @@ runs:
               issue_number: prNumber,
               body: commentBody,
             });
-            core.info(`✅ Created PR comment for "${title}"`);
+            core.info(`✅ Created PR comment for "${logTitle}"`);
           }
 
     - name: "Report error-level findings"
