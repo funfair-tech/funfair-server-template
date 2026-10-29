@@ -142,8 +142,10 @@ runs:
       working-directory: "${{steps.build_context.outputs.WORK_DIR}}"
       shell: bash
       run: |
-        if [[ ! "$NPM_REGISTRY" =~ ^https?://[^[:space:]]+$ ]]; then
-          echo "::error::npm-registry must be an http(s) URL"
+        # The registry is written into JSON string values, so reject anything that could break out of one.
+        registry_pattern='^https?://[^[:space:]"\]+$'
+        if [[ ! "$NPM_REGISTRY" =~ $registry_pattern ]]; then
+          echo "::error::npm-registry must be an http(s) URL without whitespace, double quotes or backslashes"
           exit 1
         fi
         # Each replaced prefix ends in exactly one '/', so the registry must too, or the
