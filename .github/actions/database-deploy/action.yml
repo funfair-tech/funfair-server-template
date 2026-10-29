@@ -15,9 +15,6 @@ inputs:
   sql-password:
     description: "Password for SQL_USER"
     required: true
-  db-folder:
-    description: "Folder where SQL Files live"
-    required: true
 
 runs:
   using: "composite"

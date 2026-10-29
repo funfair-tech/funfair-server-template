@@ -533,7 +533,6 @@ runs:
         sql-db: "${{inputs.sql-db}}"
         sql-user: "${{inputs.sql-user}}"
         sql-password: "${{inputs.sql-password}}"
-        db-folder: "${{github.workspace}}/db"
 
     - name: "Dotnet: Deploy Check"
       shell: bash
