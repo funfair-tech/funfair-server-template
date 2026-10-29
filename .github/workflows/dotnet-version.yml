@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_RUNNER_NAME=$RUNNER_NAME"
             echo "ACTIVE_HOSTNAME=$HOSTNAME"
             echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
@@ -79,7 +79,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_RUNNER_NAME=$RUNNER_NAME"
             echo "ACTIVE_HOSTNAME=$HOSTNAME"
             echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
@@ -151,8 +151,8 @@ jobs:
         id: upgrade_check
         shell: bash
         run: |
-          CURRENT_VER="${{steps.latest-dotnet-version.outputs.CURRENT_VERSION}}"
-          LATEST_RELEASE_VER="${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+          CURRENT_VER="$CURRENT_VERSION"
+          LATEST_RELEASE_VER="$LATEST_RELEASE_VERSION"
           echo "Current: $CURRENT_VER, Latest: $LATEST_RELEASE_VER"
           HIGHEST=$(printf '%s\n' "$CURRENT_VER" "$LATEST_RELEASE_VER" | sort -V | tail -1)
           if [[ "$CURRENT_VER" != "$LATEST_RELEASE_VER" && "$HIGHEST" == "$LATEST_RELEASE_VER" ]]; then
@@ -160,13 +160,18 @@ jobs:
           else
             echo "NEW_VERSION=false" >> "$GITHUB_OUTPUT"
           fi
+        env:
+          CURRENT_VERSION: "${{steps.latest-dotnet-version.outputs.CURRENT_VERSION}}"
+          LATEST_RELEASE_VERSION: "${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
 
       - name: "Update global.json"
         if: steps.upgrade_check.outputs.NEW_VERSION == 'true'
         shell: bash
         run: |
-          VERSION="${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
+          VERSION="$LATEST_RELEASE_VERSION"
           jq --arg ver "$VERSION" '.sdk.version = $ver' src/global.json > src/global.json.tmp && mv src/global.json.tmp src/global.json
+        env:
+          LATEST_RELEASE_VERSION: "${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
 
       - name: "Commit changes to new branch"
         if: steps.upgrade_check.outputs.NEW_VERSION == 'true'
