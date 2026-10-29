@@ -1,7 +1,7 @@
---- # Build Docker container and optionally deploy to ACR
+--- # Build Docker container and optionally push to a container registry
 # Maintain in repo: funfair-server-template
-name: "Build Docker container and optionally deploy to ACR"
-description: "Builds a docker image and optionally pushes it to AWS ECR"
+name: "Build Docker container and optionally push to a container registry"
+description: "Builds a docker image and optionally pushes it to a container registry"
 inputs:
   deploy:
     description: "Whether to deploy"
@@ -19,7 +19,7 @@ inputs:
     description: "docker app name"
     required: true
   docker-container-registry:
-    description: "AWS Elastic Container Registry"
+    description: "Container registry to push the image to"
     required: true
   container-source:
     description: "Location of app container source"
