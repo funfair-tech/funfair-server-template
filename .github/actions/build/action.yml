@@ -361,7 +361,12 @@ runs:
       with:
         working-directory: "${{github.workspace}}"
         tool-name: "changelog"
-        tool-arguments: "\"${{github.workspace}}/CHANGELOG.md\" --extract RELEASE_NOTES.md --version \"${{env.BUILD_VERSION}}\""
+        tool-arguments: |
+          ${{github.workspace}}/CHANGELOG.md
+          --extract
+          RELEASE_NOTES.md
+          --version
+          ${{env.BUILD_VERSION}}
 
     - name: "Read Release Notes"
       id: release_notes

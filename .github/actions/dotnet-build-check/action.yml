@@ -39,6 +39,10 @@ runs:
       with:
         working-directory: "${{github.workspace}}/src"
         tool-name: "buildcheck"
-        tool-arguments: >-
-          -Solution "${{steps.find_solution.outputs.SOLUTION}}" -WarningAsErrors true
-          -PreReleaseBuild ${{inputs.pre-release-build}}
+        tool-arguments: |
+          -Solution
+          ${{steps.find_solution.outputs.SOLUTION}}
+          -WarningAsErrors
+          true
+          -PreReleaseBuild
+          ${{inputs.pre-release-build}}
