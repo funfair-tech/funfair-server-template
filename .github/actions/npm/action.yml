@@ -109,6 +109,9 @@ runs:
     - name: "Npm: Config"
       shell: bash
       run: |
+        case "$NPM_REGISTRY" in
+          *$'\n'*|*$'\r'*) echo "::error::npm-registry must not contain newlines"; exit 1;;
+        esac
         {
           [ -n "$NPM_REGISTRY" ] && echo "NPM_CONFIG_REGISTRY=$NPM_REGISTRY"
           echo "NPM_CONFIG_LOGLEVEL=error"

@@ -76,6 +76,9 @@ jobs:
         shell: bash
         run: |
           title="$(git log -1 --pretty=%s)"
+          case "$title" in
+            *$'\n'*|*$'\r'*) echo "::error::Commit title must not contain newlines"; exit 1;;
+          esac
           echo "commit-title=$title" >> "$GITHUB_OUTPUT"
 
       - name: "Check Required Secrets"
