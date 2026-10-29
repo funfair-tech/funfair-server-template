@@ -41,7 +41,7 @@ jobs:
       - name: "Cleanup"
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          BRANCH: refs/pull/${{github.event.pull_request.number}}/merge
+          BRANCH: "refs/pull/${{github.event.pull_request.number}}/merge"
         with:
           github-token: "${{secrets.SOURCE_PUSH_TOKEN}}"
           script: |

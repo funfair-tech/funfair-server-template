@@ -245,8 +245,8 @@ jobs:
         with:
           path: "${{ github.workspace }}"
           base: "${{ github.event.repository.default_branch }}"
-          head: HEAD
-          extra_args: --debug --only-verified
+          head: "HEAD"
+          extra_args: "--debug --only-verified"
 
   # @@required: merge
   has-no-merge-conflicts:
@@ -527,7 +527,7 @@ jobs:
 
   # @@required: main
   poutine:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     permissions:
       security-events: write
       contents: read
