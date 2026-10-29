@@ -549,7 +549,8 @@ jobs:
         working-directory: "${{github.workspace}}"
         shell: bash
         run: |
-          [ ! -d "$GITHUB_WORKSPACE/results" ] && mkdir "$GITHUB_WORKSPACE/results" || echo "Results created"
+          mkdir -p "$GITHUB_WORKSPACE/results"
+          echo "✅ Results folder ready: $GITHUB_WORKSPACE/results"
 
       - name: "Poutine"
         uses: boostsecurityio/poutine-action@e240ebd3eff8b2db5a8e5f6b28f58739d7db2247 # v1.1.4
