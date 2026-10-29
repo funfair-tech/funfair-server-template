@@ -36,7 +36,7 @@ runs:
       run: |
         echo "Platform: $PLATFORM"
         if [ -z "$PLATFORM" ]; then
-          echo "Missing Platform";
+          echo "::error::Missing Platform"
           exit 1
         fi
       env:
