@@ -133,8 +133,8 @@ runs:
     - name: "Set dotnet environment"
       shell: bash
       run: |
-        DOTNET_DIR="${{github.workspace}}/.dotnet/${{steps.resolve_dotnet_sdk_versions.outputs.sdk-versions-key}}"
-        NUGET_PKGS="${{github.workspace}}/.nuget/packages"
+        DOTNET_DIR="$GITHUB_WORKSPACE/.dotnet/$SDK_VERSIONS_KEY"
+        NUGET_PKGS="$GITHUB_WORKSPACE/.nuget/packages"
         {
           echo "DOTNET_ROOT=$DOTNET_DIR"
           echo "DOTNET_INSTALL_DIR=$DOTNET_DIR"
@@ -150,6 +150,8 @@ runs:
           echo "MSBUILDTERMINALLOGGER=auto"
         } >> "$GITHUB_ENV"
         echo "$DOTNET_DIR" >> "$GITHUB_PATH"
+      env:
+        SDK_VERSIONS_KEY: "${{steps.resolve_dotnet_sdk_versions.outputs.sdk-versions-key}}"
 
     # Workaround for https://github.com/dotnet/sdk/issues/11432
     - name: "Reset users dotnet state"
@@ -166,12 +168,12 @@ runs:
       run: |
         echo "Ensure ~/.nuget folder exists"
         [ -d "$HOME/.nuget" ] || mkdir -p "$HOME/.nuget"
-        echo "Ensure NUGET_PACKAGES folder exists at ${{env.NUGET_PACKAGES}}"
-        [ -d "${{env.NUGET_PACKAGES}}" ] || mkdir -p "${{env.NUGET_PACKAGES}}"
+        echo "Ensure NUGET_PACKAGES folder exists at $NUGET_PACKAGES"
+        [ -d "$NUGET_PACKAGES" ] || mkdir -p "$NUGET_PACKAGES"
         echo "Ensure ~/.nuget/packages doesn't exist"
         rm -fr "$HOME/.nuget/packages"
-        echo "Link ~/.nuget/packages to ${{env.NUGET_PACKAGES}}"
-        ln -sf "${{env.NUGET_PACKAGES}}" "$HOME/.nuget/packages"
+        echo "Link ~/.nuget/packages to $NUGET_PACKAGES"
+        ln -sf "$NUGET_PACKAGES" "$HOME/.nuget/packages"
         echo "Check ~/.nuget/packages"
         ls -la "$HOME/.nuget/packages"
 
@@ -181,7 +183,7 @@ runs:
       working-directory: "${{ github.workspace }}"
       run: |
         INSTALL_NEEDED="false"
-        DOTNET_BIN="${{env.DOTNET_ROOT}}/dotnet"
+        DOTNET_BIN="$DOTNET_ROOT/dotnet"
         if [ ! -x "$DOTNET_BIN" ]; then
           INSTALL_NEEDED="true"
         else
@@ -191,15 +193,17 @@ runs:
             if ! grep -qxF "$VERSION" <<< "$INSTALLED_SDKS"; then
               INSTALL_NEEDED="true"
             fi
-          done <<< "${{steps.resolve_dotnet_sdk_versions.outputs.sdk-versions}}"
+          done <<< "$SDK_VERSIONS"
         fi
         if [ "$INSTALL_NEEDED" = "true" ]; then
-          echo "⚠️ Existing dotnet install at ${{env.DOTNET_ROOT}} missing or unverified - wiping for a clean install"
-          rm -fr "${{env.DOTNET_ROOT}}"
+          echo "⚠️ Existing dotnet install at $DOTNET_ROOT missing or unverified - wiping for a clean install"
+          rm -fr "$DOTNET_ROOT"
         else
-          echo "✅ All resolved SDK versions already installed and verified at ${{env.DOTNET_ROOT}}"
+          echo "✅ All resolved SDK versions already installed and verified at $DOTNET_ROOT"
         fi
         echo "install-needed=$INSTALL_NEEDED" >> "$GITHUB_OUTPUT"
+      env:
+        SDK_VERSIONS: "${{steps.resolve_dotnet_sdk_versions.outputs.sdk-versions}}"
 
     - name: "Install dotnet"
       if: steps.check_dotnet_install.outputs.install-needed == 'true'
