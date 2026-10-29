@@ -244,9 +244,9 @@ runs:
       uses: ./.github/actions/cloudformation-validate
       with:
         template: "cloudformation.json"
-        aws-access-key-id: ${{inputs.aws-access-key-id}}
-        aws-secret-access-key: ${{inputs.aws-secret-access-key}}
-        aws-region: ${{inputs.aws-region}}
+        aws-access-key-id: "${{inputs.aws-access-key-id}}"
+        aws-secret-access-key: "${{inputs.aws-secret-access-key}}"
+        aws-region: "${{inputs.aws-region}}"
 
     - name: "Prepare results and dist folders"
       working-directory: "${{github.workspace}}"
@@ -338,7 +338,7 @@ runs:
       run: |
         { echo "DEPLOY=true"; echo "RELEASE=false"; } >> "$GITHUB_ENV"
 
-    - name: Deploy check - Is release branch
+    - name: "Deploy check - Is release branch"
       if: "!contains(env.BUILD_VERSION, '-')"
       shell: bash
       run: |

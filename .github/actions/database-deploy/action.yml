@@ -77,5 +77,5 @@ runs:
         SQL_DB: "${{inputs.sql-db}}"
         SQL_USER: "${{inputs.sql-user}}"
         SQL_PASSWORD: "${{inputs.sql-password}}"
-        TIMEOUT: 720
+        TIMEOUT: "720"
 # yamllint enable rule:line-length
