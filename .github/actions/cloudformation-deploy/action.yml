@@ -80,7 +80,7 @@ runs:
           if [ -n "$value" ]; then
             jq -n --arg k "$key" --arg v "$value" '{ParameterKey:$k,ParameterValue:$v}'
           fi
-        done | jq -s '.' > "${{github.workspace}}/TemplateParameters.json"
+        done | jq -s '.' > "$GITHUB_WORKSPACE/TemplateParameters.json"
       env:
         CLOUD_FORMATION_TEMPLATE_FILE: "${{inputs.cloud-formation-template-file}}"
         ApplicationName: "${{inputs.cloud-formation-stack}}"
@@ -101,7 +101,7 @@ runs:
       run: |
         echo "SNS ARN: $CLOUDFORMATION_SNS_ARN"
         echo "Validated parameters:"
-        jq . "${{github.workspace}}/TemplateParameters.json"
+        jq . "$GITHUB_WORKSPACE/TemplateParameters.json"
 
     - name: "AWS Cloudformation Deploy"
       shell: bash
