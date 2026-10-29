@@ -19,9 +19,12 @@ runs:
     - name: "Set cfn-lint venv path"
       shell: bash
       run: |
-        VENV_BASE="$GITHUB_WORKSPACE/.cfn-lint"
+        VENV_BASE="$RUNNER_TEMP/cfn-lint"
         VENV_RUN="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT"
-        echo "CFN_LINT_VENV=$VENV_BASE/$VENV_RUN" >> "$GITHUB_ENV"
+        {
+          echo "CFN_LINT_VENV_BASE=$VENV_BASE"
+          echo "CFN_LINT_VENV=$VENV_BASE/$VENV_RUN"
+        } >> "$GITHUB_ENV"
 
     - name: "Create cfn-lint virtual environment"
       shell: bash
@@ -43,3 +46,4 @@ runs:
       shell: bash
       run: |
         [[ -n "$CFN_LINT_VENV" ]] && rm -rf "$CFN_LINT_VENV" || true
+        [[ -n "$CFN_LINT_VENV_BASE" ]] && rmdir "$CFN_LINT_VENV_BASE" 2>/dev/null || true
