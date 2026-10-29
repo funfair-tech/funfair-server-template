@@ -147,7 +147,7 @@ jobs:
             echo "::error::Failed to read sdk.version from src/global.json"
             exit 1
           }
-          echo "Latest available SDK: $LATEST (current: $CURRENT_VER)"
+          echo "Latest available SDK: ${LATEST//[$'\r\n']/ } (current: $CURRENT_VER)"
           reject_newlines() {
             case "$2" in
               *$'\n'*|*$'\r'*) echo "::error::$1 must not contain newlines"; exit 1;;
