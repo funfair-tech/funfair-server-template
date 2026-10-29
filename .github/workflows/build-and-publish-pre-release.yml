@@ -232,5 +232,3 @@ jobs:
         shell: bash
         run: |
           echo "::notice::Version: $BUILD_VERSION"
-        env:
-          BUILD_VERSION: "${{env.BUILD_VERSION}}"
