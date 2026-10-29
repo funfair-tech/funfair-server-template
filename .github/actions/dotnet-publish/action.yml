@@ -34,7 +34,7 @@ runs:
     - name: "Dotnet: Check Variables"
       shell: bash
       run: |
-        echo "Platform: $PLATFORM"
+        echo "Platform: ${PLATFORM//[$'\r\n']/ }"
         if [ -z "$PLATFORM" ]; then
           echo "::error::Missing Platform"
           exit 1
@@ -87,7 +87,7 @@ runs:
         script: |
           const { execSync } = require('child_process');
           const outputDir = process.env.OUTPUT_DIR;
-          const platform = process.env.PLATFORM;
+          const platform = process.env.PLATFORM.replace(/[\r\n]/g, ' ');
           let sizes = '';
           try {
             sizes = execSync(`du -sh "${outputDir}"/*`, { encoding: 'utf8', shell: true }).trim();

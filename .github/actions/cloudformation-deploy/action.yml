@@ -40,7 +40,7 @@ runs:
       shell: bash
       run: |
         if ! [[ "$AWS_LOAD_BALANCER_PRIORITY" =~ ^[0-9]+$ ]]; then
-          echo "::error::AWS_LOAD_BALANCER_PRIORITY must be a non-negative integer, got: $AWS_LOAD_BALANCER_PRIORITY"
+          echo "::error::AWS_LOAD_BALANCER_PRIORITY must be a non-negative integer"
           exit 1
         fi
         if [ "$AWS_LOAD_BALANCER_PRIORITY" -gt 0 ]; then
@@ -100,7 +100,7 @@ runs:
     - name: "show Validated TemplateParameters"
       shell: bash
       run: |
-        echo "SNS ARN: $CLOUDFORMATION_SNS_ARN"
+        echo "SNS ARN: ${CLOUDFORMATION_SNS_ARN//[$'\r\n']/ }"
         echo "Validated parameters:"
         jq . "$TEMPLATE_PARAMETERS_FILE"
       env:
