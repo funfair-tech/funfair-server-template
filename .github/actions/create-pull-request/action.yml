@@ -24,7 +24,7 @@ inputs:
     required: false
     default: ""
   draft:
-    description: "Create as draft PR"
+    description: "Create as draft PR: true or false (case-insensitive), or empty for false; any other value fails"
     required: false
     default: "false"
   title:
@@ -67,7 +67,12 @@ runs:
           const destinationBranch = process.env.DESTINATION_BRANCH;
           const title = process.env.TITLE;
           const body = process.env.BODY;
-          const draft = process.env.DRAFT === 'true';
+          const draftInput = (process.env.DRAFT || 'false').toLowerCase();
+          if (draftInput !== 'true' && draftInput !== 'false') {
+            core.setFailed('draft must be true or false');
+            return;
+          }
+          const draft = draftInput === 'true';
           const assignees = process.env.ASSIGNEES
             ? process.env.ASSIGNEES.split(',').map(a => a.trim()).filter(Boolean)
             : [];
