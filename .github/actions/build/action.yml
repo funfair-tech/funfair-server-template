@@ -272,7 +272,7 @@ runs:
       if: steps.cfn_credentials.outputs.validate == 'true'
       uses: ./.github/actions/cloudformation-validate
       with:
-        template: "cloudformation.json"
+        template: "${{github.workspace}}/cloudformation.json"
 
     - name: "Prepare results and dist folders"
       working-directory: "${{github.workspace}}"

@@ -121,8 +121,9 @@ runs:
       if: inputs.npm-cache-cert != ''
       shell: bash
       run: |
-        echo "$NPM_CACHE_CERT" > "$GITHUB_WORKSPACE/npm.crt"
-        npm config set cafile "$GITHUB_WORKSPACE/npm.crt"
+        FILE="$(mktemp "$RUNNER_TEMP/npm-ca-XXXXXX.crt")"
+        echo "$NPM_CACHE_CERT" > "$FILE"
+        echo "NPM_CONFIG_CAFILE=$FILE" >> "$GITHUB_ENV"
       env:
         NPM_CACHE_CERT: "${{inputs.npm-cache-cert}}"
 
@@ -142,7 +143,7 @@ runs:
         NPM_REGISTRY: "${{inputs.npm-registry}}"
 
 # Note that NPM will gladly tell you to add --use-system-ca to use the certs in the system store
-# but it doesn't actually work...  So instead we have to add the cert to the npm config above
+# but it doesn't actually work...  So instead we have to point NPM_CONFIG_CAFILE at the cert above
 # --use-system-ca is a deprecated setting!
     - name: "NPM: Install dependencies"
       working-directory: "${{steps.build_context.outputs.WORK_DIR}}"

@@ -63,8 +63,11 @@ runs:
         AWS_LOAD_BALANCER_PRIORITY: "${{inputs.aws-load-balancer-priority}}"
 
     - name: "Build TemplateParameters file"
+      id: template_parameters
       shell: bash
       run: |
+        FILE="$(mktemp "$RUNNER_TEMP/TemplateParameters-XXXXXX.json")"
+        echo "FILE=$FILE" >> "$GITHUB_OUTPUT"
         jq -r '.Parameters | keys[]' "$CLOUD_FORMATION_TEMPLATE_FILE" | sort -u | while read -r key; do
           case "$key" in
             ApplicationName|ApplicationContainer|ApplicationVersion) ;;
@@ -80,7 +83,7 @@ runs:
           if [ -n "$value" ]; then
             jq -n --arg k "$key" --arg v "$value" '{ParameterKey:$k,ParameterValue:$v}'
           fi
-        done | jq -s '.' > "$GITHUB_WORKSPACE/TemplateParameters.json"
+        done | jq -s '.' > "$FILE"
       env:
         CLOUD_FORMATION_TEMPLATE_FILE: "${{inputs.cloud-formation-template-file}}"
         ApplicationName: "${{inputs.cloud-formation-stack}}"
@@ -99,9 +102,10 @@ runs:
       run: |
         echo "SNS ARN: $CLOUDFORMATION_SNS_ARN"
         echo "Validated parameters:"
-        jq . "$GITHUB_WORKSPACE/TemplateParameters.json"
+        jq . "$TEMPLATE_PARAMETERS_FILE"
       env:
         CLOUDFORMATION_SNS_ARN: "${{inputs.cloudformation-sns-arn}}"
+        TEMPLATE_PARAMETERS_FILE: "${{steps.template_parameters.outputs.FILE}}"
 
     - name: "AWS Cloudformation Deploy"
       shell: bash
@@ -117,7 +121,7 @@ runs:
                         --capabilities \
                               CAPABILITY_IAM \
                         --parameter-overrides \
-                              file://TemplateParameters.json \
+                              "file://$TEMPLATE_PARAMETERS_FILE" \
                         "${NOTIFICATION_ARGS[@]}" \
                         --tags \
                               "App=$CLOUD_FORMATION_STACK" \
@@ -127,6 +131,7 @@ runs:
         CLOUD_FORMATION_STACK: "${{inputs.cloud-formation-stack}}"
         CLOUDFORMATION_SNS_ARN: "${{inputs.cloudformation-sns-arn}}"
         BUILD_VERSION: "${{inputs.build-version}}"
+        TEMPLATE_PARAMETERS_FILE: "${{steps.template_parameters.outputs.FILE}}"
 
     - name: "AWS Enable Stack termination protection"
       shell: bash
@@ -137,3 +142,11 @@ runs:
                           --stack-name "$CLOUD_FORMATION_STACK"
       env:
         CLOUD_FORMATION_STACK: "${{inputs.cloud-formation-stack}}"
+
+    - name: "Clean Up TemplateParameters file"
+      if: always() && steps.template_parameters.outputs.FILE != ''
+      shell: bash
+      run: |
+        rm -f "$FILE"
+      env:
+        FILE: "${{steps.template_parameters.outputs.FILE}}"
