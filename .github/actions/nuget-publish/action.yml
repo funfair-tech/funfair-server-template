@@ -41,7 +41,7 @@ runs:
         case "${NUGET_FEED_TYPE}" in
           ''|'NUGET'|'SLEET') ;;
           *)
-            echo "::error::nuget-feed-type must be 'NUGET', 'SLEET', or empty/unset - got '${NUGET_FEED_TYPE}'"
+            echo "::error::nuget-feed-type must be 'NUGET', 'SLEET', or empty/unset"
             exit 1
             ;;
         esac
