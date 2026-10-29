@@ -41,8 +41,10 @@ runs:
       shell: bash
       run: |
         {
-          [[ -f .nvmrc && '${{hashfiles('.nvmrc')}}' != '' ]] && echo 'NVMRC_EXIST=true' || echo 'NVMRC_EXIST=false'
+          [[ -f .nvmrc && "$NVMRC_HASH" != '' ]] && echo 'NVMRC_EXIST=true' || echo 'NVMRC_EXIST=false'
         } >> "$GITHUB_OUTPUT"
+      env:
+        NVMRC_HASH: "${{hashFiles('.nvmrc')}}"
 
     - if: steps.node_files.outputs.NVMRC_EXIST == 'true'
       name: "NPM: Setup Node.js (from nvm)"
@@ -90,16 +92,19 @@ runs:
       id: build_context
       shell: bash
       run: |
-        [ -f ${{github.workspace}}/package-lock.json ] && echo "WORK_DIR=${{github.workspace}}" >> "$GITHUB_OUTPUT" && exit 0
-        [ -f ${{github.workspace}}/src/package-lock.json ] && echo "WORK_DIR=${{github.workspace}}/src" >> "$GITHUB_OUTPUT" && exit 0
+        [ -f "$GITHUB_WORKSPACE/package-lock.json" ] && echo "WORK_DIR=$GITHUB_WORKSPACE" >> "$GITHUB_OUTPUT" && exit 0
+        [ -f "$GITHUB_WORKSPACE/src/package-lock.json" ] && echo "WORK_DIR=$GITHUB_WORKSPACE/src" >> "$GITHUB_OUTPUT" && exit 0
         echo "Error: no package-lock.json" && exit 1
 
     - name: "NPM: Show Config"
       working-directory: "${{steps.build_context.outputs.WORK_DIR}}"
       shell: bash
       run: |
-        echo "NPM_REGISTRY: ${{inputs.npm-registry}}"
-        echo "NPM_CACHE_CERT: ${{inputs.npm-cache-cert}}"
+        echo "NPM_REGISTRY: $NPM_REGISTRY"
+        echo "NPM_CACHE_CERT: $NPM_CACHE_CERT"
+      env:
+        NPM_REGISTRY: "${{inputs.npm-registry}}"
+        NPM_CACHE_CERT: "${{inputs.npm-cache-cert}}"
 
     - name: "Npm: Config"
       shell: bash
@@ -116,14 +121,14 @@ runs:
       if: inputs.npm-cache-cert != ''
       shell: bash
       run: |
-        echo "$NPM_CACHE_CERT" > "${{github.workspace}}/npm.crt"
-        npm config set cafile "${{github.workspace}}/npm.crt"
+        echo "$NPM_CACHE_CERT" > "$GITHUB_WORKSPACE/npm.crt"
+        npm config set cafile "$GITHUB_WORKSPACE/npm.crt"
       env:
         NPM_CACHE_CERT: "${{inputs.npm-cache-cert}}"
 
     - name: "Npm: Clear node modules"
       shell: bash
-      run: rm -rf "${{github.workspace}}/node_modules"
+      run: rm -rf "$GITHUB_WORKSPACE/node_modules"
 
     - name: "NPM: Force registry before restore"
       if: inputs.npm-registry != ''
@@ -163,8 +168,11 @@ runs:
     - name: "NPM: Show Package Settings"
       shell: bash
       run: |
-        echo "SIGNING: ${{inputs.npm-signing}}"
-        echo "PROJECT_TO_PUBLISH: ${{inputs.project-to-publish}}"
+        echo "SIGNING: $NPM_SIGNING"
+        echo "PROJECT_TO_PUBLISH: $PROJECT_TO_PUBLISH"
+      env:
+        NPM_SIGNING: "${{inputs.npm-signing}}"
+        PROJECT_TO_PUBLISH: "${{inputs.project-to-publish}}"
 
     - if: |
         inputs.npm-signing == 'true' &&
@@ -189,9 +197,12 @@ runs:
       name: "NPM: Check Package"
       shell: bash
       run: |
-          ls -la "${{github.workspace}}"
+          ls -la "$GITHUB_WORKSPACE"
           echo "-----------------------"
-          ls "${{github.workspace}}/dist/${{inputs.project-to-publish}}-${{inputs.build-version}}.nupkg"
+          ls "$GITHUB_WORKSPACE/dist/$PROJECT_TO_PUBLISH-$BUILD_VERSION.nupkg"
+      env:
+        PROJECT_TO_PUBLISH: "${{inputs.project-to-publish}}"
+        BUILD_VERSION: "${{inputs.build-version}}"
 
     - if: |
           inputs.npm-signing == 'true' &&
