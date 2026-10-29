@@ -92,7 +92,8 @@ runs:
       working-directory: "${{github.workspace}}/src"
       shell: bash
       run: |
-        r=5
+        attempts=5
+        r=$attempts
         delay=30
         until dotnet restore \
               --warnaserror \
@@ -100,7 +101,7 @@ runs:
               -p:NoWarn=MSB4241 \
               -p:SuppressNETCoreSdkPreviewMessage=true
         do
-          ((--r)) || exit 1
+          ((--r)) || { echo "::error::Dotnet restore failed after ${attempts} attempts"; exit 1; }
           echo "⚠️ Restore failed, retrying in ${delay}s ($r attempt(s) left)"
           sleep "${delay}"
         done
