@@ -32,6 +32,11 @@ runs:
           const outputName = process.env.OUTPUT_NAME;
           const resultsDir = path.join(process.env.GITHUB_WORKSPACE, 'results');
 
+          if (!outputName || outputName === '.' || outputName === '..' || path.basename(outputName) !== outputName) {
+            core.setFailed('❌ output must be a plain file name inside the results folder');
+            return;
+          }
+
           const toRegExp = glob => new RegExp(`^${glob.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.')}$`);
           const pattern = toRegExp(globPattern);
           const excluded = excludePattern ? toRegExp(excludePattern) : null;
