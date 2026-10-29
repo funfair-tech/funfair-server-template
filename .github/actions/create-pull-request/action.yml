@@ -52,6 +52,14 @@ runs:
     - name: "Create Pull Request"
       id: create
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        SOURCE_BRANCH: "${{inputs.source-branch}}"
+        DESTINATION_BRANCH: "${{inputs.destination-branch}}"
+        TITLE: "${{inputs.title}}"
+        BODY: "${{inputs.body}}"
+        DRAFT: "${{inputs.draft}}"
+        ASSIGNEES: "${{inputs.assignees}}"
+        LABELS: "${{inputs.labels}}"
       with:
         github-token: "${{inputs.github-token}}"
         script: |
@@ -154,11 +162,3 @@ runs:
           core.setOutput('pr-number', String(pr.number));
           core.setOutput('pr-url', pr.html_url);
           core.setOutput('has-changed-files', String(pr.changed_files > 0));
-      env:
-        SOURCE_BRANCH: "${{inputs.source-branch}}"
-        DESTINATION_BRANCH: "${{inputs.destination-branch}}"
-        TITLE: "${{inputs.title}}"
-        BODY: "${{inputs.body}}"
-        DRAFT: "${{inputs.draft}}"
-        ASSIGNEES: "${{inputs.assignees}}"
-        LABELS: "${{inputs.labels}}"

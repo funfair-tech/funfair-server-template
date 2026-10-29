@@ -158,8 +158,8 @@ runs:
   steps:
 
     - name: "Check Repo Visibility"
-      uses: ./.github/actions/check-repo-visibility
       id: visibility
+      uses: ./.github/actions/check-repo-visibility
 
     - name: "Determine Repo Visibility Label"
       id: repo-visibility
@@ -225,9 +225,9 @@ runs:
 
     - name: "Check Files Results"
       shell: bash
+      run: echo "$CHECK_FILES_OUTPUTS"
       env:
         CHECK_FILES_OUTPUTS: "${{ toJSON(steps.check_files.outputs) }}"
-      run: echo "$CHECK_FILES_OUTPUTS"
 
     - name: "Validate CloudFormation template"
       if: |-
@@ -278,12 +278,12 @@ runs:
     - name: "Check Build Tools Requirements"
       id: build_tools
       shell: bash
+      run: |
+        [[ "$DOTNET_EXIST" == 'true' || "$NPM_EXIST_SRC" == 'true' || "$NPM_EXIST_ROOT" == 'true' ]] && echo 'BUILD_ENV=true' >> "$GITHUB_OUTPUT" || echo 'BUILD_ENV=false' >> "$GITHUB_OUTPUT"
       env:
         DOTNET_EXIST: "${{steps.check_files.outputs.DOTNET_EXIST}}"
         NPM_EXIST_SRC: "${{steps.check_files.outputs.NPM_EXIST_SRC}}"
         NPM_EXIST_ROOT: "${{steps.check_files.outputs.NPM_EXIST_ROOT}}"
-      run: |
-        [[ "$DOTNET_EXIST" == 'true' || "$NPM_EXIST_SRC" == 'true' || "$NPM_EXIST_ROOT" == 'true' ]] && echo 'BUILD_ENV=true' >> "$GITHUB_OUTPUT" || echo 'BUILD_ENV=false' >> "$GITHUB_OUTPUT"
 # yamllint enable rule:line-length
 
     - name: "Install Multi-push tool"

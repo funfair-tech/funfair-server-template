@@ -37,8 +37,6 @@ runs:
 
     - name: "Check nuget-feed-type is valid"
       shell: bash
-      env:
-        NUGET_FEED_TYPE: "${{inputs.nuget-feed-type}}"
       run: |
         case "${NUGET_FEED_TYPE}" in
           ''|'NUGET'|'SLEET') ;;
@@ -47,6 +45,8 @@ runs:
             exit 1
             ;;
         esac
+      env:
+        NUGET_FEED_TYPE: "${{inputs.nuget-feed-type}}"
 
     - name: "Dotnet: Pack tool"
       working-directory: "${{github.workspace}}/src"

@@ -115,8 +115,8 @@ jobs:
           secret-value: "${{secrets.PR_CREATE_TOKEN}}"
 
       - name: "Create Pull Request"
-        if: steps.findPr.outputs.number == ''
         id: open-pr
+        if: steps.findPr.outputs.number == ''
         uses: ./.github/actions/create-pull-request
         with:
           github-token: "${{secrets.PR_CREATE_TOKEN}}"

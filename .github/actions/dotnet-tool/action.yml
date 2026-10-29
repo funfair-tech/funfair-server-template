@@ -17,9 +17,6 @@ runs:
     - name: "Install dotnet tool"
       shell: bash
       working-directory: "${{ github.workspace }}"
-      env:
-        TOOL_NAME: "${{inputs.tool-name}}"
-        TOOL_VERSION: "${{inputs.tool-version}}"
       run: |
         VERSION_ARGS=()
         [ -n "$TOOL_VERSION" ] && [ "$TOOL_VERSION" != 'latest' ] && VERSION_ARGS=(--version "$TOOL_VERSION")
@@ -28,3 +25,6 @@ runs:
           ((--r)) || exit 1
           sleep 30
         done
+      env:
+        TOOL_NAME: "${{inputs.tool-name}}"
+        TOOL_VERSION: "${{inputs.tool-version}}"

@@ -131,7 +131,7 @@ jobs:
 
       - name: "Build Version"
         shell: bash
-        env:
-          BUILD_VERSION: "${{env.BUILD_VERSION}}"
         run: |
           echo "::notice::Version: $BUILD_VERSION"
+        env:
+          BUILD_VERSION: "${{env.BUILD_VERSION}}"
