@@ -152,7 +152,11 @@ runs:
       id: resolve-pr
       if: "${{ !cancelled() && steps.build-table.outputs.table-file != '' }}"
       shell: bash
-      run: echo "number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+      run: |
+        case "$PR_NUMBER" in
+          *$'\n'*|*$'\r'*) echo "::error::pr-number must not contain newlines"; exit 1;;
+        esac
+        echo "number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
       env:
         PR_NUMBER: >-
           ${{ inputs.pr-number != '' && inputs.pr-number ||

@@ -32,6 +32,9 @@ runs:
       id: cache-status
       shell: bash
       run: |
+        case "$USE_NUGET_CACHE_INPUT" in
+          *$'\n'*|*$'\r'*) echo "::error::use-nuget-cache must not contain newlines"; exit 1;;
+        esac
         use_cache="$USE_NUGET_CACHE_INPUT"
         if [[ -z "$use_cache" || "$CACHE_RUNNER_ENVIRONMENT" != "self-hosted" ]]; then
           use_cache="false"
@@ -46,6 +49,15 @@ runs:
       if: steps.cache-status.outputs.use-nuget-cache == 'true'
       shell: bash
       run: |
+        reject_newlines() {
+          case "$2" in
+            *$'\n'*|*$'\r'*) echo "::error::$1 must not contain newlines"; exit 1;;
+          esac
+        }
+        reject_newlines "nuget-baget-cache" "$NUGET_BAGET_CACHE"
+        reject_newlines "prerelease-baget-cache" "$PRERELEASE_BAGET_CACHE"
+        reject_newlines "release-baget-cache" "$RELEASE_BAGET_CACHE"
+        reject_newlines "npm-cache" "$NPM_CACHE"
         {
           echo "NUGET_BAGET_CACHE=${NUGET_BAGET_CACHE}"
           echo "PRERELEASE_BAGET_CACHE=${PRERELEASE_BAGET_CACHE}"

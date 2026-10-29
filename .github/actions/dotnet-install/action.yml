@@ -133,6 +133,9 @@ runs:
     - name: "Set dotnet environment"
       shell: bash
       run: |
+        case "$SDK_VERSIONS_KEY" in
+          *$'\n'*|*$'\r'*) echo "::error::Resolved dotnet SDK versions must not contain newlines"; exit 1;;
+        esac
         DOTNET_DIR="$GITHUB_WORKSPACE/.dotnet/$SDK_VERSIONS_KEY"
         NUGET_PKGS="$GITHUB_WORKSPACE/.nuget/packages"
         {
