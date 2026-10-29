@@ -206,7 +206,7 @@ jobs:
           project-to-publish: "${{vars.PROJECT_TO_PUBLISH}}"
           docker-app-owner: "${{vars.DOCKER_APP_OWNER}}"
           docker-app-name: "${{vars.DOCKER_APP_NAME}}"
-          build-tag: latest
+          build-tag: "latest"
           cloud-formation-deploy: "${{vars.CLOUD_FORMATION_DEPLOY}}"
           cloud-formation-stack: "${{vars.CLOUD_FORMATION_STACK}}"
           github-token: "${{secrets.SOURCE_PUSH_TOKEN}}"
