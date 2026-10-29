@@ -109,11 +109,13 @@ runs:
     - name: "Npm: Config"
       shell: bash
       run: |
-        npm config set registry "$NPM_REGISTRY"
-        npm config set loglevel error
-        npm config set fetch-retries 3
-        npm config set fetch-retry-mintimeout 15000
-        npm config set fetch-retry-maxtimeout 90000
+        {
+          [ -n "$NPM_REGISTRY" ] && echo "NPM_CONFIG_REGISTRY=$NPM_REGISTRY"
+          echo "NPM_CONFIG_LOGLEVEL=error"
+          echo "NPM_CONFIG_FETCH_RETRIES=3"
+          echo "NPM_CONFIG_FETCH_RETRY_MINTIMEOUT=15000"
+          echo "NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT=90000"
+        } >> "$GITHUB_ENV"
       env:
         NPM_REGISTRY: "${{inputs.npm-registry}}"
 
