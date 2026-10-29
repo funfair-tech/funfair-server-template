@@ -243,7 +243,7 @@ runs:
         inputs.docker-app-name != ''
       uses: ./.github/actions/cloudformation-validate
       with:
-        template: "cloudformation.json"
+        template: "${{github.workspace}}/cloudformation.json"
         aws-access-key-id: "${{inputs.aws-access-key-id}}"
         aws-secret-access-key: "${{inputs.aws-secret-access-key}}"
         aws-region: "${{inputs.aws-region}}"
