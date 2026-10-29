@@ -37,7 +37,7 @@ runs:
       shell: bash
       run: |
         echo "Looking for dacpac"
-        DACPAC="$(find "${{github.workspace}}/src" -type f -iname "*.dacpac" | head -1)"
+        DACPAC="$(find "$GITHUB_WORKSPACE/src" -type f -iname "*.dacpac" | head -1)"
         echo "Found: $DACPAC"
         [ -z "$DACPAC" ] && echo "Error: DACPAC not found!" && exit 1
         echo "DACPAC=$DACPAC" >> "$GITHUB_OUTPUT"
@@ -63,8 +63,8 @@ runs:
             /tp:"$SQL_PASSWORD" \
             /tec:false \
             /d:true \
-            /TargetTimeout:${{env.TIMEOUT}} \
-            /p:CommandTimeout=${{env.TIMEOUT}} \
+            /TargetTimeout:"$TIMEOUT" \
+            /p:CommandTimeout="$TIMEOUT" \
             /p:BackupDatabaseBeforeChanges=False \
             /p:BlockOnPossibleDataLoss=True \
             /p:DropObjectsNotInSource=True \
