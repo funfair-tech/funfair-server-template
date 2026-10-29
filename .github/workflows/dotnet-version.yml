@@ -142,6 +142,13 @@ jobs:
           fi
           CURRENT_VER=$(jq -r '.sdk.version' src/global.json)
           echo "Latest available SDK: $LATEST (current: $CURRENT_VER)"
+          reject_newlines() {
+            case "$2" in
+              *$'\n'*|*$'\r'*) echo "::error::$1 must not contain newlines"; exit 1;;
+            esac
+          }
+          reject_newlines "Latest SDK version" "$LATEST"
+          reject_newlines "src/global.json sdk.version" "$CURRENT_VER"
           {
             echo "LATEST_RELEASE_VERSION=$LATEST"
             echo "CURRENT_VERSION=$CURRENT_VER"

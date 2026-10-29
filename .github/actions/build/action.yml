@@ -391,11 +391,12 @@ runs:
       working-directory: "${{github.workspace}}"
       run: |
         if [ -f RELEASE_NOTES.md ]; then
+          delim="RELEASE_NOTES_EOF_$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
           {
-            echo "RELEASE_NOTES<<RELEASE_NOTES_EOF"
+            echo "RELEASE_NOTES<<$delim"
             cat RELEASE_NOTES.md
             echo
-            echo "RELEASE_NOTES_EOF"
+            echo "$delim"
           } >> "$GITHUB_OUTPUT"
         fi
 
