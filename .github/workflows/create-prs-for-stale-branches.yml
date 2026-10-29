@@ -39,7 +39,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_RUNNER_NAME=$RUNNER_NAME"
             echo "ACTIVE_HOSTNAME=$HOSTNAME"
             echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
@@ -47,8 +47,8 @@ jobs:
       - name: "Info"
         shell: bash
         run: |
-          echo "Repo: ${{github.repository}}"
-          echo "Owner: ${{github.repository_owner}}"
+          echo "Repo: $GITHUB_REPOSITORY"
+          echo "Owner: $GITHUB_REPOSITORY_OWNER"
 
       - name: "Checkout Source"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -145,7 +145,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_RUNNER_NAME=$RUNNER_NAME"
             echo "ACTIVE_HOSTNAME=$HOSTNAME"
             echo "ACTIVE_USER=$USER"
           } >> "$GITHUB_ENV"
@@ -171,7 +171,10 @@ jobs:
 
       - name: "Display Found PR"
         shell: bash
-        run: echo "Pull Request ${{steps.find-pull-request.outputs.number}} (${{steps.find-pull-request.outputs.head-sha}})"
+        run: echo "Pull Request $PR_NUMBER ($PR_HEAD_SHA)"
+        env:
+          PR_NUMBER: "${{steps.find-pull-request.outputs.number}}"
+          PR_HEAD_SHA: "${{steps.find-pull-request.outputs.head-sha}}"
 
       - name: "Check Branch Status"
         if: steps.find-pull-request.outputs.number == ''
