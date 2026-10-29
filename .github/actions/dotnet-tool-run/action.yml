@@ -21,10 +21,11 @@ runs:
       working-directory: "${{ inputs.working-directory }}"
       run: |
         EXIT_CODE=0
-        timeout 10m dotnet tool run --allow-roll-forward ${{inputs.tool-name}} ${{inputs.tool-arguments}} || EXIT_CODE=$?
+        timeout 10m dotnet tool run --allow-roll-forward "$TOOL_NAME" ${{inputs.tool-arguments}} || EXIT_CODE=$?
         if [ "$EXIT_CODE" -eq 124 ]; then
-          echo "::error::❌ ${{inputs.tool-name}} timed out after 10 minutes"
+          echo "::error::❌ $TOOL_NAME timed out after 10 minutes"
         fi
         exit "$EXIT_CODE"
       env:
         TMP: "${{runner.temp}}"
+        TOOL_NAME: "${{inputs.tool-name}}"
