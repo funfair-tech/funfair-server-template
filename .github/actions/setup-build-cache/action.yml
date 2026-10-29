@@ -33,9 +33,10 @@ runs:
       shell: bash
       env:
         USE_NUGET_CACHE_INPUT: "${{inputs.use-nuget-cache}}"
+        CACHE_RUNNER_ENVIRONMENT: "${{runner.environment}}"
       run: |
         use_cache="$USE_NUGET_CACHE_INPUT"
-        if [[ -z "$use_cache" || "${{runner.environment}}" != "self-hosted" ]]; then
+        if [[ -z "$use_cache" || "$CACHE_RUNNER_ENVIRONMENT" != "self-hosted" ]]; then
           use_cache="false"
         fi
         echo "USE_NUGET_CACHE=${use_cache}" >> "$GITHUB_ENV"
