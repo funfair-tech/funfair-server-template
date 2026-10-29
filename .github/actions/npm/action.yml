@@ -46,8 +46,8 @@ runs:
       env:
         NVMRC_HASH: "${{hashFiles('.nvmrc')}}"
 
-    - if: steps.node_files.outputs.NVMRC_EXIST == 'true'
-      name: "NPM: Setup Node.js (from nvm)"
+    - name: "NPM: Setup Node.js (from nvm)"
+      if: steps.node_files.outputs.NVMRC_EXIST == 'true'
       uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
         node-version-file: .nvmrc
@@ -55,8 +55,8 @@ runs:
         package-manager-cache: false
         ## registry-url: "${{inputs.npm-registry}}"
 
-    - if: steps.node_files.outputs.NVMRC_EXIST == 'false'
-      name: "NPM: Setup Node.js (node version)"
+    - name: "NPM: Setup Node.js (node version)"
+      if: steps.node_files.outputs.NVMRC_EXIST == 'false'
       uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
         node-version: '22'
@@ -134,12 +134,12 @@ runs:
       if: inputs.npm-registry != ''
       working-directory: "${{steps.build_context.outputs.WORK_DIR}}"
       shell: bash
-      env:
-        NPM_REGISTRY: "${{inputs.npm-registry}}"
       run: |
         sed -i "s|https://registry.npmjs.org/|${NPM_REGISTRY}|g" package-lock.json
         sed -i "s|http://npm.local:5554/|${NPM_REGISTRY}|g" package-lock.json
         sed -i "s|https://npm.local:5555/|${NPM_REGISTRY}|g" package-lock.json
+      env:
+        NPM_REGISTRY: "${{inputs.npm-registry}}"
 
 # Note that NPM will gladly tell you to add --use-system-ca to use the certs in the system store
 # but it doesn't actually work...  So instead we have to add the cert to the npm config above
@@ -147,12 +147,12 @@ runs:
     - name: "NPM: Install dependencies"
       working-directory: "${{steps.build_context.outputs.WORK_DIR}}"
       shell: bash
-      env:
-        NPM_REGISTRY: "${{inputs.npm-registry}}"
       run: |
         ARGS=(--ignore-scripts --no-fund --no-audit --no-progress)
         [ -n "$NPM_REGISTRY" ] && ARGS+=(--prefer-offline --registry="$NPM_REGISTRY")
         npm install "${ARGS[@]}"
+      env:
+        NPM_REGISTRY: "${{inputs.npm-registry}}"
 
     # Running tests doesn't work as they're crap
     # - name: "NPM: Test"
@@ -174,10 +174,10 @@ runs:
         NPM_SIGNING: "${{inputs.npm-signing}}"
         PROJECT_TO_PUBLISH: "${{inputs.project-to-publish}}"
 
-    - if: |
+    - name: "NPM: Build Package"
+      if: |
         inputs.npm-signing == 'true' &&
         inputs.project-to-publish != ''
-      name: "NPM: Build Package"
       uses: ./.github/actions/dotnet-tool-run
       with:
         working-directory: "${{github.workspace}}"
@@ -197,10 +197,10 @@ runs:
   #            --warnings-as-error
   #            --optimise \
 
-    - if: |
+    - name: "NPM: Check Package"
+      if: |
         inputs.npm-signing == 'true' &&
         inputs.project-to-publish != ''
-      name: "NPM: Check Package"
       shell: bash
       run: |
           ls -la "$GITHUB_WORKSPACE"
@@ -210,19 +210,19 @@ runs:
         PROJECT_TO_PUBLISH: "${{inputs.project-to-publish}}"
         BUILD_VERSION: "${{inputs.build-version}}"
 
-    - if: |
+    - name: "NPM: Create Store Signing Wallet"
+      id: store-signing-wallet
+      if: |
           inputs.npm-signing == 'true' &&
           inputs.project-to-publish != ''
-      name: "NPM: Create Store Signing Wallet"
       uses: ./.github/actions/save-secret-as-file
-      id: store-signing-wallet
       with:
         secret: "${{inputs.npm-package-store-signing-wallet}}"
 
-    - if: |
+    - name: "NPM: Store Sign Package"
+      if: |
         inputs.npm-signing == 'true' &&
         inputs.project-to-publish != ''
-      name: "NPM: Store Sign Package"
       uses: ./.github/actions/dotnet-tool-run
       with:
         working-directory: "${{github.workspace}}"

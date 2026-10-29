@@ -164,8 +164,8 @@ jobs:
           secret-value: "${{secrets.SOURCE_PUSH_TOKEN}}"
 
       - name: "Find Existing PR"
-        uses: ./.github/actions/find-pull-request
         id: find-pull-request
+        uses: ./.github/actions/find-pull-request
         with:
           branch: "${{env.BRANCH}}"
 
@@ -185,11 +185,11 @@ jobs:
 
       # Ahead of default branch (the default branch itself is excluded from the matrix above), and no pre-existing PR then create one.
       - name: "Read PR Template"
+        id: pr-template
         if: |-
           steps.find-pull-request.outputs.number == ''
           && matrix.ahead != 0
           && matrix.dayssinceupdate > 7
-        id: pr-template
         uses: ./.github/actions/read-file
         with:
           path: ./.github/PULL_REQUEST_TEMPLATE.md
@@ -205,11 +205,11 @@ jobs:
           secret-value: "${{secrets.PR_CREATE_TOKEN}}"
 
       - name: "Create PR"
+        id: open-pr
         if: |-
           steps.find-pull-request.outputs.number == ''
           && matrix.ahead != 0
           && matrix.dayssinceupdate > 7
-        id: open-pr
         uses: ./.github/actions/create-pull-request
         with:
           github-token: "${{secrets.PR_CREATE_TOKEN}}"

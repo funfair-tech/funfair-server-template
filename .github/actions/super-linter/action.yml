@@ -16,11 +16,11 @@ runs:
     - name: "Validate Mode"
       if: inputs.mode != 'pr' && inputs.mode != 'sql'
       shell: bash
-      env:
-        MODE: "${{inputs.mode}}"
       run: |
         echo "::error::Unsupported mode '$MODE' (expected 'pr' or 'sql')"
         exit 1
+      env:
+        MODE: "${{inputs.mode}}"
 
     # File discovery is fixed per mode rather than a caller input, as each mode has a known
     # checkout pattern.

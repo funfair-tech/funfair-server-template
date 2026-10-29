@@ -31,9 +31,6 @@ runs:
     - name: "Determine cache status"
       id: cache-status
       shell: bash
-      env:
-        USE_NUGET_CACHE_INPUT: "${{inputs.use-nuget-cache}}"
-        CACHE_RUNNER_ENVIRONMENT: "${{runner.environment}}"
       run: |
         use_cache="$USE_NUGET_CACHE_INPUT"
         if [[ -z "$use_cache" || "$CACHE_RUNNER_ENVIRONMENT" != "self-hosted" ]]; then
@@ -41,15 +38,13 @@ runs:
         fi
         echo "USE_NUGET_CACHE=${use_cache}" >> "$GITHUB_ENV"
         echo "use-nuget-cache=${use_cache}" >> "$GITHUB_OUTPUT"
+      env:
+        USE_NUGET_CACHE_INPUT: "${{inputs.use-nuget-cache}}"
+        CACHE_RUNNER_ENVIRONMENT: "${{runner.environment}}"
 
     - name: "Enable Local nuget/npm feeds if caching"
       if: steps.cache-status.outputs.use-nuget-cache == 'true'
       shell: bash
-      env:
-        NUGET_BAGET_CACHE: "${{inputs.nuget-baget-cache}}"
-        PRERELEASE_BAGET_CACHE: "${{inputs.prerelease-baget-cache}}"
-        RELEASE_BAGET_CACHE: "${{inputs.release-baget-cache}}"
-        NPM_CACHE: "${{inputs.npm-cache}}"
       run: |
         {
           echo "NUGET_BAGET_CACHE=${NUGET_BAGET_CACHE}"
@@ -59,3 +54,8 @@ runs:
             echo "NPM_REGISTRY=${NPM_CACHE}"
           fi
         }>> "$GITHUB_ENV"
+      env:
+        NUGET_BAGET_CACHE: "${{inputs.nuget-baget-cache}}"
+        PRERELEASE_BAGET_CACHE: "${{inputs.prerelease-baget-cache}}"
+        RELEASE_BAGET_CACHE: "${{inputs.release-baget-cache}}"
+        NPM_CACHE: "${{inputs.npm-cache}}"
