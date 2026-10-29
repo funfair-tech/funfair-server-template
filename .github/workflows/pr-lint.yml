@@ -208,7 +208,11 @@ jobs:
         with:
           working-directory: "${{github.workspace}}"
           tool-name: "changelog"
-          tool-arguments: "--changelog \"${{github.workspace}}/CHANGELOG.md\" --check-insert \"origin/${{github.base_ref}}\""
+          tool-arguments: |
+            --changelog
+            ${{github.workspace}}/CHANGELOG.md
+            --check-insert
+            origin/${{github.base_ref}}
 
   # @@required: merge
   does-not-contain-secrets:
@@ -477,7 +481,10 @@ jobs:
         with:
           working-directory: "${{github.workspace}}"
           tool-name: "changelog"
-          tool-arguments: "--changelog \"${{github.workspace}}/CHANGELOG.md\" --lint"
+          tool-arguments: |
+            --changelog
+            ${{github.workspace}}/CHANGELOG.md
+            --lint
 
   # @@required: main
   lint-code:
