@@ -20,7 +20,7 @@ runs:
       shell: bash
       run: |
         VENV_BASE="$GITHUB_WORKSPACE/.cfn-lint"
-        VENV_RUN="${{github.sha}}-${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
+        VENV_RUN="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER-$GITHUB_RUN_ATTEMPT"
         echo "CFN_LINT_VENV=$VENV_BASE/$VENV_RUN" >> "$GITHUB_ENV"
 
     - name: "Create cfn-lint virtual environment"
