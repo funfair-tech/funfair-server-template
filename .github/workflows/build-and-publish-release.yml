@@ -108,9 +108,6 @@ jobs:
         id: build-version
         shell: bash
         run: |
-          case "$BUILD_VERSION" in
-            *$'\n'*|*$'\r'*) echo "::error::BUILD_VERSION must not contain newlines"; exit 1;;
-          esac
           echo "build-version=$BUILD_VERSION" >> "$GITHUB_OUTPUT"
 
   build-release:
