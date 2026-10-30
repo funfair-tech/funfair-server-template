@@ -49,10 +49,12 @@ jobs:
       - name: "Check Required Secrets"
         shell: bash
         run: |
-          if [ -z "${{secrets.SOURCE_PUSH_TOKEN}}" ]; then
+          if [ -z "$SOURCE_PUSH_TOKEN" ]; then
             echo "::error::SOURCE_PUSH_TOKEN is required but not set"
             exit 1
           fi
+        env:
+          SOURCE_PUSH_TOKEN: "${{secrets.SOURCE_PUSH_TOKEN}}"
 
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -63,11 +65,11 @@ jobs:
         shell: bash
         run: |
           {
-            echo "ACTIVE_RUNNER_NAME=${{runner.name}}"
+            echo "ACTIVE_RUNNER_NAME=$RUNNER_NAME"
             echo "ACTIVE_HOSTNAME=$HOSTNAME"
             echo "ACTIVE_USER=$USER"
-            echo "TEMP=${{runner.temp}}"
-            echo "TMP=${{runner.temp}}"
+            echo "TEMP=$RUNNER_TEMP"
+            echo "TMP=$RUNNER_TEMP"
           } >> "$GITHUB_ENV"
 
       - name: "Checkout Source"
@@ -106,9 +108,10 @@ jobs:
         id: build-version
         shell: bash
         run: |
+          case "$BUILD_VERSION" in
+            *$'\n'*|*$'\r'*) echo "::error::BUILD_VERSION must not contain newlines"; exit 1;;
+          esac
           echo "build-version=$BUILD_VERSION" >> "$GITHUB_OUTPUT"
-        env:
-          BUILD_VERSION: "${{env.BUILD_VERSION}}"
 
   build-release:
 
