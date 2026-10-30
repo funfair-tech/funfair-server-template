@@ -555,7 +555,7 @@ jobs:
       - name: "Poutine"
         uses: boostsecurityio/poutine-action@e240ebd3eff8b2db5a8e5f6b28f58739d7db2247 # v1.1.4
         with:
-          format: 'sarif'
+          format: "sarif"
           output: "${{github.workspace}}/results/poutine.sarif"
 
       - name: "Summarise Poutine findings"

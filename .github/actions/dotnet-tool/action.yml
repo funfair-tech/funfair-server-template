@@ -9,7 +9,7 @@ inputs:
   tool-version:
     description: "Tool version to install"
     required: false
-    default: 'latest'
+    default: "latest"
 
 runs:
   using: "composite"
