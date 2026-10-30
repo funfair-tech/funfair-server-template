@@ -59,7 +59,7 @@ runs:
       if: steps.node_files.outputs.NVMRC_EXIST == 'false'
       uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
-        node-version: '22'
+        node-version: "22"
         check-latest: true
         package-manager-cache: false
         ## registry-url: "${{inputs.npm-registry}}"
