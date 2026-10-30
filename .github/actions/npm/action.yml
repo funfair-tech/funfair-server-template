@@ -76,10 +76,10 @@ runs:
     #      uses: actions/cache@v5.0.5
     #      id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
     #      with:
-    #        path: ${{ steps.npm-cache-dir.outputs.dir }}
-    #        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #        path: ${{steps.npm-cache-dir.outputs.dir}}
+    #        key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json')}}
     #        restore-keys: |
-    #          ${{ runner.os }}-node-
+    #          ${{runner.os}}-node-
     #    - name: "Npm Cache Status"
     #      uses: actions/github-script@v9.0.0
     #      with:
