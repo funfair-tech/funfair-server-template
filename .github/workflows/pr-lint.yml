@@ -149,7 +149,6 @@ jobs:
       github.event.pull_request.draft == false &&
       github.actor != 'dependabot[bot]' &&
       !endsWith(github.repository, '-template')
-    # As LibGit2Sharp doesn't work on 20.04
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
