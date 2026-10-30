@@ -3,7 +3,7 @@
 name: "!!Deploy: Using Cloudformation"
 on:
   workflow_dispatch:
-    # note MAX inputs = 10
+    # note: workflow_dispatch allows at most 25 inputs
     inputs:
       CLOUD_FORMATION_STACK:
         description: "1. The Cloud Formation stack to deploy as"
