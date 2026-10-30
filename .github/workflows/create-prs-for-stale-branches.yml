@@ -236,7 +236,7 @@ jobs:
           script: |
             core.info(`URL: ${process.env.PR_URL}`);
             core.info(`PR: ${process.env.PR_NUMBER}`);
-            core.info(`CF: ${process.env.HAS_CHANGED_FILES}`);
+            core.info(`Has Changed Files: ${process.env.HAS_CHANGED_FILES}`);
 
       - name: "Update PR Labels"
         if: steps.open-pr.outputs.pr-number != ''
