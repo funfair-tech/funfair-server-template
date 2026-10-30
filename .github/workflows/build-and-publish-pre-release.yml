@@ -121,7 +121,7 @@ jobs:
   # @@required: main
   build-pre-release:
 
-    needs: allocate-build-number
+    needs: [allocate-build-number]
 
     runs-on: >-
       ${{startsWith(vars.PRE_RELEASE_BUILD_ENVIRONMENT, '[')

@@ -115,7 +115,7 @@ jobs:
 
   build-release:
 
-    needs: allocate-build-number
+    needs: [allocate-build-number]
 
     runs-on: >-
       ${{startsWith(vars.RELEASE_BUILD_ENVIRONMENT, '[')

@@ -118,7 +118,7 @@ jobs:
       commitmsg: "${{steps.set-matrix.outputs.commitmsg}}"
 
   check-branch:
-    needs: build-matrix
+    needs: [build-matrix]
     if: needs.build-matrix.outputs.haschanges == 'true'
     runs-on: [self-hosted, linux, build]
 
