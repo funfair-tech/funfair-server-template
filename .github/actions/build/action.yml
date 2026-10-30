@@ -324,8 +324,11 @@ runs:
       if: inputs.build-version != ''
       shell: bash
       run: |
+        case "$BUILD_VERSION_INPUT" in
+          *$'\n'*|*$'\r'*) echo "::error::build-version must not contain newlines"; exit 1;;
+        esac
         echo "BUILD_VERSION=$BUILD_VERSION_INPUT" >> "$GITHUB_ENV"
-        echo "::notice::Using allocated build version: $BUILD_VERSION_INPUT"
+        echo "::notice::Using allocated build version: ${BUILD_VERSION_INPUT//[$'\r\n']/ }"
       env:
         BUILD_VERSION_INPUT: "${{inputs.build-version}}"
 
