@@ -147,17 +147,14 @@ jobs:
             echo "::error::Failed to read sdk.version from src/global.json (file missing, invalid JSON, or sdk.version missing or null)"
             exit 1
           }
+          case "$CURRENT_VER" in
+            *$'\n'*|*$'\r'*) echo "::error::src/global.json sdk.version must not contain newlines"; exit 1;;
+          esac
           echo "Latest available SDK: ${LATEST//[$'\r\n']/ } (current: $CURRENT_VER)"
-          reject_newlines() {
-            case "$2" in
-              *$'\n'*|*$'\r'*) echo "::error::$1 must not contain newlines"; exit 1;;
-            esac
-          }
           if [[ ! "$LATEST" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]; then
             echo "::error::Latest SDK version from releases-index.json must be MAJOR.MINOR.PATCH[-PRERELEASE]"
             exit 1
           fi
-          reject_newlines "src/global.json sdk.version" "$CURRENT_VER"
           {
             echo "LATEST_RELEASE_VERSION=$LATEST"
             echo "CURRENT_VERSION=$CURRENT_VER"
