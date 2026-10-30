@@ -246,7 +246,7 @@ runs:
       shell: bash
       run: echo "$CHECK_FILES_OUTPUTS"
       env:
-        CHECK_FILES_OUTPUTS: "${{ toJSON(steps.check_files.outputs) }}"
+        CHECK_FILES_OUTPUTS: "${{toJSON(steps.check_files.outputs)}}"
 
     - name: "Validate CloudFormation template"
       if: |-
