@@ -66,8 +66,7 @@ jobs:
             const { data: repo } = await github.rest.repos.get({ owner: context.repo.owner, repo: context.repo.repo });
             const defaultBranch = repo.default_branch;
 
-            const [{ stdout: branchList }, { stdout: commitMsgRaw }, { stdout: lastUpdateRaw }] = await Promise.all([
-              exec.getExecOutput('git', ['branch', '--remote', '--format=%(refname:short)']),
+            const [{ stdout: commitMsgRaw }, { stdout: branchRefsRaw }] = await Promise.all([
               exec.getExecOutput('git', ['log', '-1', '--pretty=%s', `origin/${defaultBranch}`]),
               exec.getExecOutput('git', [
                 'for-each-ref',
@@ -76,31 +75,33 @@ jobs:
               ]),
             ]);
 
-            const branches = branchList
+            const branchRefs = branchRefsRaw
               .split('\n')
-              .map(line => line.trim().match(/^origin\/(.+)$/)?.[1])
-              .filter(branch => branch && branch !== 'HEAD' && !branch.startsWith('release/') && !branch.startsWith('hotfix/') && branch !== defaultBranch);
-            const branchSet = new Set(branches);
+              .map(line => line.trim().split(' '))
+              .map(([ref, timestamp]) => ({
+                branch: ref?.match(/^origin\/(.+)$/)?.[1],
+                lastUpdateSeconds: Number(timestamp),
+              }))
+              .filter(({ branch }) =>
+                branch && branch !== 'HEAD' && !branch.startsWith('release/') && !branch.startsWith('hotfix/') && branch !== defaultBranch);
+
+            const undated = branchRefs.filter(({ lastUpdateSeconds }) => !Number.isInteger(lastUpdateSeconds)).map(({ branch }) => branch);
+            if (undated.length > 0) {
+              core.setFailed(`❌ Could not read the last commit date for: ${undated.join(', ')}`);
+              return;
+            }
 
             const commitMsg = commitMsgRaw.trim();
-
-            const lastUpdateByBranch = new Map(
-              lastUpdateRaw
-                .split('\n')
-                .map(line => line.trim().split(' '))
-                .filter(([ref]) => ref && branchSet.has(ref.slice('origin/'.length)))
-                .map(([ref, timestamp]) => [ref.slice('origin/'.length), Number(timestamp)]),
-            );
 
             const nowSeconds = Math.floor(Date.now() / 1000);
 
             const matrix = await Promise.all(
-              branches.map(async branch => {
+              branchRefs.map(async ({ branch, lastUpdateSeconds }) => {
                 const compareRef = `origin/${defaultBranch}...origin/${branch}`;
                 const { stdout: countsRaw } = await exec.getExecOutput('git', ['rev-list', '--left-right', '--count', compareRef]);
                 const [behind, ahead] = countsRaw.trim().split(/\s+/);
 
-                const daysSinceUpdate = Math.floor((nowSeconds - lastUpdateByBranch.get(branch)) / 86400);
+                const daysSinceUpdate = Math.floor((nowSeconds - lastUpdateSeconds) / 86400);
 
                 return { branch, ahead, behind, dayssinceupdate: String(daysSinceUpdate) };
               }),
@@ -258,7 +259,7 @@ jobs:
       - name: "Delete Branch"
         if: |-
           steps.find-pull-request.outputs.number == ''
-          && matrix.ahead == '0'
+          && matrix.ahead == 0
           && matrix.dayssinceupdate > 60
         uses: ./.github/actions/delete-branch
         with:
