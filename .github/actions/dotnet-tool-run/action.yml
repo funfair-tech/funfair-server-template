@@ -22,7 +22,7 @@ runs:
   steps:
     - name: "Run dotnet tool (Latest)"
       shell: bash
-      working-directory: "${{ inputs.working-directory }}"
+      working-directory: "${{inputs.working-directory}}"
       run: |
         TOOL_ARGS=()
         TOOL_ARGUMENTS_TEXT="${TOOL_ARGUMENTS%$'\n'}"

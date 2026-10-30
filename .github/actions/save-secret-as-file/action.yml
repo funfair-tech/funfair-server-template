@@ -9,7 +9,7 @@ inputs:
 outputs:
   file:
     description: "The file the secret was written to"
-    value: "${{ steps.generate-filename.outputs.file }}"
+    value: "${{steps.generate-filename.outputs.file}}"
 
 runs:
   using: "composite"
