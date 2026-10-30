@@ -94,7 +94,7 @@ runs:
       run: |
         [ -f "$GITHUB_WORKSPACE/package-lock.json" ] && echo "WORK_DIR=$GITHUB_WORKSPACE" >> "$GITHUB_OUTPUT" && exit 0
         [ -f "$GITHUB_WORKSPACE/src/package-lock.json" ] && echo "WORK_DIR=$GITHUB_WORKSPACE/src" >> "$GITHUB_OUTPUT" && exit 0
-        echo "::error::No package-lock.json found in $GITHUB_WORKSPACE or $GITHUB_WORKSPACE/src"
+        echo "::error::No package-lock.json found in ${GITHUB_WORKSPACE//[$'\r\n']/ } or ${GITHUB_WORKSPACE//[$'\r\n']/ }/src"
         exit 1
 
     - name: "NPM: Show Config"
