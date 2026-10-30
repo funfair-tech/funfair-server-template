@@ -245,17 +245,6 @@ jobs:
           github-token: "${{secrets.SOURCE_PUSH_TOKEN}}"
           pr-number: "${{steps.open-pr.outputs.pr-number}}"
 
-      - name: "Rebase"
-        if: |-
-          steps.find-pull-request.outputs.number == ''
-          && matrix.behind != 0
-          && matrix.ahead != 0
-          && matrix.dayssinceupdate > 7
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            core.info('Rebase?');
-
       - name: "Delete Branch"
         if: |-
           steps.find-pull-request.outputs.number == ''
