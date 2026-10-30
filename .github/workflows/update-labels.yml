@@ -7,8 +7,8 @@ on:
     branches:
       - main
     paths:
-      - '.github/labels.yml'
-      - '.github/workflows/update-labels.yml'
+      - ".github/labels.yml"
+      - ".github/workflows/update-labels.yml"
 
 concurrency:
   group: "${{github.workflow}}-${{github.ref}}"

@@ -5,8 +5,8 @@ name: "Build: Release"
 on:
   push:
     branches:
-      - 'release/*'
-      - 'hotfix/*'
+      - "release/*"
+      - "hotfix/*"
 
 # Don't cancel anything in progress
 concurrency:
@@ -41,9 +41,9 @@ jobs:
     env:
       # Nuget caching
       USE_NUGET_CACHE: "${{vars.USE_NUGET_CACHE}}"
-      NUGET_BAGET_CACHE: ''
-      PRERELEASE_BAGET_CACHE: ''
-      RELEASE_BAGET_CACHE: ''
+      NUGET_BAGET_CACHE: ""
+      PRERELEASE_BAGET_CACHE: ""
+      RELEASE_BAGET_CACHE: ""
 
     steps:
       - name: "Check Required Secrets"
@@ -129,9 +129,9 @@ jobs:
       NPM_CACHE_CERT: "${{vars.NPM_CACHE_CERT}}"
       # Nuget caching
       USE_NUGET_CACHE: "${{vars.USE_NUGET_CACHE}}"
-      NUGET_BAGET_CACHE: ''
-      PRERELEASE_BAGET_CACHE: ''
-      RELEASE_BAGET_CACHE: ''
+      NUGET_BAGET_CACHE: ""
+      PRERELEASE_BAGET_CACHE: ""
+      RELEASE_BAGET_CACHE: ""
 
     steps:
       - name: "Check Required Secrets"
