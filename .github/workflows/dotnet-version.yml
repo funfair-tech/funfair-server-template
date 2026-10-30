@@ -164,11 +164,9 @@ jobs:
         id: upgrade_check
         shell: bash
         run: |
-          CURRENT_VER="$CURRENT_VERSION"
-          LATEST_RELEASE_VER="$LATEST_RELEASE_VERSION"
-          echo "Current: $CURRENT_VER, Latest: $LATEST_RELEASE_VER"
-          HIGHEST=$(printf '%s\n' "$CURRENT_VER" "$LATEST_RELEASE_VER" | sort -V | tail -1)
-          if [[ "$CURRENT_VER" != "$LATEST_RELEASE_VER" && "$HIGHEST" == "$LATEST_RELEASE_VER" ]]; then
+          echo "Current: $CURRENT_VERSION, Latest: $LATEST_RELEASE_VERSION"
+          HIGHEST=$(printf '%s\n' "$CURRENT_VERSION" "$LATEST_RELEASE_VERSION" | sort -V | tail -1)
+          if [[ "$CURRENT_VERSION" != "$LATEST_RELEASE_VERSION" && "$HIGHEST" == "$LATEST_RELEASE_VERSION" ]]; then
             echo "NEW_VERSION=true" >> "$GITHUB_OUTPUT"
           else
             echo "NEW_VERSION=false" >> "$GITHUB_OUTPUT"
@@ -181,8 +179,7 @@ jobs:
         if: steps.upgrade_check.outputs.NEW_VERSION == 'true'
         shell: bash
         run: |
-          VERSION="$LATEST_RELEASE_VERSION"
-          jq --arg ver "$VERSION" '.sdk.version = $ver' src/global.json > src/global.json.tmp && mv src/global.json.tmp src/global.json
+          jq --arg ver "$LATEST_RELEASE_VERSION" '.sdk.version = $ver' src/global.json > src/global.json.tmp && mv src/global.json.tmp src/global.json
         env:
           LATEST_RELEASE_VERSION: "${{steps.latest-dotnet-version.outputs.LATEST_RELEASE_VERSION}}"
 
