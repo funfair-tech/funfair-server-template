@@ -217,8 +217,6 @@ runs:
           ${{github.workspace}}/Wallet.json
           --wallet-password
           ${{inputs.npm-content-package-wallet-password}}
-  #            --warnings-as-error
-  #            --optimise \
 
     - name: "NPM: Check Package"
       if: |
