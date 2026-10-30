@@ -156,9 +156,11 @@ runs:
         # The value is inserted into a sed replacement, where '\', '&' and the '|'
         # delimiter are special, so escape them to keep it literal.
         REPLACEMENT="$(printf '%s' "$REGISTRY" | sed -e 's/[\\&|]/\\&/g')"
-        sed -i "s|https://registry\.npmjs\.org/|${REPLACEMENT}|g" package-lock.json
-        sed -i "s|http://npm\.local:5554/|${REPLACEMENT}|g" package-lock.json
-        sed -i "s|https://npm\.local:5555/|${REPLACEMENT}|g" package-lock.json
+        sed -i \
+          -e "s|https://registry\.npmjs\.org/|${REPLACEMENT}|g" \
+          -e "s|http://npm\.local:5554/|${REPLACEMENT}|g" \
+          -e "s|https://npm\.local:5555/|${REPLACEMENT}|g" \
+          package-lock.json
       env:
         NPM_REGISTRY: "${{inputs.npm-registry}}"
 
