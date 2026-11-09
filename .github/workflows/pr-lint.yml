@@ -297,6 +297,80 @@ jobs:
           TMP: "${{runner.temp}}"
 
   # @@required: merge
+  changelog-has-no-placeholders:
+    if: github.event.pull_request.draft == false
+    runs-on: [self-hosted, linux, build]
+    steps:
+      - name: "Initialise Workspace"
+        if: runner.environment == 'self-hosted'
+        shell: bash
+        run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
+
+      - name: "Set Active Environment"
+        shell: bash
+        run: |
+          {
+            echo "ACTIVE_RUNNER_NAME=$RUNNER_NAME"
+            echo "ACTIVE_HOSTNAME=$HOSTNAME"
+            echo "ACTIVE_USER=$USER"
+          } >> "$GITHUB_ENV"
+
+      - name: "Checkout Source"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          clean: true
+          fetch-depth: 1
+
+      - name: "Check Required Secrets"
+        uses: ./.github/actions/check-required-secret
+        with:
+          secret-name: "SOURCE_PUSH_TOKEN"
+          secret-value: "${{secrets.SOURCE_PUSH_TOKEN}}"
+
+      - name: "Install dotnet"
+        uses: ./.github/actions/dotnet-install
+        with:
+          github-token: "${{secrets.SOURCE_PUSH_TOKEN}}"
+          nuget-public-restore-feed-cache: "${{vars.NUGET_BAGET_CACHE}}"
+          nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
+          nuget-additional-restore-feed-release-cache: ""
+          nuget-additional-restore-feed-prerelease-cache: ""
+          nuget-additional-restore-feed-release: ""
+          nuget-additional-restore-feed-prerelease: ""
+
+      - name: "Install Changelog tool"
+        uses: ./.github/actions/dotnet-tool
+        with:
+          tool-name: "Credfeto.ChangeLog.Cmd"
+          tool-version: "latest"
+
+      - name: "Check Unreleased has no placeholders"
+        shell: bash
+        run: |
+          output=$(timeout 10m dotnet tool run --allow-roll-forward changelog --changelog "$CHANGELOG_FILE" --un-released 2>&1) || {
+            printf '%s\n' "$output"
+            echo "::error::❌ Changelog tool failed to read the [Unreleased] section"
+            exit 1
+          }
+
+          if ! grep -qxF 'Unreleased Content:' <<< "$output"; then
+            printf '%s\n' "$output"
+            echo "::error::❌ Changelog tool output has no 'Unreleased Content:' line"
+            exit 1
+          fi
+
+          placeholders=$(sed '0,/^Unreleased Content:$/d' <<< "$output" | grep -iE '^[[:space:]]*-[[:space:]]*TBD[[:space:]]+-' || true)
+          if [ -n "$placeholders" ]; then
+            printf '%s\n' "$placeholders"
+            echo "::error::❌ Contains placeholder content"
+            exit 1
+          fi
+
+          echo "✅ Changelog [Unreleased] section contains no placeholder content"
+        env:
+          CHANGELOG_FILE: "${{github.workspace}}/CHANGELOG.md"
+
+  # @@required: merge
   does-not-contain-secrets:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux, build]
