@@ -147,8 +147,7 @@ jobs:
   change-log-entry-is-in-unreleased:
     if: |-
       github.event.pull_request.draft == false &&
-      github.actor != 'dependabot[bot]' &&
-      !endsWith(github.repository, '-template')
+      github.actor != 'dependabot[bot]'
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
