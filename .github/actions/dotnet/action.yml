@@ -76,14 +76,18 @@ runs:
     # DOTNET BUILD
     ############################################################################################################
 
+    - name: "Dotnet: Check repo visibility"
+      id: visibility
+      uses: ./.github/actions/check-repo-visibility
+
     - name: "Dotnet: Run build check"
-      if: (!endsWith(github.repository, 'funfair-dotnet-build-check')) && (!endsWith(github.repository, '-template'))
+      if: (!endsWith(github.repository, 'funfair-dotnet-build-check')) && steps.visibility.outputs.is-template != 'true'
       uses: ./.github/actions/dotnet-build-check
       with:
         pre-release-build: "${{inputs.pre-release-build}}"
 
     - name: "Dotnet: Override code analysis rules"
-      if: "!endsWith(github.repository, '-template')"
+      if: steps.visibility.outputs.is-template != 'true'
       uses: ./.github/actions/dotnet-code-analysis-override
       with:
         release: "${{inputs.release}}"
