@@ -378,6 +378,7 @@ jobs:
           echo "✅ Changelog [Unreleased] section contains no placeholder content"
         env:
           CHANGELOG_FILE: "${{github.workspace}}/CHANGELOG.md"
+          TMP: "${{runner.temp}}"
 
   # @@required: merge
   does-not-contain-secrets:
