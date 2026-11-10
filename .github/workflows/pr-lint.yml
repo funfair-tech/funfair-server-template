@@ -378,10 +378,13 @@ jobs:
             exit 1
           fi
 
-          # A bullet (-, *, +, 1. or 1)) whose first word is TBD, TODO or WIP, optionally wrapped in emphasis, backticks, brackets or parentheses.
-          bullet_placeholder="^[[:space:]]*([-*+]|[0-9]+[.)])[[:space:]]*[*_\`[(]*(TBD|TODO|WIP)[]*_\`)]*([^[:alnum:]_]|\$)"
+          # A bullet (-, *, +, 1. or 1)) whose first word is TBD, optionally wrapped in emphasis, backticks, brackets or parentheses.
+          bullet_tbd="^[[:space:]]*([-*+]|[0-9]+[.)])[[:space:]]*[*_\`[(]*TBD[]*_\`)]*([^[:alnum:]_]|\$)"
+          # A bullet that is only TODO or WIP (same wrappers), or that word followed by ':' or ' - ', so real entries such as
+          # 'TODO list support' or 'WIP-limit setting' are not placeholders.
+          bullet_todo_wip="^[[:space:]]*([-*+]|[0-9]+[.)])[[:space:]]*[*_\`[(]*(TODO|WIP)[]*_\`)]*([[:space:]]*\$|:| - )"
           finalize_tbd='TBD - to be finalized after review'
-          placeholders=$(sed '0,/^Unreleased Content:$/d' <<< "$output" | grep -iE -e "$bullet_placeholder" -e "$finalize_tbd" || true)
+          placeholders=$(sed '0,/^Unreleased Content:$/d' <<< "$output" | grep -iE -e "$bullet_tbd" -e "$bullet_todo_wip" -e "$finalize_tbd" || true)
           if [ -n "$placeholders" ]; then
             print_untrusted "$placeholders"
             echo "::error::❌ Contains placeholder content"
