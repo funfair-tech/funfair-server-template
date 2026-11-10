@@ -211,6 +211,7 @@ jobs:
             ${{github.workspace}}/CHANGELOG.md
             --check-insert
             origin/${{github.base_ref}}
+          untrusted-output: "true"
 
   # @@required: merge
   changelog-template-unreleased-is-empty:
@@ -698,6 +699,7 @@ jobs:
             --changelog
             ${{github.workspace}}/CHANGELOG.md
             --lint
+          untrusted-output: "true"
 
   # @@required: main
   lint-code:
