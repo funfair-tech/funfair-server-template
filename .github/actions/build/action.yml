@@ -418,6 +418,7 @@ runs:
         working-directory: "${{github.workspace}}"
         tool-name: "changelog"
         tool-arguments: |
+          --changelog
           ${{github.workspace}}/CHANGELOG.md
           --extract
           RELEASE_NOTES.md
