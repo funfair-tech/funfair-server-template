@@ -377,7 +377,7 @@ jobs:
             exit 1
           fi
 
-          placeholders=$(sed '0,/^Unreleased Content:$/d' <<< "$output" | grep -iE '^[[:space:]]*-[[:space:]]*TBD[[:space:]]+-' || true)
+          placeholders=$(sed '0,/^Unreleased Content:$/d' <<< "$output" | grep -iE '^[[:space:]]*[-*][[:space:]]*TBD[[:space:]]*([-:]|$)' || true)
           if [ -n "$placeholders" ]; then
             print_untrusted "$placeholders"
             echo "::error::❌ Contains placeholder content"
