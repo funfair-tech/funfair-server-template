@@ -16,9 +16,6 @@ outputs:
   fork-parent:
     description: "Full name (owner/repo) of the parent repository if this is a fork, otherwise empty"
     value: "${{steps.check.outputs.fork-parent}}"
-  lookup-error:
-    description: "Error message if the lookup failed, otherwise empty. A failed lookup also fails this action, so callers stop rather than act on unset outputs"
-    value: "${{steps.check.outputs.lookup-error}}"
 
 runs:
   using: composite
@@ -36,8 +33,6 @@ runs:
               repo: context.repo.repo,
             }));
           } catch (err) {
-            core.error(`❌ Could not retrieve repository info: ${err.message}`);
-            core.setOutput('lookup-error', err.message);
             core.setFailed(`Could not determine repository visibility, template, and fork status: ${err.message}`);
             return;
           }
@@ -55,4 +50,3 @@ runs:
           core.setOutput('is-template', isTemplate ? 'true' : 'false');
           core.setOutput('is-fork', isFork ? 'true' : 'false');
           core.setOutput('fork-parent', forkParent);
-          core.setOutput('lookup-error', '');
