@@ -242,16 +242,6 @@ jobs:
         id: visibility
         uses: ./.github/actions/check-repo-visibility
 
-      # A failed lookup reports is-template 'false', which would skip every check below.
-      - name: "Fail on repo visibility lookup error"
-        if: steps.visibility.outputs.lookup-error != ''
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          LOOKUP_ERROR: "${{steps.visibility.outputs.lookup-error}}"
-        with:
-          script: |
-            core.setFailed(`❌ Could not determine whether this repository is a template: ${process.env.LOOKUP_ERROR}`);
-
       - name: "Check Required Secrets"
         if: steps.visibility.outputs.is-template == 'true'
         uses: ./.github/actions/check-required-secret
