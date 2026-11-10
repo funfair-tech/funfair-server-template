@@ -281,8 +281,8 @@ jobs:
             echo "::$token::"
           }
 
-          output=$(timeout 10m dotnet tool run --allow-roll-forward changelog --changelog "$CHANGELOG_FILE" --un-released 2>&1) || {
-            print_untrusted "$output"
+          output=$(timeout 10m dotnet tool run --allow-roll-forward changelog --changelog "$CHANGELOG_FILE" --un-released 2>"$CHANGELOG_STDERR_FILE") || {
+            print_untrusted "$output"$'\n'"$(cat "$CHANGELOG_STDERR_FILE")"
             echo "::error::❌ Changelog tool failed to read the [Unreleased] section"
             exit 1
           }
@@ -303,6 +303,7 @@ jobs:
           echo "✅ Template changelog [Unreleased] section contains headings only"
         env:
           CHANGELOG_FILE: "${{github.workspace}}/CHANGELOG.md"
+          CHANGELOG_STDERR_FILE: "${{runner.temp}}/changelog-unreleased-stderr.txt"
           TMP: "${{runner.temp}}"
 
   # @@required: merge
@@ -365,8 +366,8 @@ jobs:
             echo "::$token::"
           }
 
-          output=$(timeout 10m dotnet tool run --allow-roll-forward changelog --changelog "$CHANGELOG_FILE" --un-released 2>&1) || {
-            print_untrusted "$output"
+          output=$(timeout 10m dotnet tool run --allow-roll-forward changelog --changelog "$CHANGELOG_FILE" --un-released 2>"$CHANGELOG_STDERR_FILE") || {
+            print_untrusted "$output"$'\n'"$(cat "$CHANGELOG_STDERR_FILE")"
             echo "::error::❌ Changelog tool failed to read the [Unreleased] section"
             exit 1
           }
@@ -387,6 +388,7 @@ jobs:
           echo "✅ Changelog [Unreleased] section contains no placeholder content"
         env:
           CHANGELOG_FILE: "${{github.workspace}}/CHANGELOG.md"
+          CHANGELOG_STDERR_FILE: "${{runner.temp}}/changelog-unreleased-stderr.txt"
           TMP: "${{runner.temp}}"
 
   # @@required: merge
