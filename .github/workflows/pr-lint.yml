@@ -281,21 +281,30 @@ jobs:
         if: steps.visibility.outputs.is-template == 'true'
         shell: bash
         run: |
+          # Untrusted text is printed between stop-commands markers so it cannot issue workflow commands.
+          print_untrusted() {
+            local token
+            token=$(head -c 32 /dev/urandom | base64 -w0 | tr -dc 'A-Za-z0-9')
+            echo "::stop-commands::$token"
+            printf '%s\n' "$1"
+            echo "::$token::"
+          }
+
           output=$(timeout 10m dotnet tool run --allow-roll-forward changelog --changelog "$CHANGELOG_FILE" --un-released 2>&1) || {
-            printf '%s\n' "$output"
+            print_untrusted "$output"
             echo "::error::❌ Changelog tool failed to read the [Unreleased] section"
             exit 1
           }
 
           if ! grep -qxF 'Unreleased Content:' <<< "$output"; then
-            printf '%s\n' "$output"
+            print_untrusted "$output"
             echo "::error::❌ Changelog tool output has no 'Unreleased Content:' line"
             exit 1
           fi
 
           content=$(sed '0,/^Unreleased Content:$/d' <<< "$output" | grep -v '^[[:space:]]*$' || true)
           if [ -n "$content" ]; then
-            printf '%s\n' "$content"
+            print_untrusted "$content"
             echo "::error::❌ Template changelog [Unreleased] section must contain headings only"
             exit 1
           fi
@@ -356,21 +365,30 @@ jobs:
       - name: "Check Unreleased has no placeholders"
         shell: bash
         run: |
+          # Untrusted text is printed between stop-commands markers so it cannot issue workflow commands.
+          print_untrusted() {
+            local token
+            token=$(head -c 32 /dev/urandom | base64 -w0 | tr -dc 'A-Za-z0-9')
+            echo "::stop-commands::$token"
+            printf '%s\n' "$1"
+            echo "::$token::"
+          }
+
           output=$(timeout 10m dotnet tool run --allow-roll-forward changelog --changelog "$CHANGELOG_FILE" --un-released 2>&1) || {
-            printf '%s\n' "$output"
+            print_untrusted "$output"
             echo "::error::❌ Changelog tool failed to read the [Unreleased] section"
             exit 1
           }
 
           if ! grep -qxF 'Unreleased Content:' <<< "$output"; then
-            printf '%s\n' "$output"
+            print_untrusted "$output"
             echo "::error::❌ Changelog tool output has no 'Unreleased Content:' line"
             exit 1
           fi
 
           placeholders=$(sed '0,/^Unreleased Content:$/d' <<< "$output" | grep -iE '^[[:space:]]*-[[:space:]]*TBD[[:space:]]+-' || true)
           if [ -n "$placeholders" ]; then
-            printf '%s\n' "$placeholders"
+            print_untrusted "$placeholders"
             echo "::error::❌ Contains placeholder content"
             exit 1
           fi
