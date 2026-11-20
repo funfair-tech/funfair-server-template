@@ -108,6 +108,22 @@ self-hosted runners:
 - Require approval before running workflows from fork pull requests.
 - Restrict self-hosted runner groups so that public repositories and fork pull requests cannot use them.
 
+### Secrets on fork pull requests
+
+The workflows never pass a secret to a pull request from a fork, even in a private repository that sends secrets
+to fork pull request workflows. A fork pull request gets only `github.token`:
+
+- `pr-lint.yml` uses `github.token` in place of `SOURCE_PUSH_TOKEN` and skips its required-secret checks.
+- `build-and-publish-pre-release.yml` blanks every secret input to the build action except the NuGet feed, which
+  falls back to the public `https://api.nuget.org/v3/index.json`. It uses `github.token` as its token, does not
+  publish, and skips the build number allocation job, which needs `SOURCE_PUSH_TOKEN`.
+- The build action passes the AWS and Docker Hub credentials to `docker-setup` only when it publishes, so a fork
+  pull request's Docker image must build from public base images.
+- `pr-update.yml` and `on-pr-closed.yml` skip fork pull requests, and `pr-update-fork.yml` reads no secret.
+
+Like the runner guards, these are best effort for `pull_request` workflows, because a fork can edit its own copy.
+The enforced control is to leave the repository setting that sends secrets to fork pull request workflows turned off.
+
 ## Changelog
 
 View [changelog](CHANGELOG.md)
