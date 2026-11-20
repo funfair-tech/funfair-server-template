@@ -178,9 +178,8 @@ jobs:
           npm-content-package-wallet-password: "${{secrets.CONTENT_PACKAGE_WALLET_PASSWORD}}"
           npm-package-store-signing-wallet: "${{secrets.PACKAGE_STORE_SIGNING_WALLET}}"
           npm-package-store-signing-wallet-password: "${{secrets.PACKAGE_STORE_SIGNING_WALLET_PASSWORD}}"
-          # The NPM registry and its cert are internal, so a hosted runner uses the public registry.
-          npm-registry: "${{runner.environment == 'self-hosted' && env.NPM_REGISTRY || ''}}"
-          npm-cache-cert: "${{runner.environment == 'self-hosted' && env.NPM_CACHE_CERT || ''}}"
+          npm-registry: "${{env.NPM_REGISTRY}}"
+          npm-cache-cert: "${{env.NPM_CACHE_CERT}}"
           nuget-public-restore-feed-cache: "${{env.NUGET_BAGET_CACHE}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: "${{env.RELEASE_BAGET_CACHE}}"
