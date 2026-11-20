@@ -111,7 +111,8 @@ self-hosted runners:
 ### Secrets on fork pull requests
 
 The workflows never pass a secret to a pull request from a fork, even in a private repository that sends secrets
-to fork pull request workflows. A fork pull request gets only `github.token`:
+to fork pull request workflows. A fork pull request gets only `github.token`, which GitHub makes read-only
+for fork pull requests by default:
 
 - `pr-lint.yml` uses `github.token` in place of `SOURCE_PUSH_TOKEN` and skips its required-secret checks.
 - `build-and-publish-pre-release.yml` blanks every secret input to the build action except the NuGet feed, which
@@ -120,9 +121,16 @@ to fork pull request workflows. A fork pull request gets only `github.token`:
 - The build action passes the AWS and Docker Hub credentials to `docker-setup` only when it publishes, so a fork
   pull request's Docker image must build from public base images.
 - `pr-update.yml` and `on-pr-closed.yml` skip fork pull requests, and `pr-update-fork.yml` reads no secret.
+- The `build-pre-release` job in `build-and-publish-pre-release.yml` and the `poutine` job in `pr-lint.yml` hold
+  write permissions, so their checkout does not keep `github.token` in the git config for a fork pull request.
 
 Like the runner guards, these are best effort for `pull_request` workflows, because a fork can edit its own copy.
-The enforced control is to leave the repository setting that sends secrets to fork pull request workflows turned off.
+Workflow permissions cannot be set per event, so a fork pull request run asks for the same scopes as an in-repo run.
+The enforced controls are two settings for fork pull request workflows in a private repository, both of which must
+stay turned off:
+
+- Send secrets to workflows from fork pull requests.
+- Send write tokens to workflows from fork pull requests.
 
 ## Changelog
 

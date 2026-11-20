@@ -773,8 +773,12 @@ jobs:
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
+      # This job's token has write scopes, so a fork pull request's checkout does not keep it in the
+      # git config; nothing later in the job uses git credentials.
       - name: "Checkout Source"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: "${{env.IS_FORK_PR != 'true'}}"
 
       - name: "Check repo visibility"
         id: visibility

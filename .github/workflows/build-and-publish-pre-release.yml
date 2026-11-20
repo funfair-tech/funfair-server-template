@@ -247,6 +247,10 @@ jobs:
             echo "TMP=$RUNNER_TEMP"
           } >> "$GITHUB_ENV"
 
+      # A fork pull request's checkout does not keep github.token in the git config: nothing later in
+      # the job uses git credentials, and the token would be writable if the repository sends write
+      # tokens to fork pull request workflows. This is defence in depth, not a boundary: a fork can
+      # edit its own copy of this workflow, so that repository setting must stay off.
       - name: "Checkout Source"
         if: env.SKIP_BUILD != 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -255,6 +259,7 @@ jobs:
           clean: true
           fetch-depth: 0
           fetch-tags: true
+          persist-credentials: "${{env.IS_FORK_PR != 'true'}}"
 
       - name: "Setup Build Cache"
         if: env.SKIP_BUILD != 'true'
@@ -268,7 +273,8 @@ jobs:
 
       # Pull requests from forks are never passed a secret, even where the repository sends secrets
       # to fork pull request workflows: every secret input below is blank for them and github-token
-      # is the read-only github.token, so they build and test with a local version and never publish.
+      # is github.token, read-only unless the repository sends write tokens to fork pull request
+      # workflows, so they build and test with a local version and never publish.
       - name: "Build and deploy"
         if: env.SKIP_BUILD != 'true'
         uses: ./.github/actions/build

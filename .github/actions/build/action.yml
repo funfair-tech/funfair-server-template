@@ -387,8 +387,9 @@ runs:
       uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
 
     # A run that does not publish, such as a pull request from a fork, never gets the registry
-    # credentials, so its image must build from public base images; docker-setup skips each login
-    # whose credential is empty.
+    # credentials, so its image must build from public base images; docker-setup skips the Docker Hub
+    # and AWS logins when their credentials are empty. The ghcr.io login always uses github.token,
+    # which is read-only on fork pull requests unless the repository sends write tokens to forks.
     - name: "Configure Docker"
       if: steps.check_files.outputs.DOCKERFILE_EXIST == 'true'
       uses: ./.github/actions/docker-setup
