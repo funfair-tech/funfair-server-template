@@ -266,8 +266,9 @@ jobs:
           release-baget-cache: "${{vars.RELEASE_BAGET_CACHE}}"
           npm-cache: "${{vars.NPM_CACHE}}"
 
-      # Pull requests from forks get no secrets and a read-only token, so they build and test
-      # with a local version and never publish.
+      # Pull requests from forks are never passed a secret, even where the repository sends secrets
+      # to fork pull request workflows: every secret input below is blank for them and github-token
+      # is the read-only github.token, so they build and test with a local version and never publish.
       - name: "Build and deploy"
         if: env.SKIP_BUILD != 'true'
         uses: ./.github/actions/build
@@ -303,7 +304,7 @@ jobs:
           build-tag: "latest"
           cloud-formation-deploy: "${{vars.CLOUD_FORMATION_DEPLOY}}"
           cloud-formation-stack: "${{vars.CLOUD_FORMATION_STACK}}"
-          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
+          github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
           aws-access-key-id: "${{env.IS_FORK_PR != 'true' && secrets.AWS_DOCKER_CONTAINER_REGISTRY_ACCESS_KEY_ID || ''}}"
           aws-secret-access-key: "${{env.IS_FORK_PR != 'true' && secrets.AWS_DOCKER_CONTAINER_REGISTRY_SECRET_ACCESS_KEY || ''}}"
           aws-region: "${{vars.AWS_REGION}}"

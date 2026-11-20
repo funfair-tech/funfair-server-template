@@ -15,8 +15,9 @@ concurrency:
   group: "${{github.workflow}}-${{github.ref}}"
   cancel-in-progress: true
 
-# Pull requests from forks get no secrets and a read-only token, and should not run on self-hosted
-# runners, so they run every check on GitHub-hosted runners with github.token instead.
+# Pull requests from forks are never passed a secret, even where the repository sends secrets to fork
+# pull request workflows, and should not run on self-hosted runners, so they run every check on
+# GitHub-hosted runners with the read-only github.token in place of SOURCE_PUSH_TOKEN.
 # The env context is not available to runs-on, so the fork test there is the check-runner anchor on the first job,
 # which every other job reuses as *check-runner.
 # The runs-on guard is best effort, not an enforced boundary: a pull_request run uses the workflow
@@ -203,7 +204,7 @@ jobs:
         if: steps.visibility.outputs.is-template != 'true'
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
+          github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -271,7 +272,7 @@ jobs:
         if: steps.visibility.outputs.is-template == 'true'
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
+          github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -359,7 +360,7 @@ jobs:
       - name: "Install dotnet"
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
+          github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -694,7 +695,7 @@ jobs:
       - name: "Install dotnet"
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
+          github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -757,7 +758,7 @@ jobs:
         uses: ./.github/actions/super-linter
         with:
           mode: "pr"
-          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
+          github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
 
   # @@required: merge
   poutine:
