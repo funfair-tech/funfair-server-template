@@ -47,13 +47,10 @@ runs:
           // unrelated in-repo PR when a fork's branch shares that name.
           // Only the number is taken from the payload: its draft, state and head SHA are frozen when the
           // event fired, so a re-run of an older run would otherwise report out-of-date state.
+          // context.payload.pull_request is set only on pull request events, so it needs no event-name test.
           async function findPullRequest() {
-            if (context.eventName === 'pull_request' || context.eventName === 'pull_request_target') {
-              const number = context.payload.pull_request?.number;
-              if (!number) {
-                return undefined;
-              }
-
+            const number = context.payload.pull_request?.number;
+            if (number) {
               const { data: pr } = await github.rest.pulls.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
