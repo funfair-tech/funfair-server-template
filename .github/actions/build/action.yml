@@ -17,8 +17,7 @@ inputs:
     description: >-
       Whether to publish/deploy build outputs: 'true' or 'false' (case-insensitive); any other
       value fails. 'false' builds, tests and analyses only, for untrusted runs such as pull
-      requests from forks, which are passed no secrets, and never passes the registry
-      credentials on to docker-setup
+      requests from forks, which are passed no secrets
     required: false
     default: "true"
 
