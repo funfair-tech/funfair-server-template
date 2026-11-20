@@ -289,15 +289,16 @@ jobs:
           npm-content-package-wallet-password: "${{env.IS_FORK_PR != 'true' && secrets.CONTENT_PACKAGE_WALLET_PASSWORD || ''}}"
           npm-package-store-signing-wallet: "${{env.IS_FORK_PR != 'true' && secrets.PACKAGE_STORE_SIGNING_WALLET || ''}}"
           npm-package-store-signing-wallet-password: "${{env.IS_FORK_PR != 'true' && secrets.PACKAGE_STORE_SIGNING_WALLET_PASSWORD || ''}}"
-          # Fork code must not get the internal NPM registry or its cert, so a fork PR uses the public registry.
+          # Fork code must not get the internal NPM registry or its cert, or the additional NuGet
+          # restore feeds and their caches, so a fork PR restores only from the public registry and feed.
           npm-registry: "${{env.IS_FORK_PR != 'true' && env.NPM_REGISTRY || ''}}"
           npm-cache-cert: "${{env.IS_FORK_PR != 'true' && env.NPM_CACHE_CERT || ''}}"
           nuget-public-restore-feed-cache: "${{env.NUGET_BAGET_CACHE}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
-          nuget-additional-restore-feed-release-cache: "${{env.RELEASE_BAGET_CACHE}}"
-          nuget-additional-restore-feed-release: "${{vars.NUGET_ADDITIONAL_RESTORE_FEED_RELEASE}}"
-          nuget-additional-restore-feed-prerelease-cache: "${{env.PRERELEASE_BAGET_CACHE}}"
-          nuget-additional-restore-feed-prerelease: "${{vars.NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE}}"
+          nuget-additional-restore-feed-release-cache: "${{env.IS_FORK_PR != 'true' && env.RELEASE_BAGET_CACHE || ''}}"
+          nuget-additional-restore-feed-release: "${{env.IS_FORK_PR != 'true' && vars.NUGET_ADDITIONAL_RESTORE_FEED_RELEASE || ''}}"
+          nuget-additional-restore-feed-prerelease-cache: "${{env.IS_FORK_PR != 'true' && env.PRERELEASE_BAGET_CACHE || ''}}"
+          nuget-additional-restore-feed-prerelease: "${{env.IS_FORK_PR != 'true' && vars.NUGET_ADDITIONAL_RESTORE_FEED_PRERELEASE || ''}}"
           nuget-pack: "${{vars.NUGET_PACK}}"
           nuget-feed: "${{env.IS_FORK_PR != 'true' && secrets.NUGET_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-feed-type: "${{vars.NUGET_FEED_TYPE}}"
