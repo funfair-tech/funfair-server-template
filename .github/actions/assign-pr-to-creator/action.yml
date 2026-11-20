@@ -35,11 +35,19 @@ runs:
               })).data
             : context.payload.pull_request;
           const creator = pullRequest.user.login;
-          await github.rest.issues.addAssignees({
+          const { data: updated } = await github.rest.issues.addAssignees({
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: prNumber,
             assignees: [creator],
           });
+          // GitHub returns success but silently drops assignees it cannot assign (e.g. a fork PR author who is not a collaborator)
+          const creatorLower = creator.toLowerCase();
+          const assigned = (updated.assignees ?? []).some(a => a.login.toLowerCase() === creatorLower);
+          if (!assigned) {
+            core.warning(`⚠️ PR #${prNumber} was not assigned to ${creator}: GitHub dropped the assignee, ` +
+              'most likely because the user cannot be assigned in this repository');
+            return;
+          }
           core.info(`✅ Assigned PR #${prNumber} to ${creator}`);
           core.notice(`Assigned PR #${prNumber} to ${creator}`);
