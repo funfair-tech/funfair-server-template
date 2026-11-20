@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   repo-info:
-    runs-on: >-
+    runs-on: &check-runner >-
       ${{startsWith(vars.CHECK_ENVIRONMENT, '[')
       && fromJSON(vars.CHECK_ENVIRONMENT)
       || vars.CHECK_ENVIRONMENT
@@ -53,11 +53,7 @@ jobs:
   check-composite-action-versions:
     needs: [repo-info]
     if: needs.repo-info.outputs.is_template == 'true'
-    runs-on: >-
-      ${{startsWith(vars.CHECK_ENVIRONMENT, '[')
-      && fromJSON(vars.CHECK_ENVIRONMENT)
-      || vars.CHECK_ENVIRONMENT
-      || 'ubuntu-latest'}}
+    runs-on: *check-runner
 
     steps:
       - name: "Initialise Workspace"

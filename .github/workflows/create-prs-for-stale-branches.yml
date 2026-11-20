@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   build-matrix:
-    runs-on: >-
+    runs-on: &maintenance-runner >-
       ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
       && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
       || vars.MAINTENANCE_ENVIRONMENT
@@ -124,11 +124,7 @@ jobs:
   check-branch:
     needs: [build-matrix]
     if: needs.build-matrix.outputs.haschanges == 'true'
-    runs-on: >-
-      ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
-      && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
-      || vars.MAINTENANCE_ENVIRONMENT
-      || 'ubuntu-latest'}}
+    runs-on: *maintenance-runner
 
     permissions:
       contents: write

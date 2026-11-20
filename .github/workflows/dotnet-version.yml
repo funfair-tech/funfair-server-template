@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   repo-info:
-    runs-on: >-
+    runs-on: &maintenance-runner >-
       ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
       && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
       || vars.MAINTENANCE_ENVIRONMENT
@@ -58,11 +58,7 @@ jobs:
   bump-dotnet-sdk-version:
     needs: [repo-info]
     if: needs.repo-info.outputs.is_template == 'true'
-    runs-on: >-
-      ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
-      && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
-      || vars.MAINTENANCE_ENVIRONMENT
-      || 'ubuntu-latest'}}
+    runs-on: *maintenance-runner
 
     permissions:
       contents: write
