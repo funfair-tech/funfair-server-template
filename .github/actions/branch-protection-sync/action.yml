@@ -35,7 +35,7 @@ runs:
 
           const files = fs.readdirSync(WORKFLOWS_DIR).filter(f => f.endsWith('.yml') || f.endsWith('.yaml'));
           for (const file of files) {
-            const lines = fs.readFileSync(path.join(WORKFLOWS_DIR, file), 'utf8').split('\n');
+            const lines = fs.readFileSync(path.join(WORKFLOWS_DIR, file), 'utf8').split(/\r?\n/);
             for (let i = 0; i < lines.length; i++) {
               const markerMatch = lines[i].match(TAG_MARKER_RE);
               if (!markerMatch) continue;
