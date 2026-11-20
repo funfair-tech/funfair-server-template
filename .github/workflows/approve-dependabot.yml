@@ -3,12 +3,13 @@
 name: "Dependabot: Approve updates"
 on:
   # https://securitylab.github.com/research/github-actions-preventing-pwn-requests
-  # pull_request_target is required here to grant the workflow write permissions on Dependabot PRs.
-  # NOTE: pull_request_target resolves local composite actions from the filesystem rather than git
-  # storage, and since the workspace is empty at job initialisation (before any steps run), local
-  # uses: ./.github/actions/... references will always fail - even with an actions/checkout step,
-  # because step execution happens after action path resolution. As a result, any steps in this
-  # workflow that would otherwise use local composite actions must inline their logic directly.
+  # pull_request_target is required here so the job can read the SOURCE_PUSH_TOKEN secret, which has
+  # write access and is used to approve and auto-merge Dependabot PRs; pull_request runs triggered by
+  # Dependabot cannot read Actions secrets. GITHUB_TOKEN itself stays at contents: read.
+  # NOTE: this job deliberately has no actions/checkout step, so no repository code is present in
+  # the workspace. That keeps pull request code out of a job that holds the SOURCE_PUSH_TOKEN
+  # secret, but it also means local uses: ./.github/actions/... references have nothing to load,
+  # so any logic that would otherwise live in a local composite action is inlined here instead.
   pull_request_target:
     types:
       - opened
