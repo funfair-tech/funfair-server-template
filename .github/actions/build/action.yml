@@ -13,6 +13,13 @@ inputs:
       allocated here
     required: false
     default: ""
+  publish:
+    description: >-
+      Whether to publish/deploy build outputs: 'true' or 'false' (case-insensitive); any other
+      value fails. 'false' builds, tests and analyses only, for untrusted runs such as pull
+      requests from forks, where no secrets are available
+    required: false
+    default: "true"
 
   # NPM
   npm-production-packager-version:
@@ -176,6 +183,27 @@ runs:
       env:
         PRODUCTION_BUILD: "${{inputs.production-build}}"
 
+    - name: "Check publish is valid"
+      shell: bash
+      run: |
+        case "${PUBLISH,,}" in
+          'true') ;;
+          'false')
+            # Allocating a build number needs a write token, which an unpublished run must not use.
+            if [ -z "$BUILD_VERSION_INPUT" ]; then
+              echo "::error::build-version must be supplied when publish is 'false'"
+              exit 1
+            fi
+            ;;
+          *)
+            echo "::error::publish must be 'true' or 'false'"
+            exit 1
+            ;;
+        esac
+      env:
+        PUBLISH: "${{inputs.publish}}"
+        BUILD_VERSION_INPUT: "${{inputs.build-version}}"
+
     - name: "Check Repo Visibility"
       id: visibility
       uses: ./.github/actions/check-repo-visibility
@@ -252,7 +280,8 @@ runs:
         steps.check_files.outputs.DOTNET_EXIST == 'true' &&
         steps.check_files.outputs.CLOUDFORMATION_EXIST == 'true' &&
         inputs.cloud-formation-deploy == 'true' &&
-        inputs.docker-app-name != ''
+        inputs.docker-app-name != '' &&
+        inputs.publish == 'true'
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:
         AWS_KEY_ID: "${{inputs.aws-access-key-id}}"
@@ -391,14 +420,20 @@ runs:
         { echo "DEPLOY=false";  } >> "$GITHUB_ENV"
 
     - name: "Install Package Builder"
-      if: steps.check_files.outputs.NPM_EXIST_SRC == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'
+      if: |-
+        steps.check_files.outputs.NPM_EXIST_SRC == 'true' &&
+        steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' &&
+        inputs.publish == 'true'
       uses: ./.github/actions/dotnet-tool
       with:
         tool-name: "FunFair.Content.Packager.Cmd"
         tool-version: "${{inputs.npm-production-packager-version}}"
 
     - name: "Install Package Store Signer"
-      if: steps.check_files.outputs.NPM_EXIST_SRC == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST == 'true'
+      if: |-
+        steps.check_files.outputs.NPM_EXIST_SRC == 'true' &&
+        steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' &&
+        inputs.publish == 'true'
       uses: ./.github/actions/dotnet-tool
       with:
         tool-name: "FunFair.Content.PackageSigner.Cmd"
@@ -458,7 +493,7 @@ runs:
         db-folder: "${{github.workspace}}/db"
         nuget-pack: "${{inputs.nuget-pack}}"
         nuget-feed: "${{inputs.nuget-feed}}"
-        nuget-feed-type: "${{inputs.nuget-feed-type}}"
+        nuget-feed-type: "${{inputs.publish == 'true' && inputs.nuget-feed-type || ''}}"
         nuget-username: "${{inputs.nuget-username}}"
         sleet-config: "${{inputs.sleet-config}}"
         sleet-feed: "${{inputs.sleet-feed}}"
@@ -505,7 +540,7 @@ runs:
         npm-content-package-wallet-password: "${{inputs.npm-content-package-wallet-password}}"
         npm-package-store-signing-wallet: "${{inputs.npm-package-store-signing-wallet}}"
         npm-package-store-signing-wallet-password: "${{inputs.npm-package-store-signing-wallet-password}}"
-        npm-signing: "${{steps.check_files.outputs.NPM_SIGNING_EXIST}}"
+        npm-signing: "${{inputs.publish == 'true' && steps.check_files.outputs.NPM_SIGNING_EXIST || 'false'}}"
         npm-registry: "${{inputs.npm-registry}}"
         npm-cache-cert: "${{inputs.npm-cache-cert}}"
         project-to-publish: "${{inputs.project-to-publish}}"
@@ -565,7 +600,7 @@ runs:
         inputs.dotnet-docker-platform != ''
       uses: ./.github/actions/docker-build-to-registry
       with:
-        deploy: "${{env.DEPLOY}}"
+        deploy: "${{inputs.publish == 'true' && env.DEPLOY || 'false'}}"
         build-version: "${{env.BUILD_VERSION}}"
         build-tag: "${{inputs.build-tag}}"
         app-owner: "${{inputs.docker-app-owner}}"
@@ -584,7 +619,8 @@ runs:
         inputs.sql-db != '' &&
         inputs.sql-user != '' &&
         inputs.sql-password != '' &&
-        env.DEPLOY == 'true'
+        env.DEPLOY == 'true' &&
+        inputs.publish == 'true'
       uses: ./.github/actions/database-deploy
       with:
         sql-server: "${{inputs.sql-server}}"
@@ -617,7 +653,8 @@ runs:
         steps.check_files.outputs.CLOUDFORMATION_EXIST == 'true' &&
         inputs.cloud-formation-deploy == 'true' &&
         inputs.docker-app-name != '' &&
-        env.DEPLOY == 'true'
+        env.DEPLOY == 'true' &&
+        inputs.publish == 'true'
       uses: ./.github/actions/dispatch-deploy
       with:
         cloud-formation-stack: "${{inputs.cloud-formation-stack}}"
@@ -636,7 +673,8 @@ runs:
       if: |-
         (steps.check_files.outputs.NPM_EXIST_SRC == 'true' || steps.check_files.outputs.NPM_EXIST_ROOT == 'true') &&
         steps.check_files.outputs.NPM_SIGNING_EXIST == 'true' &&
-        env.DEPLOY == 'true'
+        env.DEPLOY == 'true' &&
+        inputs.publish == 'true'
       uses: ./.github/actions/sleet
       with:
         sleet-config: "${{inputs.sleet-config}}"
@@ -646,7 +684,10 @@ runs:
     # Create GitHub Release
     ############################################################################################################
     - name: "Create Release"
-      if: steps.build_tools.outputs.BUILD_ENV == 'true' && inputs.create-release == 'true'
+      if: |-
+        steps.build_tools.outputs.BUILD_ENV == 'true' &&
+        inputs.create-release == 'true' &&
+        inputs.publish == 'true'
       uses: ./.github/actions/create-release
       with:
         github-token: "${{inputs.github-token}}"
