@@ -219,7 +219,7 @@ jobs:
         if: steps.visibility.outputs.is-template != 'true'
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{env.IS_FORK_PR == 'true' && (secrets.SOURCE_PUSH_TOKEN || github.token) || secrets.SOURCE_PUSH_TOKEN}}"
+          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -294,7 +294,7 @@ jobs:
         if: steps.visibility.outputs.is-template == 'true'
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{env.IS_FORK_PR == 'true' && (secrets.SOURCE_PUSH_TOKEN || github.token) || secrets.SOURCE_PUSH_TOKEN}}"
+          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -389,7 +389,7 @@ jobs:
       - name: "Install dotnet"
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{env.IS_FORK_PR == 'true' && (secrets.SOURCE_PUSH_TOKEN || github.token) || secrets.SOURCE_PUSH_TOKEN}}"
+          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -787,7 +787,7 @@ jobs:
       - name: "Install dotnet"
         uses: ./.github/actions/dotnet-install
         with:
-          github-token: "${{env.IS_FORK_PR == 'true' && (secrets.SOURCE_PUSH_TOKEN || github.token) || secrets.SOURCE_PUSH_TOKEN}}"
+          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
           nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
@@ -857,7 +857,7 @@ jobs:
         uses: ./.github/actions/super-linter
         with:
           mode: "pr"
-          github-token: "${{env.IS_FORK_PR == 'true' && (secrets.SOURCE_PUSH_TOKEN || github.token) || secrets.SOURCE_PUSH_TOKEN}}"
+          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
 
   # @@required: merge
   poutine:

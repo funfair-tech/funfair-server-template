@@ -311,15 +311,14 @@ runs:
             return;
           }
 
-          const missingNames = (values) => Object.entries(values).filter(([, value]) => !value).map(([name]) => name);
-          const gateMissing = missingNames({
+          const gateMissing = Object.entries({
             'docker-app-owner': settings['app-owner'],
             'docker-app-name': settings['app-name'],
             'dotnet-docker-platform': settings['docker-platform'],
-          });
-          const missing = [...gateMissing, ...missingNames({ 'project-to-publish': process.env.PROJECT_TO_PUBLISH })];
-          if (derive && missing.length > 0) {
-            core.setFailed(`❌ A Docker image is expected, but ${missing.join(', ')} is not set and cannot be derived from the repository`);
+          }).filter(([, value]) => !value).map(([name]) => name);
+          // When deriving, every gate setting has a fallback, so project-to-publish is the only one that can be missing.
+          if (derive && !process.env.PROJECT_TO_PUBLISH) {
+            core.setFailed('❌ A Docker image is expected, but project-to-publish is not set and cannot be derived from the repository');
           } else if (gateMissing.length > 0) {
             core.warning(`⚠️ A Docker image is expected, but ${gateMissing.join(', ')} is not set: the image will not be built`);
           } else {

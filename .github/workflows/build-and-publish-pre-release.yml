@@ -152,10 +152,7 @@ jobs:
     # A failed or cancelled allocation still runs the job, so that it fails the required check
     # instead of skipping it. This relies on cancelled() being true only for a cancelled workflow
     # run, not for a cancelled allocation job alone, which GitHub implies but does not document.
-    if: >-
-      ${{!cancelled()
-      && (needs.allocate-build-number.result != 'skipped'
-      || github.event_name == 'pull_request')}}
+    if: "${{!cancelled()}}"
 
     # Only a run that allocated a build number builds on the configured runner. Every other run
     # (a fork pull request, a run built by push, or a failed or cancelled allocation) uses
@@ -289,7 +286,7 @@ jobs:
           build-tag: "latest"
           cloud-formation-deploy: "${{vars.CLOUD_FORMATION_DEPLOY}}"
           cloud-formation-stack: "${{vars.CLOUD_FORMATION_STACK}}"
-          github-token: "${{env.IS_FORK_PR == 'true' && (secrets.SOURCE_PUSH_TOKEN || github.token) || secrets.SOURCE_PUSH_TOKEN}}"
+          github-token: "${{secrets.SOURCE_PUSH_TOKEN || (env.IS_FORK_PR == 'true' && github.token) || ''}}"
           aws-access-key-id: "${{env.IS_FORK_PR != 'true' && secrets.AWS_DOCKER_CONTAINER_REGISTRY_ACCESS_KEY_ID || ''}}"
           aws-secret-access-key: "${{env.IS_FORK_PR != 'true' && secrets.AWS_DOCKER_CONTAINER_REGISTRY_SECRET_ACCESS_KEY || ''}}"
           aws-region: "${{vars.AWS_REGION}}"
