@@ -45,10 +45,21 @@ runs:
 
           // A pull request event names its own PR; a branch-name lookup could instead match an
           // unrelated in-repo PR when a fork's branch shares that name.
+          // Only the number is taken from the payload: its draft, state and head SHA are frozen when the
+          // event fired, so a re-run of an older run would otherwise report out-of-date state.
           async function findPullRequest() {
             if (context.eventName === 'pull_request' || context.eventName === 'pull_request_target') {
-              const pr = context.payload.pull_request;
-              return pr && pr.state === 'open' && (!base || pr.base.ref === base) ? pr : undefined;
+              const number = context.payload.pull_request?.number;
+              if (!number) {
+                return undefined;
+              }
+
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: number,
+              });
+              return pr.state === 'open' && (!base || pr.base.ref === base) ? pr : undefined;
             }
 
             // Outside a pull request event the branch was pushed to this repository, so its owner is the head owner.
