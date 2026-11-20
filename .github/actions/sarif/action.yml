@@ -1,4 +1,4 @@
---- # Build and deploy packages
+--- # Upload SARIF files to GitHub code scanning
 # Maintain in repo: funfair-server-template
 name: "Upload sarif files"
 description: "Uploads SARIF files (excluding test results) to GitHub code scanning"
@@ -45,7 +45,17 @@ runs:
       continue-on-error: "${{inputs.repo-fork == 'true'}}"
       env:
         SARIF_ID: "${{steps.sarif.outputs.sarif-id}}"
+        UPLOAD_OUTCOME: "${{steps.sarif.outcome}}"
       with:
+        # No github-token: this script makes no API calls, it only logs.
         script: |
+          const outcome = process.env.UPLOAD_OUTCOME;
+          if (outcome !== 'success') {
+            // Only reachable when continue-on-error tolerated the failure; otherwise the job has already failed.
+            core.warning(`⚠️ Sarif upload not completed: upload step outcome was "${outcome}". `
+              + 'Failures are tolerated on forks and pull requests from forks (read-only token).');
+            return;
+          }
+
           core.info('Sarif Upload Completed');
           core.notice(`sarifId: ${process.env.SARIF_ID}`);
