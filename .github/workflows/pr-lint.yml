@@ -205,7 +205,7 @@ jobs:
         uses: ./.github/actions/dotnet-install
         with:
           github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
-          nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
+          nuget-public-restore-feed-cache: "${{vars.NUGET_BAGET_CACHE}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
           nuget-additional-restore-feed-prerelease-cache: ""
@@ -273,7 +273,7 @@ jobs:
         uses: ./.github/actions/dotnet-install
         with:
           github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
-          nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
+          nuget-public-restore-feed-cache: "${{vars.NUGET_BAGET_CACHE}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
           nuget-additional-restore-feed-prerelease-cache: ""
@@ -361,7 +361,7 @@ jobs:
         uses: ./.github/actions/dotnet-install
         with:
           github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
-          nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
+          nuget-public-restore-feed-cache: "${{vars.NUGET_BAGET_CACHE}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
           nuget-additional-restore-feed-prerelease-cache: ""
@@ -696,7 +696,7 @@ jobs:
         uses: ./.github/actions/dotnet-install
         with:
           github-token: "${{env.IS_FORK_PR == 'true' && github.token || secrets.SOURCE_PUSH_TOKEN}}"
-          nuget-public-restore-feed-cache: "${{runner.environment == 'self-hosted' && vars.NUGET_BAGET_CACHE || ''}}"
+          nuget-public-restore-feed-cache: "${{vars.NUGET_BAGET_CACHE}}"
           nuget-public-restore-feed: "${{vars.NUGET_PUBLIC_RESTORE_FEED || 'https://api.nuget.org/v3/index.json'}}"
           nuget-additional-restore-feed-release-cache: ""
           nuget-additional-restore-feed-prerelease-cache: ""
