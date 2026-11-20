@@ -49,7 +49,6 @@ jobs:
       - name: "Assign PR to the creator"
         if: |-
           !github.event.pull_request.assignee.login
-          && github.event_name == 'pull_request_target'
           && ( github.event.action == 'opened' || github.event.action == 'reopened')
         uses: ./.github/actions/assign-pr-to-creator
         with:
