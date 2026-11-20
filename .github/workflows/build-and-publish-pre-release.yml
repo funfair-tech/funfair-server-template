@@ -15,7 +15,7 @@ on:
       - main
 
 # Don't cancel anything in progress.
-# An in-repo pull request run that only skips gets its own group, so it never replaces a
+# An in-repo pull request run that does not build gets its own group, so it never replaces a
 # pending ready_for_review build of the same pull request.
 concurrency:
   group: >-
@@ -134,9 +134,10 @@ jobs:
   # @@required: main
   build-pre-release:
 
-    # A skipped check counts as passing, so an in-repo pull request run (which only skips,
-    # because the push run builds the same commit) reports under a different name than the
-    # required check, rather than masking an in-progress or failed push build.
+    # An in-repo pull request run (opened/reopened/synchronize) does not build, because the
+    # push run builds the same commit. It runs with every build step skipped, not as a skipped
+    # job, because GitHub does not evaluate the name of a skipped job; the distinct name stops
+    # that no-op success satisfying the required build-pre-release check.
     name: >-
       ${{github.event_name == 'pull_request'
       && github.event.action != 'ready_for_review'
@@ -146,16 +147,18 @@ jobs:
 
     needs: [allocate-build-number]
 
+    # Allocation is skipped only for pull request runs that cannot or need not allocate:
+    # fork pull requests (which build with a local version) and in-repo runs built by push.
     if: >-
       ${{!cancelled()
       && (needs.allocate-build-number.result == 'success'
       || (github.event_name == 'pull_request'
-      && github.event.pull_request.head.repo.full_name != github.repository
       && needs.allocate-build-number.result == 'skipped'))}}
 
     runs-on: >-
       ${{github.event_name == 'pull_request'
-      && github.event.pull_request.head.repo.full_name != github.repository
+      && (github.event.pull_request.head.repo.full_name != github.repository
+      || github.event.action != 'ready_for_review')
       && 'ubuntu-latest'
       || (startsWith(vars.PRE_RELEASE_BUILD_ENVIRONMENT, '[')
       && fromJSON(vars.PRE_RELEASE_BUILD_ENVIRONMENT)
@@ -166,6 +169,10 @@ jobs:
       IS_FORK_PR: >-
         ${{github.event_name == 'pull_request'
         && github.event.pull_request.head.repo.full_name != github.repository}}
+      BUILT_BY_PUSH: >-
+        ${{github.event_name == 'pull_request'
+        && github.event.action != 'ready_for_review'
+        && github.event.pull_request.head.repo.full_name == github.repository}}
       # Which NPM Registry to use
       NPM_REGISTRY: "${{vars.NPM_REGISTRY}}"
       NPM_CACHE_CERT: "${{vars.NPM_CACHE_CERT}}"
@@ -176,8 +183,14 @@ jobs:
       RELEASE_BAGET_CACHE: ""
 
     steps:
+      - name: "Built by Push"
+        if: env.BUILT_BY_PUSH == 'true'
+        shell: bash
+        run: |
+          echo "ℹ️ Not building: the push run builds this commit."
+
       - name: "Check Required Secrets"
-        if: env.IS_FORK_PR != 'true'
+        if: env.IS_FORK_PR != 'true' && env.BUILT_BY_PUSH != 'true'
         shell: bash
         run: |
           if [ -z "$SOURCE_PUSH_TOKEN" ]; then
@@ -188,11 +201,12 @@ jobs:
           SOURCE_PUSH_TOKEN: "${{secrets.SOURCE_PUSH_TOKEN}}"
 
       - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted'
+        if: runner.environment == 'self-hosted' && env.BUILT_BY_PUSH != 'true'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
       - name: "Set Active Environment"
+        if: env.BUILT_BY_PUSH != 'true'
         shell: bash
         run: |
           {
@@ -204,6 +218,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: "Checkout Source"
+        if: env.BUILT_BY_PUSH != 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: "${{github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref}}"
@@ -212,6 +227,7 @@ jobs:
           fetch-tags: true
 
       - name: "Setup Build Cache"
+        if: env.BUILT_BY_PUSH != 'true'
         uses: ./.github/actions/setup-build-cache
         with:
           use-nuget-cache: "${{vars.USE_NUGET_CACHE}}"
@@ -223,6 +239,7 @@ jobs:
       # Pull requests from forks get no secrets and a read-only token, so they build and test
       # with a local version and never publish.
       - name: "Build and deploy"
+        if: env.BUILT_BY_PUSH != 'true'
         uses: ./.github/actions/build
         with:
           production-build: "false"
@@ -275,6 +292,7 @@ jobs:
           create-release: false
 
       - name: "Build Version"
+        if: env.BUILT_BY_PUSH != 'true'
         shell: bash
         run: |
           echo "::notice::Version: ${BUILD_VERSION//[$'\r\n']/ }"
