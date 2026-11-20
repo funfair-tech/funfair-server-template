@@ -17,12 +17,18 @@ concurrency:
 permissions:
   contents: read
 
+# Pull requests from forks get no secrets and a read-only token here, so no job can update them and none
+# may run on self-hosted runners: every job skips them, and pr-update-fork.yml updates them instead.
+# The env context is not available to a job-level if, so each job repeats the fork test there.
 env:
   HEAD_REF: "${{github.head_ref}}"
   BASE_REF: "${{github.base_ref}}"
 
 jobs:
   repo-info:
+    if: |-
+      !(github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name != github.repository)
     runs-on: [self-hosted, linux, build]
     outputs:
       is_template: "${{steps.visibility.outputs.is-template}}"
@@ -53,7 +59,10 @@ jobs:
 
   info:
     needs: [repo-info]
-    if: needs.repo-info.outputs.is_template == 'true'
+    if: |-
+      needs.repo-info.outputs.is_template == 'true'
+      && !(github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name != github.repository)
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Initialise Workspace"
@@ -101,7 +110,10 @@ jobs:
               .write();
 
   update-pull-request:
-    if: github.actor != 'dependabot[bot]'
+    if: |-
+      github.actor != 'dependabot[bot]'
+      && !(github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name != github.repository)
     runs-on: [self-hosted, linux, build]
     steps:
       - name: "Check Required Secrets"
