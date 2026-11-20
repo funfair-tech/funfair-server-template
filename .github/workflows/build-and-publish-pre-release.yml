@@ -7,8 +7,9 @@ on:
     branches-ignore:
       - "release/*"
       - "hotfix/*"
-  # In-repo pull requests already build on push, so opened/reopened/synchronize only build
-  # pull requests from forks; ready_for_review still builds every pull request.
+  # In-repo pull requests already build on push (apart from release/* and hotfix/* branches, which
+  # build only on ready_for_review), so opened/reopened/synchronize only build pull requests from
+  # forks; ready_for_review still builds every pull request.
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
     branches:
@@ -134,28 +135,31 @@ jobs:
   # @@required: merge
   build-pre-release:
 
-    # An in-repo pull request run (opened/reopened/synchronize) does not build, because the
-    # push run builds the same commit. It runs with every build step skipped, not as a skipped
-    # job, because GitHub does not evaluate the name of a skipped job; the distinct name stops
-    # that no-op success satisfying the required build-pre-release check.
+    # An in-repo pull request run (opened/reopened/synchronize) does not build: the push run
+    # builds the same commit, except for release/* and hotfix/* head branches, which the push
+    # trigger ignores and which build only when marked ready for review. It runs with every build
+    # step skipped, not as a skipped job, because GitHub does not evaluate the name of a skipped
+    # job; the distinct name stops that no-op success satisfying the required build-pre-release check.
     name: >-
       ${{github.event_name == 'pull_request'
       && github.event.action != 'ready_for_review'
       && github.event.pull_request.head.repo.full_name == github.repository
-      && 'build-pre-release (built by push)'
+      && ((startsWith(github.head_ref, 'release/') || startsWith(github.head_ref, 'hotfix/'))
+      && 'build-pre-release (builds when ready for review)'
+      || 'build-pre-release (built by push)')
       || 'build-pre-release'}}
 
     needs: [allocate-build-number]
 
     # Allocation is skipped only for pull request runs that cannot or need not allocate:
-    # fork pull requests (which build with a local version) and in-repo runs built by push.
+    # fork pull requests (which build with a local version) and in-repo runs that do not build.
     # A failed or cancelled allocation still runs the job, so that it fails the required check
     # instead of skipping it. This relies on cancelled() being true only for a cancelled workflow
     # run, not for a cancelled allocation job alone, which GitHub implies but does not document.
     if: "${{!cancelled()}}"
 
     # Only a run that allocated a build number builds on the configured runner. Every other run
-    # (a fork pull request, a run built by push, or a failed or cancelled allocation) uses
+    # (a fork pull request, an in-repo run that does not build, or a failed or cancelled allocation) uses
     # ubuntu-latest, so this relies on the allocation job's if: skipping exactly the first two.
     # Keeping a fork pull request on ubuntu-latest is best effort, not an enforced boundary: a
     # pull_request run uses the workflow files from the pull request's merge ref, so a fork can
@@ -175,10 +179,14 @@ jobs:
       IS_FORK_PR: >-
         ${{github.event_name == 'pull_request'
         && github.event.pull_request.head.repo.full_name != github.repository}}
-      BUILT_BY_PUSH: >-
+      SKIP_BUILD: >-
         ${{github.event_name == 'pull_request'
         && github.event.action != 'ready_for_review'
         && github.event.pull_request.head.repo.full_name == github.repository}}
+      # Only picks the message for a skipped build: the push trigger ignores these branches.
+      RELEASE_OR_HOTFIX_HEAD: >-
+        ${{startsWith(github.head_ref, 'release/')
+        || startsWith(github.head_ref, 'hotfix/')}}
       # Which NPM Registry to use
       NPM_REGISTRY: "${{vars.NPM_REGISTRY}}"
       NPM_CACHE_CERT: "${{vars.NPM_CACHE_CERT}}"
@@ -200,13 +208,19 @@ jobs:
           exit 1
 
       - name: "Built by Push"
-        if: env.BUILT_BY_PUSH == 'true'
+        if: env.SKIP_BUILD == 'true' && env.RELEASE_OR_HOTFIX_HEAD != 'true'
         shell: bash
         run: |
           echo "ℹ️ Not building: the push run builds this commit."
 
+      - name: "Builds When Ready for Review"
+        if: env.SKIP_BUILD == 'true' && env.RELEASE_OR_HOTFIX_HEAD == 'true'
+        shell: bash
+        run: |
+          echo "ℹ️ Not building: no push run builds release or hotfix branches, so this pull request builds when marked ready for review."
+
       - name: "Check Required Secrets"
-        if: env.IS_FORK_PR != 'true' && env.BUILT_BY_PUSH != 'true'
+        if: env.IS_FORK_PR != 'true' && env.SKIP_BUILD != 'true'
         shell: bash
         run: |
           if [ -z "$SOURCE_PUSH_TOKEN" ]; then
@@ -217,12 +231,12 @@ jobs:
           SOURCE_PUSH_TOKEN: "${{secrets.SOURCE_PUSH_TOKEN}}"
 
       - name: "Initialise Workspace"
-        if: runner.environment == 'self-hosted' && env.BUILT_BY_PUSH != 'true'
+        if: runner.environment == 'self-hosted' && env.SKIP_BUILD != 'true'
         shell: bash
         run: sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE"
 
       - name: "Set Active Environment"
-        if: env.BUILT_BY_PUSH != 'true'
+        if: env.SKIP_BUILD != 'true'
         shell: bash
         run: |
           {
@@ -234,7 +248,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: "Checkout Source"
-        if: env.BUILT_BY_PUSH != 'true'
+        if: env.SKIP_BUILD != 'true'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: "${{github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref}}"
@@ -243,7 +257,7 @@ jobs:
           fetch-tags: true
 
       - name: "Setup Build Cache"
-        if: env.BUILT_BY_PUSH != 'true'
+        if: env.SKIP_BUILD != 'true'
         uses: ./.github/actions/setup-build-cache
         with:
           use-nuget-cache: "${{vars.USE_NUGET_CACHE}}"
@@ -255,7 +269,7 @@ jobs:
       # Pull requests from forks get no secrets and a read-only token, so they build and test
       # with a local version and never publish.
       - name: "Build and deploy"
-        if: env.BUILT_BY_PUSH != 'true'
+        if: env.SKIP_BUILD != 'true'
         uses: ./.github/actions/build
         with:
           production-build: "false"
@@ -309,7 +323,7 @@ jobs:
           create-release: false
 
       - name: "Build Version"
-        if: env.BUILT_BY_PUSH != 'true'
+        if: env.SKIP_BUILD != 'true'
         shell: bash
         run: |
           echo "::notice::Version: ${BUILD_VERSION//[$'\r\n']/ }"
