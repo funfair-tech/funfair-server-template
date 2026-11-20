@@ -157,11 +157,18 @@ runs:
         case "$PR_NUMBER" in
           *$'\n'*|*$'\r'*) echo "::error::pr-number must not contain newlines"; exit 1;;
         esac
+        if [ -z "$PR_NUMBER" ]; then
+          echo "ℹ️ ${TITLE//[$'\r\n']/ }: no pull request found for this run; the summary is in the job summary only"
+        fi
         echo "number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
       env:
+        TITLE: "${{inputs.title}}"
+        # pull_request_target carries the same pull_request payload as pull_request, so a
+        # fork PR run resolves its number without the caller passing pr-number.
         PR_NUMBER: >-
           ${{inputs.pr-number != '' && inputs.pr-number ||
-          (github.event_name == 'pull_request' && github.event.pull_request.number || steps.find-pr.outputs.number)}}
+          ((github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.number ||
+          steps.find-pr.outputs.number)}}
 
     - name: "Comment on pull request"
       if: >-
