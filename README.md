@@ -105,7 +105,7 @@ files from the pull request's merge ref, so a fork can edit those guards in its 
 and its guards are enforced. Two repository or organisation settings are what actually keep fork pull requests off
 self-hosted runners:
 
-- Require approval before running workflows from fork pull requests.
+- "Require approval for fork pull request workflows", set to all external contributors.
 - Restrict self-hosted runner groups so that public repositories and fork pull requests cannot use them.
 
 ### Secrets on fork pull requests
@@ -126,11 +126,19 @@ for fork pull requests by default:
 
 Like the runner guards, these are best effort for `pull_request` workflows, because a fork can edit its own copy.
 Workflow permissions cannot be set per event, so a fork pull request run asks for the same scopes as an in-repo run.
-The enforced controls are two settings for fork pull request workflows in a private repository, both of which must
-stay turned off:
+The enforced controls are repository settings. Public repositories never send secrets or write tokens to fork pull
+requests. For a private repository, the settings are in the organisation or repository settings under Actions, then
+General, in the "Fork pull request workflows in private repositories" section, which GitHub shows only for private
+repositories:
 
-- Send secrets to workflows from fork pull requests.
-- Send write tokens to workflows from fork pull requests.
+- "Run workflows from fork pull requests": while this is off, the repository never runs fork pull request
+  workflows, so none of the fork handling above applies.
+- "Send write tokens to workflows from fork pull requests" and "Send secrets and variables to workflows from fork
+  pull requests" appear only once "Run workflows from fork pull requests" is on. If it is turned on, both must stay off.
+
+"Require approval for fork pull request workflows", set to require approval for all external contributors, means a
+maintainer approves each run before it starts. That approval is what keeps an edited fork workflow off self-hosted
+runners, so review any change under `.github/` before approving the run.
 
 ## Changelog
 
