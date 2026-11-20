@@ -412,7 +412,8 @@ runs:
     - name: "Install Multi-push tool"
       if: |-
         steps.build_tools.outputs.BUILD_ENV == 'true' &&
-        inputs.nuget-pack == 'true'
+        inputs.nuget-pack == 'true' &&
+        inputs.publish == 'true'
       uses: ./.github/actions/dotnet-tool
       with:
         tool-name: "Credfeto.Package.Push"
