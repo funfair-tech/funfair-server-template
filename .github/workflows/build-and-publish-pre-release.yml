@@ -131,7 +131,7 @@ jobs:
         run: |
           echo "build-version=$BUILD_VERSION" >> "$GITHUB_OUTPUT"
 
-  # @@required: main
+  # @@required: merge
   build-pre-release:
 
     # An in-repo pull request run (opened/reopened/synchronize) does not build, because the

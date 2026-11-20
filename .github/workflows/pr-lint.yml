@@ -767,7 +767,7 @@ jobs:
             --lint
           untrusted-output: "true"
 
-  # @@required: main
+  # @@required: merge
   lint-code:
     if: |-
       github.event.pull_request.draft == false &&
@@ -811,7 +811,7 @@ jobs:
           mode: "pr"
           github-token: "${{env.IS_FORK_PR == 'true' && (secrets.SOURCE_PUSH_TOKEN || github.token) || secrets.SOURCE_PUSH_TOKEN}}"
 
-  # @@required: main
+  # @@required: merge
   poutine:
     runs-on: "ubuntu-latest"
     permissions:
