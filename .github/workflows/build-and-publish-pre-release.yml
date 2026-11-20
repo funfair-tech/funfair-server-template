@@ -167,9 +167,6 @@ jobs:
 
     env:
       ALLOCATION_RESULT: "${{needs.allocate-build-number.result}}"
-      ALLOCATION_FAILED: >-
-        ${{needs.allocate-build-number.result == 'failure'
-        || needs.allocate-build-number.result == 'cancelled'}}
       IS_FORK_PR: >-
         ${{github.event_name == 'pull_request'
         && github.event.pull_request.head.repo.full_name != github.repository}}
@@ -191,7 +188,7 @@ jobs:
       # the required build-pre-release check. No later step has a status check function in its
       # if:, so none of them runs after this one fails.
       - name: "Check Build Number Allocated"
-        if: env.ALLOCATION_FAILED == 'true'
+        if: env.ALLOCATION_RESULT == 'failure' || env.ALLOCATION_RESULT == 'cancelled'
         shell: bash
         run: |
           echo "::error::❌ Not building: allocate-build-number finished with result '$ALLOCATION_RESULT', so there is no build number."
