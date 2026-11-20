@@ -89,9 +89,12 @@ Variable values:
 
 Exceptions:
 
-- Every `pr-lint.yml` job runs a pull request from a fork on `ubuntu-latest`, whatever `CHECK_ENVIRONMENT` says.
+- Every `pr-lint.yml` and `test-check-no-files-actions.yml` job runs a pull request from a fork on `ubuntu-latest`,
+  whatever `CHECK_ENVIRONMENT` says.
 - `pr-update.yml` skips pull requests from forks; `pr-update-fork.yml` handles them and always runs on `ubuntu-latest`,
   reading no variable, because it holds a writable token while handling an untrusted pull request.
+- `on-pr-closed.yml` skips pull requests from forks, because their read-only token cannot delete caches;
+  those caches are left to expire.
 - In `build-and-publish-pre-release.yml`, a `build-pre-release` run that did not allocate a build number runs on
   `ubuntu-latest`: a fork pull request, an in-repo pull request run already built by push, or a failed or cancelled allocation.
 

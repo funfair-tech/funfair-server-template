@@ -19,13 +19,19 @@ concurrency:
   group: "${{github.workflow}}-${{github.ref}}"
   cancel-in-progress: true
 
+# Pull requests from forks must not run on self-hosted runners, so they run every job on GitHub-hosted
+# runners instead. No job here needs a secret or write access, so they run unchanged otherwise.
+# The env context is not available to runs-on, so each job repeats the fork test there.
 jobs:
   repo-info:
     runs-on: >-
-      ${{startsWith(vars.CHECK_ENVIRONMENT, '[')
+      ${{github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name != github.repository
+      && 'ubuntu-latest'
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
       && fromJSON(vars.CHECK_ENVIRONMENT)
       || vars.CHECK_ENVIRONMENT
-      || 'ubuntu-latest'}}
+      || 'ubuntu-latest')}}
     outputs:
       is_template: "${{steps.visibility.outputs.is-template}}"
     steps:
@@ -57,10 +63,13 @@ jobs:
     needs: [repo-info]
     if: needs.repo-info.outputs.is_template == 'true'
     runs-on: >-
-      ${{startsWith(vars.CHECK_ENVIRONMENT, '[')
+      ${{github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name != github.repository
+      && 'ubuntu-latest'
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
       && fromJSON(vars.CHECK_ENVIRONMENT)
       || vars.CHECK_ENVIRONMENT
-      || 'ubuntu-latest'}}
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
