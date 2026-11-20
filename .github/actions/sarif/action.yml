@@ -8,7 +8,7 @@ inputs:
     description: "Visibility of the repo"
     required: true
   repo-fork:
-    description: "Whether the repo is a fork ('true' or 'false'); upload failures are tolerated on forks"
+    description: "Whether the repo is a fork or the run is a pull request from a fork ('true' or 'false'); upload failures are tolerated when true"
     required: true
 
 runs:
@@ -36,7 +36,7 @@ runs:
         sarif_file: "${{github.workspace}}/results"
         token: "${{github.token}}"
         # Upload is fire-and-forget: nothing later in the job consumes processing results.
-        # continue-on-error above only tolerates failures on forks (read-only token).
+        # continue-on-error above only tolerates failures on forks and pull requests from forks (read-only token).
         wait-for-processing: false
 
     - name: "Sarif Upload Summary"
