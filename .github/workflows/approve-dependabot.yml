@@ -26,7 +26,14 @@ permissions:
 
 jobs:
   approve-dependabot:
-    if: vars.DEPENDABOT_AUTOMERGE == 'true' && github.actor == 'dependabot[bot]'
+    # github.actor alone is not enough: an event Dependabot causes in a fork can make it the actor on a
+    # fork PR, and this job must never approve or auto-merge a fork PR, so the PR head must also be in
+    # this repository. A PR whose head repository was deleted has a null head.repo, so the comparison
+    # is false and the job is skipped.
+    if: |-
+      vars.DEPENDABOT_AUTOMERGE == 'true'
+      && github.actor == 'dependabot[bot]'
+      && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: >-
       ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
       && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
