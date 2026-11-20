@@ -96,7 +96,7 @@ Exceptions:
 - `on-pr-closed.yml` skips pull requests from forks, because their read-only token cannot delete caches;
   those caches are left to expire.
 - In `build-and-publish-pre-release.yml`, a `build-pre-release` run that did not allocate a build number runs on
-  `ubuntu-latest`: a fork pull request, an in-repo pull request run already built by push, or a failed or cancelled allocation.
+  `ubuntu-latest`: a fork pull request, an in-repo pull request run that does not build, or a failed or cancelled allocation.
 
 The fork exceptions in `pr-lint.yml`, `test-check-no-files-actions.yml`, `pr-update.yml`, `on-pr-closed.yml` and
 `build-and-publish-pre-release.yml` are best effort, not an enforced boundary. A `pull_request` run uses the workflow
