@@ -140,15 +140,24 @@ runs:
             }
           }
 
+          async function assignAndVerify() {
+            const { data: updated } = await github.rest.issues.addAssignees({
+              ...ownerRepo,
+              issue_number: pr.number,
+              assignees: assignees,
+            });
+            // GitHub returns success but silently drops assignees it cannot assign (e.g. bots or non-collaborators)
+            const assignedLogins = new Set((updated.assignees ?? []).map(a => a.login.toLowerCase()));
+            const dropped = assignees.filter(a => !assignedLogins.has(a.toLowerCase()));
+            if (dropped.length > 0) {
+              core.warning(`⚠️ PR #${pr.number} was not assigned to ${dropped.join(', ')}: GitHub dropped the assignee(s), ` +
+                'most likely because they cannot be assigned in this repository');
+            }
+          }
+
           const followUps = [];
           if (assignees.length > 0) {
-            followUps.push(
-              github.rest.issues.addAssignees({
-                ...ownerRepo,
-                issue_number: pr.number,
-                assignees: assignees,
-              })
-            );
+            followUps.push(assignAndVerify());
           }
 
           if (labels.length > 0) {
