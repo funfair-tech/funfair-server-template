@@ -29,7 +29,11 @@ jobs:
     if: |-
       !(github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository)
-    runs-on: [self-hosted, linux, build]
+    runs-on: >-
+      ${{startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest'}}
     outputs:
       is_template: "${{steps.visibility.outputs.is-template}}"
     steps:
@@ -63,7 +67,11 @@ jobs:
       needs.repo-info.outputs.is_template == 'true'
       && !(github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository)
-    runs-on: [self-hosted, linux, build]
+    runs-on: >-
+      ${{startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest'}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -114,7 +122,11 @@ jobs:
       github.actor != 'dependabot[bot]'
       && !(github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository)
-    runs-on: [self-hosted, linux, build]
+    runs-on: >-
+      ${{startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest'}}
     steps:
       - name: "Check Required Secrets"
         shell: bash

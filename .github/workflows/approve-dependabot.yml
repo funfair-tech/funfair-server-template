@@ -27,7 +27,11 @@ permissions:
 jobs:
   approve-dependabot:
     if: vars.DEPENDABOT_AUTOMERGE == 'true' && github.actor == 'dependabot[bot]'
-    runs-on: [self-hosted, linux, build]
+    runs-on: >-
+      ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
+      && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
+      || vars.MAINTENANCE_ENVIRONMENT
+      || 'ubuntu-latest'}}
     steps:
       - name: "Check Required Secrets"
         shell: bash

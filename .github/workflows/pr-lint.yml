@@ -31,7 +31,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     outputs:
       is_template: "${{steps.visibility.outputs.is-template}}"
     steps:
@@ -66,7 +69,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -110,7 +116,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -170,7 +179,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -242,7 +254,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -339,7 +354,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -435,7 +453,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -473,7 +494,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -505,7 +529,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -537,7 +564,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -571,7 +601,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -604,7 +637,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -637,7 +673,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -675,7 +714,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     permissions:
       contents: read
       pull-requests: read
@@ -710,7 +752,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -776,7 +821,10 @@ jobs:
       ${{github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name != github.repository
       && 'ubuntu-latest'
-      || fromJSON('["self-hosted", "linux", "build"]')}}
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     steps:
       - name: "Initialise Workspace"
         if: runner.environment == 'self-hosted'
@@ -813,7 +861,14 @@ jobs:
 
   # @@required: merge
   poutine:
-    runs-on: "ubuntu-latest"
+    runs-on: >-
+      ${{github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name != github.repository
+      && 'ubuntu-latest'
+      || (startsWith(vars.CHECK_ENVIRONMENT, '[')
+      && fromJSON(vars.CHECK_ENVIRONMENT)
+      || vars.CHECK_ENVIRONMENT
+      || 'ubuntu-latest')}}
     permissions:
       security-events: write
       contents: read

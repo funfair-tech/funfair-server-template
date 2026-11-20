@@ -24,6 +24,8 @@ permissions: {}
 jobs:
   update-pull-request:
     if: github.event.pull_request.head.repo.full_name != github.repository
+    # Never a runner variable: this job holds a writable token for an untrusted fork PR, so it must
+    # not run on a self-hosted runner whatever the repository configures.
     runs-on: "ubuntu-latest"
     permissions:
       contents: read

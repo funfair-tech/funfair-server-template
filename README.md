@@ -70,6 +70,31 @@ Services must not use long-lived IAM user access keys (`AWS_ACCESS_KEY_ID` / `AW
 }
 ```
 
+## Workflow runners
+
+Every job, apart from those listed under Exceptions below, reads its `runs-on` from a repository (or organisation) variable for its workflow's category:
+
+- `PRE_RELEASE_BUILD_ENVIRONMENT` (build): `build-and-publish-pre-release.yml`.
+- `RELEASE_BUILD_ENVIRONMENT` (build): `build-and-publish-release.yml`.
+- `CHECK_ENVIRONMENT` (check): `pr-lint.yml`, `pr-update.yml`, `test-check-no-files-actions.yml`, `check-composite-action-versions.yml`.
+- `DEPLOY_ENVIRONMENT` (deploy): `deploy.yml`.
+- `MAINTENANCE_ENVIRONMENT` (maintenance): `pull-request.yml`, `branch-protection-sync.yml`, `create-prs-for-stale-branches.yml`,
+  `missing-releases.yml`, `on-pr-closed.yml`, `update-labels.yml`, `approve-dependabot.yml`, `dependabot.yml`, `dotnet-version.yml`.
+
+Variable values:
+
+- A value is a single runner label (for example `ubuntu-latest`) or a JSON array of labels,
+  for example `["self-hosted","linux","build"]`; a value starting with `[` is parsed as JSON.
+- An unset variable defaults to `ubuntu-latest`.
+
+Exceptions:
+
+- Every `pr-lint.yml` job runs a pull request from a fork on `ubuntu-latest`, whatever `CHECK_ENVIRONMENT` says.
+- `pr-update.yml` skips pull requests from forks; `pr-update-fork.yml` handles them and always runs on `ubuntu-latest`,
+  reading no variable, because it holds a writable token while handling an untrusted pull request.
+- In `build-and-publish-pre-release.yml`, a `build-pre-release` run that did not allocate a build number runs on
+  `ubuntu-latest`: a fork pull request, an in-repo pull request run already built by push, or a failed or cancelled allocation.
+
 ## Changelog
 
 View [changelog](CHANGELOG.md)

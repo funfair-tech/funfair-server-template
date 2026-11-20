@@ -27,7 +27,11 @@ permissions:
 
 jobs:
   build-matrix:
-    runs-on: [self-hosted, linux, build]
+    runs-on: >-
+      ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
+      && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
+      || vars.MAINTENANCE_ENVIRONMENT
+      || 'ubuntu-latest'}}
 
     steps:
       - name: "Initialise Workspace"
@@ -120,7 +124,11 @@ jobs:
   check-branch:
     needs: [build-matrix]
     if: needs.build-matrix.outputs.haschanges == 'true'
-    runs-on: [self-hosted, linux, build]
+    runs-on: >-
+      ${{startsWith(vars.MAINTENANCE_ENVIRONMENT, '[')
+      && fromJSON(vars.MAINTENANCE_ENVIRONMENT)
+      || vars.MAINTENANCE_ENVIRONMENT
+      || 'ubuntu-latest'}}
 
     permissions:
       contents: write
