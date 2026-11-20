@@ -98,6 +98,16 @@ Exceptions:
 - In `build-and-publish-pre-release.yml`, a `build-pre-release` run that did not allocate a build number runs on
   `ubuntu-latest`: a fork pull request, an in-repo pull request run already built by push, or a failed or cancelled allocation.
 
+The fork exceptions in `pr-lint.yml`, `test-check-no-files-actions.yml`, `pr-update.yml`, `on-pr-closed.yml` and
+`build-and-publish-pre-release.yml` are best effort, not an enforced boundary. A `pull_request` run uses the workflow
+files from the pull request's merge ref, so a fork can edit those guards in its own copy and pick a self-hosted label.
+`pr-update-fork.yml` is different: it runs under `pull_request_target` from the base branch, so a fork cannot change it
+and its guards are enforced. Two repository or organisation settings are what actually keep fork pull requests off
+self-hosted runners:
+
+- Require approval before running workflows from fork pull requests.
+- Restrict self-hosted runner groups so that public repositories and fork pull requests cannot use them.
+
 ## Changelog
 
 View [changelog](CHANGELOG.md)

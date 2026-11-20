@@ -157,6 +157,11 @@ jobs:
     # Only a run that allocated a build number builds on the configured runner. Every other run
     # (a fork pull request, a run built by push, or a failed or cancelled allocation) uses
     # ubuntu-latest, so this relies on the allocation job's if: skipping exactly the first two.
+    # Keeping a fork pull request on ubuntu-latest is best effort, not an enforced boundary: a
+    # pull_request run uses the workflow files from the pull request's merge ref, so a fork can
+    # edit it. The enforced controls are the repository or organisation settings that require
+    # approval for fork pull request workflows and that stop self-hosted runner groups being used
+    # by public repositories or fork pull requests.
     runs-on: >-
       ${{needs.allocate-build-number.result != 'success'
       && 'ubuntu-latest'
