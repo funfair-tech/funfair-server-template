@@ -11,6 +11,7 @@ on:
       - ".github/actions/check-required-secret/**"
       - ".github/actions/find-pull-request/**"
       - ".github/actions/read-file/**"
+      - ".github/actions/assign-pr/**"
       - ".github/actions/create-pull-request/**"
       - ".github/actions/sync-labels/**"
       - ".github/actions/delete-branch/**"
