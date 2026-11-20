@@ -149,16 +149,19 @@ jobs:
 
     # Allocation is skipped only for pull request runs that cannot or need not allocate:
     # fork pull requests (which build with a local version) and in-repo runs built by push.
+    # A failed or cancelled allocation still runs the job, so that it fails the required check
+    # instead of skipping it. This relies on cancelled() being true only for a cancelled workflow
+    # run, not for a cancelled allocation job alone, which GitHub implies but does not document.
     if: >-
       ${{!cancelled()
-      && (needs.allocate-build-number.result == 'success'
-      || (github.event_name == 'pull_request'
-      && needs.allocate-build-number.result == 'skipped'))}}
+      && (needs.allocate-build-number.result != 'skipped'
+      || github.event_name == 'pull_request')}}
 
+    # Only a run that allocated a build number builds on the configured runner. Every other run
+    # (a fork pull request, a run built by push, or a failed or cancelled allocation) uses
+    # ubuntu-latest, so this relies on the allocation job's if: skipping exactly the first two.
     runs-on: >-
-      ${{github.event_name == 'pull_request'
-      && (github.event.pull_request.head.repo.full_name != github.repository
-      || github.event.action != 'ready_for_review')
+      ${{needs.allocate-build-number.result != 'success'
       && 'ubuntu-latest'
       || (startsWith(vars.PRE_RELEASE_BUILD_ENVIRONMENT, '[')
       && fromJSON(vars.PRE_RELEASE_BUILD_ENVIRONMENT)
@@ -166,6 +169,10 @@ jobs:
       || 'ubuntu-latest')}}
 
     env:
+      ALLOCATION_RESULT: "${{needs.allocate-build-number.result}}"
+      ALLOCATION_FAILED: >-
+        ${{needs.allocate-build-number.result == 'failure'
+        || needs.allocate-build-number.result == 'cancelled'}}
       IS_FORK_PR: >-
         ${{github.event_name == 'pull_request'
         && github.event.pull_request.head.repo.full_name != github.repository}}
@@ -183,6 +190,16 @@ jobs:
       RELEASE_BAGET_CACHE: ""
 
     steps:
+      # Failing here, rather than skipping the job, stops a run with no build number satisfying
+      # the required build-pre-release check. No later step has a status check function in its
+      # if:, so none of them runs after this one fails.
+      - name: "Check Build Number Allocated"
+        if: env.ALLOCATION_FAILED == 'true'
+        shell: bash
+        run: |
+          echo "::error::❌ Not building: allocate-build-number finished with result '$ALLOCATION_RESULT', so there is no build number."
+          exit 1
+
       - name: "Built by Push"
         if: env.BUILT_BY_PUSH == 'true'
         shell: bash
