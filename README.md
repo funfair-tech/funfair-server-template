@@ -70,6 +70,76 @@ Services must not use long-lived IAM user access keys (`AWS_ACCESS_KEY_ID` / `AW
 }
 ```
 
+## Workflow runners
+
+Every job, apart from those listed under Exceptions below, reads its `runs-on` from a repository (or organisation) variable for its workflow's category:
+
+- `PRE_RELEASE_BUILD_ENVIRONMENT` (build): `build-and-publish-pre-release.yml`.
+- `RELEASE_BUILD_ENVIRONMENT` (build): `build-and-publish-release.yml`.
+- `CHECK_ENVIRONMENT` (check): `pr-lint.yml`, `pr-update.yml`, `test-check-no-files-actions.yml`, `check-composite-action-versions.yml`.
+- `DEPLOY_ENVIRONMENT` (deploy): `deploy.yml`.
+- `MAINTENANCE_ENVIRONMENT` (maintenance): `pull-request.yml`, `branch-protection-sync.yml`, `create-prs-for-stale-branches.yml`,
+  `missing-releases.yml`, `on-pr-closed.yml`, `update-labels.yml`, `approve-dependabot.yml`, `dependabot.yml`, `dotnet-version.yml`.
+
+Variable values:
+
+- A value is a single runner label (for example `ubuntu-latest`) or a JSON array of labels,
+  for example `["self-hosted","linux","build"]`; a value starting with `[` is parsed as JSON.
+- An unset variable defaults to `ubuntu-latest`.
+
+Exceptions:
+
+- Every `pr-lint.yml` and `test-check-no-files-actions.yml` job runs a pull request from a fork on `ubuntu-latest`,
+  whatever `CHECK_ENVIRONMENT` says.
+- `pr-update.yml` skips pull requests from forks; `pr-update-fork.yml` handles them and always runs on `ubuntu-latest`,
+  reading no variable, because it holds a writable token while handling an untrusted pull request.
+- `on-pr-closed.yml` skips pull requests from forks, because their read-only token cannot delete caches;
+  those caches are left to expire.
+- In `build-and-publish-pre-release.yml`, a `build-pre-release` run that did not allocate a build number runs on
+  `ubuntu-latest`: a fork pull request, an in-repo pull request run that does not build, or a failed or cancelled allocation.
+
+The fork exceptions in `pr-lint.yml`, `test-check-no-files-actions.yml`, `pr-update.yml`, `on-pr-closed.yml` and
+`build-and-publish-pre-release.yml` are best effort, not an enforced boundary. A `pull_request` run uses the workflow
+files from the pull request's merge ref, so a fork can edit those guards in its own copy and pick a self-hosted label.
+`pr-update-fork.yml` is different: it runs under `pull_request_target` from the base branch, so a fork cannot change it
+and its guards are enforced. Two repository or organisation settings are what actually keep fork pull requests off
+self-hosted runners:
+
+- "Require approval for fork pull request workflows", set to all external contributors.
+- Restrict self-hosted runner groups so that public repositories and fork pull requests cannot use them.
+
+### Secrets on fork pull requests
+
+The workflows never pass a secret to a pull request from a fork, even in a private repository that sends secrets
+to fork pull request workflows. A fork pull request gets only `github.token`, which GitHub makes read-only
+for fork pull requests by default:
+
+- `pr-lint.yml` uses `github.token` in place of `SOURCE_PUSH_TOKEN` and skips its required-secret checks.
+- `build-and-publish-pre-release.yml` blanks every secret input to the build action except the NuGet feed, which
+  falls back to the public `https://api.nuget.org/v3/index.json`. It uses `github.token` as its token, does not
+  publish, and skips the build number allocation job, which needs `SOURCE_PUSH_TOKEN`.
+- The build action passes the AWS and Docker Hub credentials to `docker-setup` only when it publishes, so a fork
+  pull request's Docker image must build from public base images.
+- `pr-update.yml` and `on-pr-closed.yml` skip fork pull requests, and `pr-update-fork.yml` reads no secret.
+- The `build-pre-release` job in `build-and-publish-pre-release.yml` and the `poutine` job in `pr-lint.yml` hold
+  write permissions, so their checkout does not keep `github.token` in the git config for a fork pull request.
+
+Like the runner guards, these are best effort for `pull_request` workflows, because a fork can edit its own copy.
+Workflow permissions cannot be set per event, so a fork pull request run asks for the same scopes as an in-repo run.
+The enforced controls are repository settings. Public repositories never send secrets or write tokens to fork pull
+requests. For a private repository, the settings are in the organisation or repository settings under Actions, then
+General, in the "Fork pull request workflows in private repositories" section, which GitHub shows only for private
+repositories:
+
+- "Run workflows from fork pull requests": while this is off, the repository never runs fork pull request
+  workflows, so none of the fork handling above applies.
+- "Send write tokens to workflows from fork pull requests" and "Send secrets and variables to workflows from fork
+  pull requests" appear only once "Run workflows from fork pull requests" is on. If it is turned on, both must stay off.
+
+"Require approval for fork pull request workflows", set to require approval for all external contributors, means a
+maintainer approves each run before it starts. That approval is what keeps an edited fork workflow off self-hosted
+runners, so review any change under `.github/` before approving the run.
+
 ## Changelog
 
 View [changelog](CHANGELOG.md)
