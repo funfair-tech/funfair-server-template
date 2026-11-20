@@ -331,7 +331,7 @@ runs:
         steps.check_files.outputs.DOTNET_EXIST == 'true' &&
         steps.check_files.outputs.CLOUDFORMATION_EXIST == 'true' &&
         inputs.cloud-formation-deploy == 'true' &&
-        inputs.docker-app-name != '' &&
+        steps.docker_image.outputs.app-name != '' &&
         inputs.publish == 'true'
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:
@@ -670,7 +670,7 @@ runs:
         steps.check_files.outputs.DOTNET_EXIST == 'true' &&
         steps.check_files.outputs.SQL_EXIST == 'true' &&
         inputs.cloud-formation-deploy == 'true' &&
-        inputs.docker-app-name != '' &&
+        steps.docker_image.outputs.app-name != '' &&
         inputs.sql-server != '' &&
         inputs.sql-db != '' &&
         inputs.sql-user != '' &&
@@ -700,7 +700,7 @@ runs:
         SLN_EXIST: "${{steps.check_files.outputs.SLN_EXIST}}"
         CLOUDFORMATION_EXIST: "${{steps.check_files.outputs.CLOUDFORMATION_EXIST}}"
         CLOUD_FORMATION_DEPLOY: "${{inputs.cloud-formation-deploy}}"
-        DOCKER_APP_NAME: "${{inputs.docker-app-name}}"
+        DOCKER_APP_NAME: "${{steps.docker_image.outputs.app-name}}"
         NPM_SIGNING_EXIST: "${{steps.check_files.outputs.NPM_SIGNING_EXIST}}"
 
     - name: "Dotnet: Cloudformation Deploy"
@@ -708,7 +708,7 @@ runs:
         steps.check_files.outputs.DOTNET_EXIST == 'true' &&
         steps.check_files.outputs.CLOUDFORMATION_EXIST == 'true' &&
         inputs.cloud-formation-deploy == 'true' &&
-        inputs.docker-app-name != '' &&
+        steps.docker_image.outputs.app-name != '' &&
         env.DEPLOY == 'true' &&
         inputs.publish == 'true'
       uses: ./.github/actions/dispatch-deploy
@@ -716,8 +716,8 @@ runs:
         cloud-formation-stack: "${{inputs.cloud-formation-stack}}"
         cloud-formation-template-file: "cloudformation.json"
         build-version: "${{env.BUILD_VERSION}}"
-        docker-app-owner: "${{inputs.docker-app-owner}}"
-        docker-app-name: "${{inputs.docker-app-name}}"
+        docker-app-owner: "${{steps.docker_image.outputs.app-owner}}"
+        docker-app-name: "${{steps.docker_image.outputs.app-name}}"
         api-host: "${{inputs.api-host}}"
         api-prefix: "${{inputs.api-prefix}}"
         aws-load-balancer-hostname: "${{inputs.aws-load-balancer-hostname}}"
