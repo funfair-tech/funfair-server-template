@@ -20,14 +20,22 @@ runs:
         secret-name: "nuget-api-key"
         secret-value: "${{inputs.nuget-api-key}}"
 
+    - name: "Check Packages Exist"
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      with:
+        script: |
+          const globber = await glob.create(`${process.env.GITHUB_WORKSPACE}/dist/*.nupkg`);
+          const packages = await globber.glob();
+          if (packages.length === 0) {
+            core.setFailed(`❌ No .nupkg files found in ${process.env.GITHUB_WORKSPACE}/dist`);
+          } else {
+            core.info(`✅ Found ${packages.length} .nupkg file(s) to push`);
+          }
+
     - name: "NuGet Push"
       shell: bash
       run: |
         cd "$GITHUB_WORKSPACE"
-        if ! compgen -G "dist/*.nupkg" > /dev/null; then
-          echo "::error::No .nupkg files found in $GITHUB_WORKSPACE/dist"
-          exit 1
-        fi
         dotnet nuget push "dist/*.nupkg" --source "$NUGET_FEED" --api-key "$NUGET_API_KEY" --skip-duplicate
       env:
         NUGET_FEED: "${{inputs.nuget-feed}}"
