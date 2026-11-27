@@ -1,4 +1,4 @@
---- # Build and deploy packages
+--- # Push packages in dist to a NuGet feed
 # Maintain in repo: funfair-server-template
 name: "Publish to nuget"
 description: "Publishes Nuget packages"
@@ -21,14 +21,14 @@ runs:
         secret-value: "${{inputs.nuget-api-key}}"
 
     - name: "NuGet Push"
-      uses: ./.github/actions/dotnet-tool-run
-      with:
-        working-directory: "${{github.workspace}}"
-        tool-name: "pushpackages"
-        tool-arguments: |
-          --folder
-          dist
-          --api-key
-          ${{inputs.nuget-api-key}}
-          --source
-          ${{inputs.nuget-feed}}
+      shell: bash
+      run: |
+        cd "$GITHUB_WORKSPACE"
+        if ! compgen -G "dist/*.nupkg" > /dev/null; then
+          echo "::error::No .nupkg files found in $GITHUB_WORKSPACE/dist"
+          exit 1
+        fi
+        dotnet nuget push "dist/*.nupkg" --source "$NUGET_FEED" --api-key "$NUGET_API_KEY" --skip-duplicate
+      env:
+        NUGET_FEED: "${{inputs.nuget-feed}}"
+        NUGET_API_KEY: "${{inputs.nuget-api-key}}"
