@@ -37,7 +37,7 @@ runs:
       working-directory: "${{github.workspace}}"
       shell: bash
       run: |
-        dotnet nuget push "dist/*.nupkg" --source "$NUGET_FEED" --api-key "$NUGET_API_KEY" --skip-duplicate
+        timeout 10m dotnet nuget push "dist/*.nupkg" --source "$NUGET_FEED" --api-key "$NUGET_API_KEY" --skip-duplicate
       env:
         NUGET_FEED: "${{inputs.nuget-feed}}"
         NUGET_API_KEY: "${{inputs.nuget-api-key}}"
