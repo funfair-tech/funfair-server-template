@@ -24,18 +24,19 @@ runs:
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       with:
         script: |
-          const globber = await glob.create(`${process.env.GITHUB_WORKSPACE}/dist/*.nupkg`);
+          const dist = `${process.env.GITHUB_WORKSPACE}/dist`;
+          const globber = await glob.create(`${dist}/*.nupkg`);
           const packages = await globber.glob();
           if (packages.length === 0) {
-            core.setFailed(`❌ No .nupkg files found in ${process.env.GITHUB_WORKSPACE}/dist`);
+            core.setFailed(`❌ No .nupkg files found in ${dist}`);
           } else {
             core.info(`✅ Found ${packages.length} .nupkg file(s) to push`);
           }
 
     - name: "NuGet Push"
+      working-directory: "${{github.workspace}}"
       shell: bash
       run: |
-        cd "$GITHUB_WORKSPACE"
         dotnet nuget push "dist/*.nupkg" --source "$NUGET_FEED" --api-key "$NUGET_API_KEY" --skip-duplicate
       env:
         NUGET_FEED: "${{inputs.nuget-feed}}"
